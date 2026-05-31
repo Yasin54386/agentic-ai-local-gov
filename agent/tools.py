@@ -81,6 +81,56 @@ TOOLS: list[dict[str, Any]] = [
                        "source and by operational domain.",
         "input_schema": {"type": "object", "properties": {}},
     },
+    {
+        "name": "neighbourhood_profile",
+        "description": "Build a profile of a Darwin suburb/ward by combining EVERY "
+                       "dataset that mentions it (pets, trees, infringements, census, "
+                       "etc.). Use for 'tell me about <suburb>' questions.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"suburb": {"type": "string", "description": "e.g. Karama, Malak, Chan Ward"}},
+            "required": ["suburb"],
+        },
+    },
+    {
+        "name": "query_unified",
+        "description": "Query the unified cross-dataset table. Filter by domain, area, "
+                       "year, category; optionally group_by (domain/area_name/category/"
+                       "period_year/dataset_title) with op count/sum/avg. Use for "
+                       "transparency questions like council spending or grants.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "domain": {"type": "string"},
+                "area": {"type": "string"},
+                "year": {"type": "integer"},
+                "category": {"type": "string"},
+                "group_by": {"type": "string",
+                              "enum": ["domain", "area_name", "category", "period_year", "dataset_title"]},
+                "op": {"type": "string", "enum": ["count", "sum", "avg"], "default": "count"},
+                "limit": {"type": "integer", "default": 25},
+            },
+        },
+    },
+    {
+        "name": "list_suburbs",
+        "description": "List the Darwin suburbs/wards that appear in the data, busiest first.",
+        "input_schema": {"type": "object", "properties": {
+            "limit": {"type": "integer", "default": 80}}},
+    },
+    {
+        "name": "live_weather",
+        "description": "Get LIVE current weather + 5-day rain forecast for Darwin "
+                       "(Open-Meteo). Use for 'what's the weather' / wet-season questions.",
+        "input_schema": {"type": "object", "properties": {}},
+    },
+    {
+        "name": "flood_risk",
+        "description": "Get an INDICATIVE wet-season flood-risk level for Darwin, derived "
+                       "from the live rain forecast. Use for 'is there a flood risk' "
+                       "questions. Not an official BOM warning.",
+        "input_schema": {"type": "object", "properties": {}},
+    },
 ]
 
 
@@ -99,4 +149,19 @@ def dispatch(repo: Repository, name: str, args: dict[str, Any]) -> Any:
                               args.get("value", ""), args.get("op", "count"))
     if name == "repository_stats":
         return repo.stats()
+    if name == "neighbourhood_profile":
+        return repo.neighbourhood_profile(args["suburb"])
+    if name == "query_unified":
+        return repo.query_unified(args.get("domain", ""), args.get("area", ""),
+                                  args.get("year"), args.get("category", ""),
+                                  args.get("group_by", ""), args.get("op", "count"),
+                                  limit=args.get("limit", 25))
+    if name == "list_suburbs":
+        return repo.list_suburbs(args.get("limit", 80))
+    if name == "live_weather":
+        from ingestion import live
+        return live.get_weather()
+    if name == "flood_risk":
+        from ingestion import live
+        return live.flood_risk()
     return {"error": f"unknown tool: {name}"}

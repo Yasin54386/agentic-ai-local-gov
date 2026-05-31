@@ -10,12 +10,14 @@ from __future__ import annotations
 import csv
 import json
 import re
+import sqlite3
 from pathlib import Path
 from typing import Any
 
 from ingestion.store import CatalogStore
 
 DEFAULT_DB = "data/catalog.db"
+UNIFIED_DB = "data/unified.db"
 RAW_ROOT = Path("data/raw")
 
 
@@ -24,8 +26,13 @@ def _safe(name: str) -> str:
 
 
 class Repository:
-    def __init__(self, db_path: str = DEFAULT_DB):
+    def __init__(self, db_path: str = DEFAULT_DB, unified_db: str = UNIFIED_DB):
         self.store = CatalogStore(db_path)
+        # Connect to the unified records table if it has been built.
+        self.uni = None
+        if Path(unified_db).exists():
+            self.uni = sqlite3.connect(unified_db)
+            self.uni.row_factory = sqlite3.Row
 
     # ---- tool-backing functions -------------------------------------------
 
@@ -138,5 +145,90 @@ class Repository:
             "by_domain": dict(self.store.counts_by("domain")),
         }
 
+    # ---- unified-table tools (neighbourhood profiles, transparency) --------
+
+    def _require_unified(self) -> dict | None:
+        if self.uni is None:
+            return {"error": "Unified table not built. Run: python -m ingestion.unify"}
+        return None
+
+    def list_suburbs(self, limit: int = 80) -> list[str]:
+        if self._require_unified():
+            return []
+        rows = self.uni.execute(
+            "SELECT area_name, COUNT(*) n FROM records "
+            "WHERE area_name IS NOT NULL GROUP BY area_name ORDER BY n DESC LIMIT ?",
+            (limit,),
+        ).fetchall()
+        return [r["area_name"] for r in rows]
+
+    def neighbourhood_profile(self, suburb: str) -> dict:
+        """Combine every dataset that mentions a suburb/ward into one profile."""
+        err = self._require_unified()
+        if err:
+            return err
+        like = f"%{suburb.strip().upper()}%"
+        rows = self.uni.execute(
+            "SELECT dataset_title, dataset_id, domain, category, metric_name, "
+            "metric_value, period_year, payload FROM records "
+            "WHERE UPPER(area_name) LIKE ?", (like,),
+        ).fetchall()
+        if not rows:
+            return {"suburb": suburb, "found": False,
+                    "hint": "No records. Try a known suburb (see list_suburbs)."}
+        by_dataset: dict[str, dict] = {}
+        for r in rows:
+            d = by_dataset.setdefault(r["dataset_title"], {
+                "dataset_id": r["dataset_id"], "domain": r["domain"],
+                "record_count": 0, "sample_categories": set()})
+            d["record_count"] += 1
+            if r["category"]:
+                d["sample_categories"].add(r["category"])
+        summary = []
+        for title, d in sorted(by_dataset.items(), key=lambda kv: -kv[1]["record_count"]):
+            summary.append({
+                "dataset": title, "dataset_id": d["dataset_id"], "domain": d["domain"],
+                "records_for_suburb": d["record_count"],
+                "categories": sorted(list(d["sample_categories"]))[:8],
+            })
+        return {"suburb": suburb, "found": True,
+                "total_records": len(rows), "datasets": summary}
+
+    def query_unified(self, domain: str = "", area: str = "", year: int | None = None,
+                      category: str = "", group_by: str = "", op: str = "count",
+                      value_field: str = "metric_value", limit: int = 25) -> dict:
+        """Flexible cross-dataset query over the unified table (transparency etc.)."""
+        err = self._require_unified()
+        if err:
+            return err
+        where, params = [], []
+        if domain:
+            where.append("domain = ?"); params.append(domain)
+        if area:
+            where.append("UPPER(area_name) LIKE ?"); params.append(f"%{area.upper()}%")
+        if year:
+            where.append("period_year = ?"); params.append(year)
+        if category:
+            where.append("UPPER(category) LIKE ?"); params.append(f"%{category.upper()}%")
+        clause = (" WHERE " + " AND ".join(where)) if where else ""
+        if group_by in {"domain", "area_name", "category", "period_year", "dataset_title"}:
+            agg = {"count": "COUNT(*)", "sum": f"SUM({value_field})",
+                   "avg": f"AVG({value_field})"}.get(op, "COUNT(*)")
+            sql = (f"SELECT {group_by} k, {agg} v FROM records{clause} "
+                   f"GROUP BY {group_by} ORDER BY v DESC LIMIT ?")
+            rows = self.uni.execute(sql, (*params, limit)).fetchall()
+            return {"op": op, "group_by": group_by,
+                    "groups": {str(r["k"]): r["v"] for r in rows}}
+        sql = (f"SELECT dataset_title, area_name, period_year, category, metric_value, "
+               f"payload FROM records{clause} LIMIT ?")
+        rows = self.uni.execute(sql, (*params, limit)).fetchall()
+        return {"matched": len(rows),
+                "records": [{"dataset": r["dataset_title"], "area": r["area_name"],
+                             "year": r["period_year"], "category": r["category"],
+                             "value": r["metric_value"],
+                             "detail": json.loads(r["payload"])} for r in rows]}
+
     def close(self) -> None:
         self.store.close()
+        if self.uni is not None:
+            self.uni.close()
