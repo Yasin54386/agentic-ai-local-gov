@@ -1,0 +1,13 @@
+# One-shot refresh cycle (feeds the unified table through MCP). Triggered by the
+# matching .timer every 6 hours. Install both files, then:
+#   sudo systemctl enable --now ask-territory-refresh.timer
+[Unit]
+Description=Ask Territory data refresh (one cycle, via MCP)
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=appuser
+WorkingDirectory=/opt/ask-territory
+Environment=OLLAMA_HOST=http://127.0.0.1:11434
+ExecStart=/usr/bin/python3 -m ingestion.refresh --once

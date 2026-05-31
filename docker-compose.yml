@@ -1,0 +1,45 @@
+# Ask Territory — full self-hosted stack: web UI + local LLM + 6-hourly refresh.
+# Everything runs on your own server. Only the web port is exposed (to nginx).
+
+services:
+  # The self-hosted language model (Qwen2.5-7B via Ollama).
+  ollama:
+    image: ollama/ollama:latest
+    restart: unless-stopped
+    volumes:
+      - ollama_models:/root/.ollama
+    # Uncomment to use an NVIDIA GPU (much faster):
+    # deploy:
+    #   resources:
+    #     reservations:
+    #       devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]
+
+  # The Ask Territory web app + JSON API.
+  web:
+    build: .
+    restart: unless-stopped
+    environment:
+      - PORT=8000
+      - OLLAMA_HOST=http://ollama:11434
+      - MODEL=${MODEL:-qwen2.5:7b-instruct}
+    volumes:
+      - ./data:/app/data          # persist catalog/unified DBs + refresh snapshots
+    ports:
+      - "127.0.0.1:8000:8000"     # bind to localhost only; nginx terminates TLS
+    depends_on:
+      - ollama
+
+  # Feeds the unified table through MCP every 6 hours.
+  refresh:
+    build: .
+    restart: unless-stopped
+    command: ["python", "-m", "ingestion.refresh", "--interval", "21600"]
+    environment:
+      - OLLAMA_HOST=http://ollama:11434
+    volumes:
+      - ./data:/app/data
+    depends_on:
+      - ollama
+
+volumes:
+  ollama_models:

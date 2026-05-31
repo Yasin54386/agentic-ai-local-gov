@@ -1,4 +1,4 @@
-"""Ask Darwin web server — stdlib only, runs on localhost.
+"""Ask Territory web server — stdlib only, runs on localhost or in production.
 
 Serves a single-page UI and a small JSON API backed by the same tools the agent
 uses. The data panels (Live, Neighbourhood, Transparency, Stats) work WITHOUT a
@@ -7,12 +7,16 @@ Ollama server is running; otherwise it returns a friendly hint.
 
     python -m webapp.server            # http://localhost:8000
     PORT=9000 python -m webapp.server
+
+In production it sits behind nginx (TLS) — see DEPLOY.md. Concurrency-safe via a
+lock around the shared repository connection (ThreadingHTTPServer).
 """
 from __future__ import annotations
 
 import json
 import os
-from http.server import BaseHTTPRequestHandler, HTTPServer
+import threading
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
@@ -23,7 +27,13 @@ from agent.tools import dispatch
 STATIC = Path(__file__).parent / "static"
 PORT = int(os.environ.get("PORT", "8000"))
 
-repo = Repository()  # single-threaded HTTPServer → one shared connection is fine
+repo = Repository()
+_lock = threading.Lock()  # serialise access to the shared sqlite connection
+
+
+def tool(name, args=None):
+    with _lock:
+        return dispatch(repo, name, args or {})
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -52,20 +62,20 @@ class Handler(BaseHTTPRequestHandler):
         if u.path in ("/", "/index.html"):
             return self._file(STATIC / "index.html", "text/html; charset=utf-8")
         if u.path == "/api/stats":
-            return self._json(dispatch(repo, "repository_stats", {}))
+            return self._json(tool("repository_stats"))
         if u.path == "/api/live":
-            return self._json({"weather": dispatch(repo, "live_weather", {}),
-                               "flood": dispatch(repo, "flood_risk", {})})
+            return self._json({"weather": tool("live_weather"),
+                               "flood": tool("flood_risk")})
         if u.path == "/api/suburbs":
-            return self._json(dispatch(repo, "list_suburbs", {"limit": 60}))
+            return self._json(tool("list_suburbs", {"limit": 60}))
         if u.path == "/api/profile":
             suburb = (q.get("suburb", [""])[0]).strip()
             if not suburb:
                 return self._json({"error": "pass ?suburb="}, 400)
-            return self._json(dispatch(repo, "neighbourhood_profile", {"suburb": suburb}))
+            return self._json(tool("neighbourhood_profile", {"suburb": suburb}))
         if u.path == "/api/transparency":
             # council capital expenditure by category (sum) — a transparency view
-            return self._json(dispatch(repo, "query_unified", {
+            return self._json(tool("query_unified", {
                 "domain": "finance & procurement", "group_by": "category",
                 "op": "sum", "limit": 15}))
         if u.path == "/api/health":
@@ -87,7 +97,8 @@ class Handler(BaseHTTPRequestHandler):
                             "then it serves on localhost:11434. The data panels work without it."})
             from agent.agent import run
             try:
-                answer = run(question, repo=repo, verbose=False)
+                with _lock:
+                    answer = run(question, repo=repo, verbose=False)
                 return self._json({"answer": answer})
             except Exception as exc:
                 return self._json({"error": str(exc)}, 500)
@@ -95,8 +106,8 @@ class Handler(BaseHTTPRequestHandler):
 
 
 def main() -> int:
-    srv = HTTPServer(("0.0.0.0", PORT), Handler)
-    print(f"Ask Darwin running →  http://localhost:{PORT}")
+    srv = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
+    print(f"Ask Territory running →  http://localhost:{PORT}")
     print(f"  model server: {'UP' if llm.server_up() else 'offline (data panels still work)'}")
     try:
         srv.serve_forever()
