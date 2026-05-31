@@ -1,0 +1,14 @@
+# Harvested repository — regenerable by running the ingestion engine.
+# The catalog DB and raw downloaded data are NOT committed (can be large);
+# the human-readable snapshot docs/CATALOG.md IS committed.
+data/
+*.db
+*.sqlite
+*.sqlite3
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
