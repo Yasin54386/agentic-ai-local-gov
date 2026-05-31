@@ -1,10 +1,8 @@
-# Harvested repository — regenerable by running the ingestion engine.
-# The catalog DB and raw downloaded data are NOT committed (can be large);
-# the human-readable snapshot docs/CATALOG.md IS committed.
-data/
-*.db
-*.sqlite
-*.sqlite3
+# The harvested data IS committed (raw records + SQL databases) so the public
+# data repository is self-contained and reviewable in the repo. Regenerate any
+# time with:  python -m ingestion.harvest --report
+#             python -m ingestion.fetch_data --api-sources
+#             python -m ingestion.unify
 
 # Python
 __pycache__/

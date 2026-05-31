@@ -1,0 +1,205 @@
+﻿measure;sector;year;count_amt;type
+Establishments;Drink;2022;24.0;Core
+Establishments;Drink;2023;30.0;Core
+Establishments;Leisure & Entertainment;2020;111.0;Core
+Establishments;Leisure & Entertainment;2021;115.0;Core
+Establishments;Leisure & Entertainment;2023;135.0;Core
+Establishments;Food;2020;279.0;Core
+Establishments;Food;2023;300.0;Core
+Employment;Leisure & Entertainment;2020;940.0;Core
+Employment;Leisure & Entertainment;2021;1175.0;Core
+Employment;Food;2020;2465.0;Core
+Turnover (A$m);Leisure & Entertainment;2020;251.402066425147;Core
+Turnover (A$m);Leisure & Entertainment;2021;253.938199367523;Core
+Turnover (A$m);Food;2023;460.216774283541;Core
+Establishments;Accommodation;2022;60.0;Non-Core
+Establishments;Care;2023;27.0;Non-Core
+Establishments;Design;2023;286.0;Non-Core
+Establishments;Education;2021;62.0;Non-Core
+Establishments;Education;2022;68.0;Non-Core
+Establishments;Education;2023;75.0;Non-Core
+Establishments;Food;2020;70.0;Non-Core
+Establishments;Food;2023;68.0;Non-Core
+Establishments;Infrastructure;2022;38.0;Non-Core
+Establishments;Libraries & Archives;2022;0.0;Non-Core
+Establishments;Promotion;2020;23.0;Non-Core
+Establishments;Research;2021;5.0;Non-Core
+Establishments;Research;2022;4.0;Non-Core
+Establishments;Retail/Other;2020;205.0;Non-Core
+Establishments;Retail/Other;2021;207.0;Non-Core
+Establishments;Transport;2022;186.0;Non-Core
+Employment;Accommodation;2022;1325.0;Non-Core
+Employment;Care;2021;940.0;Non-Core
+Employment;Design;2022;1240.0;Non-Core
+Employment;Education;2022;245.0;Non-Core
+Employment;Food;2021;770.0;Non-Core
+Employment;Food;2023;850.0;Non-Core
+Employment;Infrastructure;2021;555.0;Non-Core
+Employment;Libraries & Archives;2020;0.0;Non-Core
+Employment;Libraries & Archives;2022;0.0;Non-Core
+Employment;Promotion;2020;115.0;Non-Core
+Employment;Promotion;2021;120.0;Non-Core
+Employment;Research;2020;20.0;Non-Core
+Employment;Research;2021;20.0;Non-Core
+Turnover (A$m);Accommodation;2020;271.298;Non-Core
+Turnover (A$m);Accommodation;2023;352.97077809286;Non-Core
+Turnover (A$m);Care;2020;134.24661087044;Non-Core
+Turnover (A$m);Care;2021;153.757662657247;Non-Core
+Turnover (A$m);Care;2023;168.328003150892;Non-Core
+Turnover (A$m);Education;2021;27.6671386378302;Non-Core
+Turnover (A$m);Education;2022;28.1858962394271;Non-Core
+Turnover (A$m);Food;2021;360.789340773612;Non-Core
+Turnover (A$m);Food;2022;374.095173936352;Non-Core
+Turnover (A$m);Promotion;2022;40.8622080683348;Non-Core
+Turnover (A$m);Research;2021;6.3658132200908;Non-Core
+Turnover (A$m);Research;2022;7.0395799816048;Non-Core
+Turnover (A$m);Transport;2023;95.305080776396;Non-Core
+Establishments;Drink;2021;6.0;Supply
+Establishments;Entertainment;2023;29.0;Supply
+Establishments;Food;2020;34.0;Supply
+Establishments;Food;2022;41.0;Supply
+Establishments;Food;2023;33.0;Supply
+Employment;Entertainment;2023;145.0;Supply
+Employment;Food;2020;345.0;Supply
+Turnover (A$m);Drink;2022;155.711345023145;Supply
+Turnover (A$m);Food;2020;132.635685051967;Supply
+Turnover (A$m);Food;2021;129.356105405399;Supply
+Turnover (A$m);Food;2023;146.452404073925;Supply
+Establishments;Food;2022;329.0;Core
+Employment;Drink;2021;435.0;Core
+Employment;Drink;2022;465.0;Core
+Employment;Drink;2023;490.0;Core
+Employment;Leisure & Entertainment;2023;1570.0;Core
+Employment;Food;2022;3415.0;Core
+Turnover (A$m);Leisure & Entertainment;2022;292.705941403428;Core
+Turnover (A$m);Leisure & Entertainment;2023;325.894712005055;Core
+Turnover (A$m);Food;2021;395.826576285054;Core
+Establishments;Accommodation;2020;58.0;Non-Core
+Establishments;Care;2021;30.0;Non-Core
+Establishments;Education;2020;56.0;Non-Core
+Establishments;Food;2021;76.0;Non-Core
+Establishments;Infrastructure;2021;40.0;Non-Core
+Establishments;Infrastructure;2023;31.0;Non-Core
+Establishments;Libraries & Archives;2020;0.0;Non-Core
+Establishments;Libraries & Archives;2021;0.0;Non-Core
+Establishments;Libraries & Archives;2023;0.0;Non-Core
+Establishments;Promotion;2023;22.0;Non-Core
+Establishments;Research;2023;9.0;Non-Core
+Establishments;Retail/Other;2022;216.0;Non-Core
+Employment;Accommodation;2020;1105.0;Non-Core
+Employment;Accommodation;2021;1225.0;Non-Core
+Employment;Accommodation;2023;1430.0;Non-Core
+Employment;Care;2020;1100.0;Non-Core
+Employment;Care;2022;1065.0;Non-Core
+Employment;Design;2021;1020.0;Non-Core
+Employment;Design;2023;1665.0;Non-Core
+Employment;Education;2020;170.0;Non-Core
+Employment;Education;2021;215.0;Non-Core
+Employment;Infrastructure;2022;530.0;Non-Core
+Employment;Libraries & Archives;2021;0.0;Non-Core
+Employment;Research;2022;25.0;Non-Core
+Employment;Retail/Other;2020;2390.0;Non-Core
+Employment;Retail/Other;2023;2340.0;Non-Core
+Employment;Transport;2022;310.0;Non-Core
+Employment;Transport;2023;280.0;Non-Core
+Turnover (A$m);Care;2022;177.812704298698;Non-Core
+Turnover (A$m);Design;2020;223.826625173418;Non-Core
+Turnover (A$m);Design;2022;307.853223034511;Non-Core
+Turnover (A$m);Education;2023;30.2839245534178;Non-Core
+Turnover (A$m);Infrastructure;2023;193.38041446881;Non-Core
+Turnover (A$m);Libraries & Archives;2020;0.0;Non-Core
+Turnover (A$m);Libraries & Archives;2023;0.0;Non-Core
+Turnover (A$m);Promotion;2020;29.1162393543162;Non-Core
+Turnover (A$m);Promotion;2021;36.4591993839229;Non-Core
+Turnover (A$m);Promotion;2023;41.2549702776524;Non-Core
+Turnover (A$m);Research;2020;6.6400835450567;Non-Core
+Turnover (A$m);Research;2023;7.1574357622904;Non-Core
+Turnover (A$m);Retail/Other;2020;591.280337656213;Non-Core
+Turnover (A$m);Retail/Other;2021;634.776047535002;Non-Core
+Turnover (A$m);Retail/Other;2023;745.210902166144;Non-Core
+Turnover (A$m);Transport;2020;75.453714727502;Non-Core
+Establishments;Drink;2020;6.0;Supply
+Establishments;Drink;2022;8.0;Supply
+Establishments;Entertainment;2021;28.0;Supply
+Employment;Drink;2021;145.0;Supply
+Employment;Drink;2022;145.0;Supply
+Employment;Drink;2023;160.0;Supply
+Employment;Entertainment;2020;105.0;Supply
+Employment;Entertainment;2021;115.0;Supply
+Turnover (A$m);Drink;2021;163.690009275047;Supply
+Turnover (A$m);Drink;2023;166.233039962579;Supply
+Turnover (A$m);Entertainment;2020;34.6010476479557;Supply
+Turnover (A$m);Entertainment;2022;38.0858308053069;Supply
+Turnover (A$m);Food;2022;141.257478485407;Supply
+Establishments;Drink;2020;28.0;Core
+Establishments;Drink;2021;24.0;Core
+Establishments;Leisure & Entertainment;2022;137.0;Core
+Establishments;Food;2021;299.0;Core
+Employment;Drink;2020;330.0;Core
+Employment;Leisure & Entertainment;2022;1525.0;Core
+Employment;Food;2021;3210.0;Core
+Employment;Food;2023;3480.0;Core
+Turnover (A$m);Drink;2020;48.677613707492;Core
+Turnover (A$m);Drink;2021;55.349268450083;Core
+Turnover (A$m);Drink;2022;59.7627436473832;Core
+Turnover (A$m);Drink;2023;67.251714553191;Core
+Turnover (A$m);Food;2020;342.068074945662;Core
+Turnover (A$m);Food;2022;425.479541963105;Core
+Establishments;Accommodation;2021;60.0;Non-Core
+Establishments;Accommodation;2023;59.0;Non-Core
+Establishments;Care;2020;30.0;Non-Core
+Establishments;Care;2022;31.0;Non-Core
+Establishments;Design;2020;239.0;Non-Core
+Establishments;Design;2021;241.0;Non-Core
+Establishments;Design;2022;277.0;Non-Core
+Establishments;Food;2022;71.0;Non-Core
+Establishments;Infrastructure;2020;28.0;Non-Core
+Establishments;Promotion;2021;21.0;Non-Core
+Establishments;Promotion;2022;21.0;Non-Core
+Establishments;Research;2020;4.0;Non-Core
+Establishments;Retail/Other;2023;212.0;Non-Core
+Establishments;Transport;2020;183.0;Non-Core
+Establishments;Transport;2021;191.0;Non-Core
+Establishments;Transport;2023;176.0;Non-Core
+Employment;Care;2023;930.0;Non-Core
+Employment;Design;2020;990.0;Non-Core
+Employment;Education;2023;335.0;Non-Core
+Employment;Food;2020;865.0;Non-Core
+Employment;Food;2022;840.0;Non-Core
+Employment;Infrastructure;2020;610.0;Non-Core
+Employment;Infrastructure;2023;440.0;Non-Core
+Employment;Libraries & Archives;2023;0.0;Non-Core
+Employment;Promotion;2022;135.0;Non-Core
+Employment;Promotion;2023;130.0;Non-Core
+Employment;Research;2023;30.0;Non-Core
+Employment;Retail/Other;2021;2050.0;Non-Core
+Employment;Retail/Other;2022;2355.0;Non-Core
+Employment;Transport;2020;280.0;Non-Core
+Employment;Transport;2021;310.0;Non-Core
+Turnover (A$m);Accommodation;2021;237.0;Non-Core
+Turnover (A$m);Accommodation;2022;290.336093990975;Non-Core
+Turnover (A$m);Design;2021;257.010454500357;Non-Core
+Turnover (A$m);Design;2023;368.823071446206;Non-Core
+Turnover (A$m);Education;2020;21.5224632240233;Non-Core
+Turnover (A$m);Food;2020;341.47422587266;Non-Core
+Turnover (A$m);Food;2023;385.046953212367;Non-Core
+Turnover (A$m);Infrastructure;2020;154.610192524981;Non-Core
+Turnover (A$m);Infrastructure;2021;156.171474850659;Non-Core
+Turnover (A$m);Infrastructure;2022;184.497807604325;Non-Core
+Turnover (A$m);Libraries & Archives;2021;0.0;Non-Core
+Turnover (A$m);Libraries & Archives;2022;0.0;Non-Core
+Turnover (A$m);Retail/Other;2022;753.888903064137;Non-Core
+Turnover (A$m);Transport;2021;70.5529250105946;Non-Core
+Turnover (A$m);Transport;2022;75.5635071075273;Non-Core
+Establishments;Drink;2023;9.0;Supply
+Establishments;Entertainment;2020;27.0;Supply
+Establishments;Entertainment;2022;32.0;Supply
+Establishments;Food;2021;41.0;Supply
+Employment;Drink;2020;150.0;Supply
+Employment;Entertainment;2022;115.0;Supply
+Employment;Food;2021;330.0;Supply
+Employment;Food;2022;330.0;Supply
+Employment;Food;2023;330.0;Supply
+Turnover (A$m);Drink;2020;141.633179071399;Supply
+Turnover (A$m);Entertainment;2021;29.9181501609831;Supply
+Turnover (A$m);Entertainment;2023;39.9154068960853;Supply
