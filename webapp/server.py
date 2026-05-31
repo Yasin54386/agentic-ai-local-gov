@@ -61,6 +61,8 @@ class Handler(BaseHTTPRequestHandler):
         q = parse_qs(u.query)
         if u.path in ("/", "/index.html"):
             return self._file(STATIC / "index.html", "text/html; charset=utf-8")
+        if u.path == "/favicon.ico":
+            self.send_response(204); self.end_headers(); return
         if u.path == "/api/stats":
             return self._json(tool("repository_stats"))
         if u.path == "/api/live":

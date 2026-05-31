@@ -31,7 +31,9 @@ class Repository:
         # Connect to the unified records table if it has been built.
         self.uni = None
         if Path(unified_db).exists():
-            self.uni = sqlite3.connect(unified_db)
+            # check_same_thread=False: the web server is threaded and serialises
+            # access with a lock, so cross-thread use of this connection is safe.
+            self.uni = sqlite3.connect(unified_db, check_same_thread=False)
             self.uni.row_factory = sqlite3.Row
 
     # ---- tool-backing functions -------------------------------------------
