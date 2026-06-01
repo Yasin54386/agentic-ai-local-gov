@@ -4,6 +4,10 @@
 #             python -m ingestion.fetch_data --api-sources
 #             python -m ingestion.unify
 
+# The migrated database is BUILT from migrations + committed data, not committed
+# (no binary churn). Rebuild: python -m db.migrate && python -m db.load
+data/askterritory.db
+
 # Python
 __pycache__/
 *.pyc
