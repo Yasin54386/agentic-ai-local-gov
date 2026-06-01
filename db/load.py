@@ -85,11 +85,21 @@ def load_records(db: Database) -> dict:
             pass
     db.commit()
 
-    all_rows, by_theme = [], {t: [] for t in [*THEMES, "other"]}
+    from db.sync import record_id as hash_id   # same identity scheme as sync
+    all_rows, by_theme, seen = [], {t: [] for t in [*THEMES, "other"]}, set()
     for r in src.execute(f"SELECT {','.join(SRC_RECORD_COLS)} FROM records"):
         theme = classify(r["dataset_id"])
-        # build a full record row in RECORD_COLS order, injecting table_name
+        try:
+            payload = json.loads(r["payload"])
+        except Exception:
+            payload = {}
+        # content-hash id so load and the incremental sync agree (idempotent)
+        key = hash_id(r["dataset_id"], payload)
+        if key in seen:                 # collapse exact-duplicate rows
+            continue
+        seen.add(key)
         d = {c: r[c] for c in SRC_RECORD_COLS}
+        d["record_id"] = key
         d["table_name"] = theme
         row = tuple(d[c] for c in RECORD_COLS)
         all_rows.append(row)
