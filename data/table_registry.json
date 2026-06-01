@@ -1,0 +1,85 @@
+{
+  "tables": [
+    {
+      "table": "animals",
+      "description": "Animal registrations and infringements",
+      "rows": 7482,
+      "datasets": [
+        "smart.darwin.nt.gov.au:animal-infringements",
+        "smart.darwin.nt.gov.au:cod-animal-registrations"
+      ]
+    },
+    {
+      "table": "demographics",
+      "description": "ABS census & population: people, ancestry, language, country of birth",
+      "rows": 20618,
+      "datasets": [
+        "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+        "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+        "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+        "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+        "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+        "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+        "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+        "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+        "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+        "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001"
+      ]
+    },
+    {
+      "table": "economy",
+      "description": "Economy, industry and business activity",
+      "rows": 212,
+      "datasets": [
+        "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+        "smart.darwin.nt.gov.au:total-economy"
+      ]
+    },
+    {
+      "table": "environment",
+      "description": "Trees, canopy, wildlife, birds, landfill/waste",
+      "rows": 1107,
+      "datasets": [
+        "smart.darwin.nt.gov.au:aussie-bird-count-year",
+        "smart.darwin.nt.gov.au:gardens-for-wildlife-suburbs",
+        "smart.darwin.nt.gov.au:landfill-gas-generation-by-month-sept22-nov25",
+        "smart.darwin.nt.gov.au:tree-canopy-cover",
+        "smart.darwin.nt.gov.au:tree_planting_numbers_by_program"
+      ]
+    },
+    {
+      "table": "finance",
+      "description": "Council money: expenses, capital spend, grants",
+      "rows": 730,
+      "datasets": [
+        "smart.darwin.nt.gov.au:councillor-expenses",
+        "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+        "smart.darwin.nt.gov.au:year_by_year_capital_expenditure0"
+      ]
+    },
+    {
+      "table": "governance",
+      "description": "Council decisions and meetings",
+      "rows": 1048,
+      "datasets": [
+        "smart.darwin.nt.gov.au:councillor-decisions"
+      ]
+    },
+    {
+      "table": "live",
+      "description": "Live snapshots fed in via MCP (weather, flood)",
+      "rows": 1,
+      "datasets": [
+        "live:darwin-weather"
+      ]
+    },
+    {
+      "table": "mobility",
+      "description": "Micromobility and transport movement",
+      "rows": 133,
+      "datasets": [
+        "smart.darwin.nt.gov.au:micromobility-data-neuron-beam"
+      ]
+    }
+  ]
+}

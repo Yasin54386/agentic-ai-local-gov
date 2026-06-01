@@ -19,6 +19,8 @@ import os
 import re
 from collections import Counter, defaultdict
 
+from .themes import classify
+
 RAW_GLOB = "data/raw/smart.darwin.nt.gov.au/*/JSON_export_full_data.json"
 OUT_JSON = "data/column_catalog.json"
 OUT_MD = "docs/COLUMN-CATALOG.md"
@@ -139,13 +141,15 @@ def build() -> dict:
         cls = semantic_class(field, dom_type)
         label, cryptic = meaningful_label(field)
         n_null, n_tot = nulls[field]
+        tables = sorted({classify(d) for d in ds_for[field]})
         columns.append({
             "column": SYNONYMS.get(field, field),       # unified name
             "original_field": field,
             "label": label,
             "semantic_class": cls,
             "data_type": dom_type,
-            "appears_in": [{"dataset_id": d, "records": c}
+            "tables": tables,                            # which categorised table(s) hold it
+            "appears_in": [{"dataset_id": d, "table": classify(d), "records": c}
                            for d, c in sorted(ds_for[field].items(), key=lambda x: -x[1])],
             "dataset_count": len(ds_for[field]),
             "examples": samples[field][:4],
@@ -171,13 +175,14 @@ def _write_md(cat: dict) -> None:
              "> to decide which column (and dataset) answers a question.", "",
              f"**{cat['total_columns']} columns** across all datasets. "
              f"By class: " + ", ".join(f"{k} {v}" for k, v in cat["by_class"].items()), "",
-             "| Column | Class | Type | Datasets | Example | Review? |",
-             "|---|---|---|---:|---|:--:|"]
+             "| Column | Table(s) | Class | Type | Example | Review? |",
+             "|---|---|---|---|---|:--:|"]
     for c in cat["columns"]:
         ex = ", ".join(str(x)[:18] for x in c["examples"][:2])
         flag = "⚠️" if c["needs_review"] else ""
-        lines.append(f"| `{c['column']}` ({c['label']}) | {c['semantic_class']} | "
-                     f"{c['data_type']} | {c['dataset_count']} | {ex} | {flag} |")
+        tbls = ", ".join(c["tables"])
+        lines.append(f"| `{c['column']}` ({c['label']}) | {tbls} | {c['semantic_class']} | "
+                     f"{c['data_type']} | {ex} | {flag} |")
     open(OUT_MD, "w", encoding="utf-8").write("\n".join(lines) + "\n")
 
 

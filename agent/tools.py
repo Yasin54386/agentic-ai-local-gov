@@ -108,6 +108,9 @@ TOOLS: list[dict[str, Any]] = [
                 "group_by": {"type": "string",
                               "enum": ["domain", "area_name", "category", "period_year", "dataset_title"]},
                 "op": {"type": "string", "enum": ["count", "sum", "avg"], "default": "count"},
+                "table": {"type": "string", "description": "which categorised table to query "
+                          "(finance/governance/demographics/economy/animals/environment/"
+                          "mobility/live); default 'records' = all"},
                 "limit": {"type": "integer", "default": 25},
             },
         },
@@ -117,6 +120,14 @@ TOOLS: list[dict[str, Any]] = [
         "description": "List the Darwin suburbs/wards that appear in the data, busiest first.",
         "input_schema": {"type": "object", "properties": {
             "limit": {"type": "integer", "default": 80}}},
+    },
+    {
+        "name": "list_tables",
+        "description": "List the categorised data tables (finance, governance, demographics, "
+                       "economy, animals, environment, mobility, live) with their row counts "
+                       "and datasets. Use to see how the data is organised, then query one "
+                       "with query_unified(table=...).",
+        "input_schema": {"type": "object", "properties": {}},
     },
     {
         "name": "find_columns",
@@ -173,9 +184,11 @@ def dispatch(repo: Repository, name: str, args: dict[str, Any]) -> Any:
         return repo.query_unified(args.get("domain", ""), args.get("area", ""),
                                   args.get("year"), args.get("category", ""),
                                   args.get("group_by", ""), args.get("op", "count"),
-                                  limit=args.get("limit", 25))
+                                  limit=args.get("limit", 25), table=args.get("table", "records"))
     if name == "list_suburbs":
         return repo.list_suburbs(args.get("limit", 80))
+    if name == "list_tables":
+        return repo.list_tables()
     if name == "find_columns":
         return repo.find_columns(args.get("query", ""), args.get("semantic_class", ""),
                                  args.get("limit", 20))

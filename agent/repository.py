@@ -196,13 +196,28 @@ class Repository:
         return {"suburb": suburb, "found": True,
                 "total_records": len(rows), "datasets": summary}
 
+    def list_tables(self) -> dict:
+        """List the categorised tables (finance, demographics, …) with row counts."""
+        path = Path("data/table_registry.json")
+        if not path.exists():
+            return {"error": "Tables not built. Run: python -m ingestion.tables"}
+        return json.loads(path.read_text(encoding="utf-8"))
+
     def query_unified(self, domain: str = "", area: str = "", year: int | None = None,
                       category: str = "", group_by: str = "", op: str = "count",
-                      value_field: str = "metric_value", limit: int = 25) -> dict:
-        """Flexible cross-dataset query over the unified table (transparency etc.)."""
+                      value_field: str = "metric_value", limit: int = 25,
+                      table: str = "records") -> dict:
+        """Flexible query over a categorised table (default: all records)."""
         err = self._require_unified()
         if err:
             return err
+        # whitelist the table name (it goes into SQL) against the built tables
+        valid = {"records"}
+        reg = self.list_tables()
+        if "tables" in reg:
+            valid |= {t["table"] for t in reg["tables"]}
+        if table not in valid:
+            return {"error": f"unknown table '{table}'. Valid: {sorted(valid)}"}
         where, params = [], []
         if domain:
             where.append("domain = ?"); params.append(domain)
@@ -216,13 +231,13 @@ class Repository:
         if group_by in {"domain", "area_name", "category", "period_year", "dataset_title"}:
             agg = {"count": "COUNT(*)", "sum": f"SUM({value_field})",
                    "avg": f"AVG({value_field})"}.get(op, "COUNT(*)")
-            sql = (f"SELECT {group_by} k, {agg} v FROM records{clause} "
+            sql = (f"SELECT {group_by} k, {agg} v FROM {table}{clause} "
                    f"GROUP BY {group_by} ORDER BY v DESC LIMIT ?")
             rows = self.uni.execute(sql, (*params, limit)).fetchall()
-            return {"op": op, "group_by": group_by,
+            return {"table": table, "op": op, "group_by": group_by,
                     "groups": {str(r["k"]): r["v"] for r in rows}}
         sql = (f"SELECT dataset_title, area_name, period_year, category, metric_value, "
-               f"payload FROM records{clause} LIMIT ?")
+               f"payload FROM {table}{clause} LIMIT ?")
         rows = self.uni.execute(sql, (*params, limit)).fetchall()
         return {"matched": len(rows),
                 "records": [{"dataset": r["dataset_title"], "area": r["area_name"],
@@ -256,6 +271,7 @@ class Repository:
             hits.append({
                 "column": col["column"], "label": col["label"],
                 "semantic_class": col["semantic_class"], "data_type": col["data_type"],
+                "tables": col.get("tables", []),
                 "datasets": [d["dataset_id"] for d in col["appears_in"]],
                 "examples": col["examples"][:3],
             })
