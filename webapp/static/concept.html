@@ -1,344 +1,949 @@
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 <title>Ask Territory</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  /* ---------- theme tokens ---------- */
-  :root{
-    --sun1:#ff7a45; --sun2:#ff4d6d; --teal:#0fb5a6; --gold:#f4b740; --violet:#7c6cff;
-    --r:16px; --r-sm:10px;
-  }
-  html[data-theme="dark"]{
-    --bg:#0a141b; --bg2:#0e1a23; --card:#10202b; --card2:#162935; --ink:#eaf2f8;
-    --mut:#7f97a8; --line:#21384a; --shadow:0 8px 30px rgba(0,0,0,.35);
-    --hero:linear-gradient(120deg,#13303a,#0e1a23 60%);
-  }
-  html[data-theme="light"]{
-    --bg:#f5f7f6; --bg2:#eef2f1; --card:#ffffff; --card2:#f3f6f8; --ink:#0c2230;
-    --mut:#5d7488; --line:#e2e8ec; --shadow:0 8px 30px rgba(20,50,70,.08);
-    --hero:linear-gradient(120deg,#e8fbf8,#fff 60%);
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);
-    font:15px/1.55 ui-sans-serif,system-ui,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
-  ::selection{background:var(--teal);color:#022}
-  .app{display:grid;grid-template-columns:248px 1fr;min-height:100vh}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f5f0e8;
+  --cream2:#ede8dc;
+  --cream3:#e4ddd0;
+  --ink:#1a1208;
+  --ink2:#3a2e1e;
+  --ink3:#6b5c44;
+  --terra:#c8441a;
+  --terra2:#e05c30;
+  --sun:#f0b429;
+  --sun2:#f5cc5a;
+  --sage:#3d6b4f;
+  --sage2:#4e8a65;
+  --sky:#1e4a7a;
+  --rule:rgba(26,18,8,0.15);
+  --rule2:rgba(26,18,8,0.08);
+}
+html{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden}
 
-  /* ---------- sidebar ---------- */
-  aside{background:var(--bg2);border-right:1px solid var(--line);padding:18px 14px;
-    position:sticky;top:0;height:100vh;overflow:auto;display:flex;flex-direction:column}
-  .brand{display:flex;align-items:center;gap:10px;padding:6px 8px 20px;font-weight:800;font-size:18px;letter-spacing:-.02em}
-  .brand .mark{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;
-    background:linear-gradient(135deg,var(--sun1),var(--sun2));font-size:16px}
-  .grp{color:var(--mut);font-size:10.5px;text-transform:uppercase;letter-spacing:.12em;margin:16px 10px 6px;font-weight:700}
-  nav button{display:flex;gap:10px;align-items:center;width:100%;text-align:left;background:none;border:none;
-    color:var(--mut);padding:9px 11px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;transition:.15s}
-  nav button:hover{background:var(--card2);color:var(--ink)}
-  nav button.active{background:var(--card);color:var(--ink);box-shadow:var(--shadow)}
-  nav button.active::before{content:"";width:3px;height:18px;border-radius:3px;
-    background:linear-gradient(var(--sun1),var(--sun2));margin:-1px 2px -1px -4px}
-  .theme-toggle{margin-top:auto;display:flex;gap:8px;align-items:center;justify-content:space-between;
-    background:var(--card);border:1px solid var(--line);border-radius:12px;padding:8px 12px;cursor:pointer;color:var(--ink);font-size:13px}
+/* PAPER TEXTURE */
+body::after{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:.6;mix-blend-mode:multiply;
+}
 
-  /* ---------- main ---------- */
-  main{padding:0 0 60px}
-  .topbar{display:flex;justify-content:flex-end;gap:10px;padding:14px 30px;align-items:center}
-  .tag{font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:4px 12px}
-  .wrap{padding:0 30px;max-width:1080px}
-  section.view{display:none}
-  section.view.active{display:block;animation:f .25s ease}
-  @keyframes f{from{opacity:0;transform:translateY(6px)}to{opacity:1}}
+/* MASTHEAD */
+.masthead{
+  border-bottom:3px solid var(--ink);
+  padding:0 40px;
+  background:var(--cream);
+  position:sticky;top:0;z-index:100;
+}
+.masthead-top{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:14px 0 10px;
+  border-bottom:1px solid var(--rule);
+}
+.masthead-date{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:400;letter-spacing:.06em;color:var(--ink3);text-transform:uppercase}
+.masthead-title{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:900;
+  font-size:42px;letter-spacing:-.02em;line-height:1;color:var(--ink);
+  text-align:center;
+}
+.masthead-title span{color:var(--terra);font-style:normal}
+.masthead-tagline{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:300;color:var(--ink3);text-align:right;letter-spacing:.05em;line-height:1.4}
 
-  .hero{background:var(--hero);border:1px solid var(--line);border-radius:var(--r);padding:30px;margin-bottom:20px;position:relative;overflow:hidden}
-  .hero::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;
-    background:radial-gradient(circle,rgba(255,122,69,.25),transparent 70%)}
-  .eyebrow{color:var(--teal);font-weight:700;font-size:12px;letter-spacing:.1em;text-transform:uppercase}
-  .hero h1{font-size:30px;line-height:1.1;margin:8px 0 6px;letter-spacing:-.03em;max-width:18ch}
-  .hero p{color:var(--mut);margin:0;max-width:52ch}
-  .gradtext{background:linear-gradient(120deg,var(--sun1),var(--sun2));-webkit-background-clip:text;background-clip:text;color:transparent}
+/* NAV STRIP */
+.nav-strip{
+  display:flex;gap:0;overflow-x:auto;scrollbar-width:none;
+}
+.nav-strip::-webkit-scrollbar{display:none}
+.nav-btn{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;
+  text-transform:uppercase;letter-spacing:.1em;
+  padding:10px 18px;border:none;background:none;
+  color:var(--ink3);cursor:pointer;white-space:nowrap;
+  border-top:3px solid transparent;transition:all .15s;
+  position:relative;
+}
+.nav-btn:hover{color:var(--ink);background:var(--cream2)}
+.nav-btn.active{color:var(--terra);border-top-color:var(--terra)}
+.nav-btn.active::after{content:"";position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--terra);opacity:.3}
 
-  h1.page{font-size:24px;letter-spacing:-.02em;margin:0 0 2px}
-  .lead{color:var(--mut);margin:0 0 18px;font-size:15px}
-  .bind{font-size:10.5px;color:var(--mut);border:1px dashed var(--line);border-radius:6px;padding:2px 7px;margin-left:8px;vertical-align:middle;font-weight:500}
+/* LAYOUT */
+.page{display:none;animation:rise .3s ease}
+.page.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 
-  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px;margin-bottom:16px;box-shadow:var(--shadow)}
-  .card h2{font-size:15px;margin:0 0 12px;letter-spacing:-.01em}
-  .grid{display:grid;gap:16px}.g2{grid-template-columns:1fr 1fr}.g3{grid-template-columns:repeat(3,1fr)}.g4{grid-template-columns:repeat(4,1fr)}
-  @media(max-width:860px){.app{grid-template-columns:1fr}aside{position:static;height:auto}.g2,.g3,.g4{grid-template-columns:1fr}}
+.content{padding:40px;max-width:1300px;margin:0 auto}
 
-  .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-sm);padding:15px;box-shadow:var(--shadow)}
-  .stat .n{font-size:26px;font-weight:800;letter-spacing:-.02em}
-  .stat .l{color:var(--mut);font-size:12px;text-transform:uppercase;letter-spacing:.05em;margin-top:2px}
+/* GRID SYSTEM */
+.cols{display:grid;gap:0}
+.cols-2{grid-template-columns:1fr 1fr}
+.cols-3{grid-template-columns:1fr 1fr 1fr}
+.cols-4{grid-template-columns:repeat(4,1fr)}
+.cols-7030{grid-template-columns:70fr 30fr}
+.cols-6040{grid-template-columns:60fr 40fr}
 
-  .feat{display:flex;gap:13px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
-    border-radius:var(--r-sm);padding:15px;box-shadow:var(--shadow);transition:.18s}
-  .feat:hover{transform:translateY(-2px)}
-  .ic{flex:none;width:38px;height:38px;border-radius:11px;display:grid;place-items:center;font-size:18px;background:var(--card2)}
-  .feat b{display:block;font-size:14.5px} .feat span{color:var(--mut);font-size:13px}
+/* RULED LINES */
+.ruled{border-top:1px solid var(--rule)}
+.ruled2{border-top:2px solid var(--ink)}
+.ruled3{border-top:3px solid var(--ink)}
+.ruled-b{border-bottom:1px solid var(--rule)}
+.border-r{border-right:1px solid var(--rule)}
 
-  input,select,textarea{font:inherit;background:var(--bg2);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 13px}
-  input,textarea{width:100%}
-  .btn{background:linear-gradient(135deg,var(--sun1),var(--sun2));color:#fff;border:none;padding:11px 20px;border-radius:10px;cursor:pointer;font-weight:700}
-  .btn.alt{background:var(--card2);color:var(--ink);border:1px solid var(--line)}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px}
-  table{width:100%;border-collapse:collapse;font-size:14px}
-  th,td{text-align:left;padding:9px 8px;border-bottom:1px solid var(--line)}
-  th{color:var(--mut);font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.04em}
-  tr:last-child td{border-bottom:none}
-  .bar{height:8px;background:var(--bg2);border-radius:6px;overflow:hidden}
-  .bar>span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--gold))}
-  .chip{display:inline-block;background:var(--card2);border:1px solid var(--line);color:var(--mut);border-radius:999px;padding:3px 11px;font-size:12px;margin:2px}
-  .pill{font-size:12px;padding:3px 11px;border-radius:999px;border:1px solid var(--line);font-weight:600}
-  .pill.good{color:#15b86b;border-color:#15b86b}.pill.warn{color:var(--gold);border-color:var(--gold)}
-  .muted{color:var(--mut);font-size:12px}
-  .answer{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:16px;line-height:1.6}
-  .spark{display:flex;align-items:flex-end;gap:5px;height:60px}
-  .spark>i{flex:1;background:linear-gradient(180deg,var(--violet),transparent);border-radius:4px 4px 0 0}
-  .up{color:#15b86b}.down{color:#ef5552}
+/* ── OVERVIEW / HOME ── */
+.hero-kicker{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;
+  letter-spacing:.18em;text-transform:uppercase;color:var(--terra);
+  padding:20px 0 10px;
+}
+.hero-headline{
+  font-family:'Playfair Display',serif;font-weight:900;
+  font-size:clamp(52px,7vw,90px);line-height:.95;letter-spacing:-.03em;
+  color:var(--ink);padding:0 0 20px;border-bottom:2px solid var(--ink);
+}
+.hero-headline em{font-style:italic;color:var(--terra)}
+.hero-sub{
+  font-size:16px;font-weight:300;color:var(--ink2);line-height:1.6;
+  padding:18px 0;max-width:55ch;
+}
+.search-bar{
+  display:flex;gap:0;border:2px solid var(--ink);border-radius:0;
+  overflow:hidden;margin:0 0 32px;max-width:620px;
+}
+.search-bar input{
+  flex:1;padding:14px 18px;font:16px/1 'Barlow',sans-serif;
+  background:white;border:none;outline:none;color:var(--ink);
+}
+.search-bar input::placeholder{color:var(--ink3)}
+.search-bar button{
+  background:var(--terra);color:white;border:none;padding:0 28px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;
+  letter-spacing:.08em;text-transform:uppercase;cursor:pointer;
+  transition:background .15s;white-space:nowrap;
+}
+.search-bar button:hover{background:var(--terra2)}
+
+/* BIG STATS ROW */
+.bigstat{padding:24px 28px;position:relative;overflow:hidden}
+.bigstat-n{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;
+  font-size:52px;line-height:1;color:var(--ink);letter-spacing:-.02em;
+}
+.bigstat-n.terra{color:var(--terra)}
+.bigstat-n.sun{color:var(--sun)}
+.bigstat-n.sage{color:var(--sage)}
+.bigstat-n.sky{color:var(--sky)}
+.bigstat-label{
+  font-family:'Barlow Condensed',sans-serif;font-weight:400;font-size:12px;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-top:4px;
+}
+.bigstat-sub{font-size:11px;color:var(--ink3);margin-top:2px;font-weight:300}
+
+/* FEATURE BLOCKS */
+.feat-block{padding:24px 28px;border-bottom:1px solid var(--rule);transition:background .2s;cursor:default}
+.feat-block:hover{background:var(--cream2)}
+.feat-block:last-child{border-bottom:none}
+.feat-num{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+  color:var(--terra);letter-spacing:.1em;margin-bottom:6px;
+}
+.feat-title{font-family:'Playfair Display',serif;font-weight:900;font-size:20px;color:var(--ink);margin-bottom:6px}
+.feat-body{font-size:13px;color:var(--ink3);line-height:1.5;font-weight:300}
+
+/* SECTION HEADERS */
+.sec-head{
+  font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;
+  text-transform:uppercase;letter-spacing:.2em;color:var(--ink3);
+  padding:0 0 8px;border-bottom:2px solid var(--ink);margin-bottom:0;
+}
+
+/* PULL QUOTE */
+.pull{
+  font-family:'Playfair Display',serif;font-style:italic;font-weight:900;
+  font-size:clamp(20px,2.5vw,30px);line-height:1.2;color:var(--ink);
+  padding:24px 28px;border-left:5px solid var(--terra);margin:0;
+}
+
+/* ANSWER PANEL */
+.answer-panel{
+  background:var(--ink);color:var(--cream);padding:24px 28px;
+}
+.answer-panel p{font-size:14px;line-height:1.7;font-weight:300}
+.answer-panel strong{color:var(--sun);font-weight:600}
+.answer-source{
+  display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;
+}
+.src-tag{
+  font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;
+  letter-spacing:.06em;text-transform:uppercase;
+  border:1px solid rgba(240,180,41,.4);color:var(--sun2);padding:3px 10px;
+}
+
+/* INPUT ROW */
+.field{
+  border:2px solid var(--ink);background:white;padding:12px 16px;
+  font:15px 'Barlow',sans-serif;color:var(--ink);outline:none;width:100%;
+  transition:border-color .15s;
+}
+.field:focus{border-color:var(--terra)}
+.field::placeholder{color:var(--ink3)}
+.field-select{
+  border:2px solid var(--ink);background:white;padding:12px 16px;
+  font:15px 'Barlow',sans-serif;color:var(--ink);outline:none;
+  appearance:none;cursor:pointer;
+}
+.btn{
+  background:var(--ink);color:var(--cream);border:none;padding:13px 28px;
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;transition:all .15s;
+}
+.btn:hover{background:var(--terra)}
+.btn-terra{background:var(--terra)}
+.btn-terra:hover{background:var(--terra2)}
+
+/* BAR CHARTS */
+.chart-row{padding:12px 0;border-bottom:1px solid var(--rule2);display:grid;align-items:center;gap:12px}
+.chart-row:last-child{border-bottom:none}
+.chart-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;color:var(--ink2)}
+.chart-sub{font-size:11px;color:var(--ink3);font-weight:300}
+.chart-val{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-align:right;white-space:nowrap}
+.track{height:8px;background:var(--cream3);position:relative;overflow:hidden}
+.fill{height:100%;position:absolute;left:0;top:0;transition:width 1.2s cubic-bezier(.22,1,.36,1)}
+.fill-terra{background:var(--terra)}
+.fill-sun{background:var(--sun)}
+.fill-sage{background:var(--sage)}
+.fill-sky{background:var(--sky)}
+.fill-ink{background:var(--ink)}
+
+/* VALUE CHANGE */
+.chg-up{color:var(--sage);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px}
+.chg-dn{color:var(--terra);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px}
+
+/* SPARKLINE */
+.spark{display:flex;align-items:flex-end;gap:3px;height:64px}
+.spark-b{flex:1;min-width:6px;border-radius:1px 1px 0 0;transition:height 1s cubic-bezier(.22,1,.36,1)}
+
+/* TICKER */
+.ticker{
+  background:var(--ink);color:var(--cream);
+  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;
+  letter-spacing:.06em;padding:8px 40px;display:flex;gap:40px;overflow:hidden;
+  white-space:nowrap;border-top:1px solid var(--rule);
+}
+.ticker-item{display:flex;gap:10px;align-items:center;flex:none}
+.ticker-val{color:var(--sun)}
+
+/* DATA TABLE */
+.dt{width:100%;border-collapse:collapse;font-size:14px}
+.dt th{
+  font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;
+  text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);
+  padding:8px 12px;border-bottom:2px solid var(--ink);text-align:left;
+}
+.dt td{padding:11px 12px;border-bottom:1px solid var(--rule);color:var(--ink2)}
+.dt tr:last-child td{border-bottom:none}
+.dt tr:hover td{background:var(--cream2)}
+.dt .num{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:15px;color:var(--ink);text-align:right}
+
+/* BADGE */
+.badge{
+  display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;
+  font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;
+  border:1px solid;border-radius:0;
+}
+.badge-terra{color:var(--terra);border-color:var(--terra);background:rgba(200,68,26,.06)}
+.badge-sage{color:var(--sage);border-color:var(--sage);background:rgba(61,107,79,.06)}
+.badge-sun{color:#8a6500;border-color:var(--sun);background:rgba(240,180,41,.1)}
+.badge-sky{color:var(--sky);border-color:var(--sky);background:rgba(30,74,122,.06)}
+
+/* WEATHER LARGE */
+.wx-temp{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:96px;line-height:1;color:var(--ink);letter-spacing:-.04em}
+.wx-cond{font-family:'Playfair Display',serif;font-style:italic;font-size:22px;color:var(--ink3)}
+
+/* CHIP ROW */
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;padding:16px 0}
+.chip{
+  font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;
+  letter-spacing:.06em;text-transform:uppercase;
+  background:var(--cream2);border:1px solid var(--rule);
+  padding:5px 13px;cursor:pointer;transition:all .15s;color:var(--ink3);
+}
+.chip:hover{background:var(--terra);color:white;border-color:var(--terra)}
+
+/* SPACING */
+.p{padding:24px 28px}
+.pt{padding-top:24px}
+.pb{padding-bottom:24px}
+.gap24{gap:24px}
+.mt16{margin-top:16px}
+.mt24{margin-top:24px}
+.mt32{margin-top:32px}
+.mb8{margin-bottom:8px}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:var(--cream2)}
+::-webkit-scrollbar-thumb{background:var(--ink3)}
+
+@media(max-width:900px){
+  .masthead{padding:0 16px}
+  .content{padding:20px 16px}
+  .cols-2,.cols-3,.cols-4,.cols-7030,.cols-6040{grid-template-columns:1fr}
+  .border-r{border-right:none;border-bottom:1px solid var(--rule)}
+  .hero-headline{font-size:42px}
+  .masthead-title{font-size:26px}
+  .bigstat-n{font-size:36px}
+}
+
+/* ENTRY ANIMATIONS */
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.anim{animation:fadeUp .5s ease both}
+.anim-d1{animation-delay:.05s}.anim-d2{animation-delay:.1s}.anim-d3{animation-delay:.15s}.anim-d4{animation-delay:.2s}
+.anim-d5{animation-delay:.25s}.anim-d6{animation-delay:.3s}
+
+/* COUNTER */
+.odometer{display:inline}
 </style>
 </head>
 <body>
-<div class="app">
-  <aside>
-    <div class="brand"><span class="mark">🌅</span> Ask Territory</div>
-    <nav>
-      <button data-v="home" class="active">✨ Overview</button>
-      <div class="grp">Ask</div>
-      <button data-v="ask">💬 Assistant</button>
-      <button data-v="draft">✍️ Draft &amp; brief</button>
-      <div class="grp">Explore</div>
-      <button data-v="hood">📍 My suburb</button>
-      <button data-v="env">🌳 Canopy &amp; climate</button>
-      <button data-v="equity">⚖️ Fair share</button>
-      <button data-v="mobility">🛴 City in motion</button>
-      <div class="grp">Hold to account</div>
-      <button data-v="spend">💰 The money</button>
-      <button data-v="decisions">🗳️ Decisions</button>
-      <button data-v="grants">🎁 Grants</button>
-      <div class="grp">Live</div>
-      <button data-v="live">🌧️ Weather &amp; flood</button>
-      <div class="grp">Data</div>
-      <button data-v="repo">🗂️ The data</button>
-    </nav>
-    <button class="theme-toggle" id="themeBtn"><span>Appearance</span><span id="themeLbl">🌙 Dark</span></button>
-  </aside>
 
-  <main>
-    <div class="topbar"><span class="tag">Self-hosted · NT open data · no data leaves the Territory</span></div>
-    <div class="wrap">
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-date" id="mdate">Monday · Darwin, NT</div>
+    <div class="masthead-title">Ask <span>Territory</span></div>
+    <div class="masthead-tagline">Self-hosted · NT Open Data<br>No data leaves the Territory</div>
+  </div>
+  <nav class="nav-strip">
+    <button class="nav-btn active" data-p="home">Overview</button>
+    <button class="nav-btn" data-p="ask">Ask AI</button>
+    <button class="nav-btn" data-p="suburb">My Suburb</button>
+    <button class="nav-btn" data-p="canopy">Canopy</button>
+    <button class="nav-btn" data-p="equity">Fair Share</button>
+    <button class="nav-btn" data-p="motion">City Motion</button>
+    <button class="nav-btn" data-p="money">The Money</button>
+    <button class="nav-btn" data-p="decisions">Decisions</button>
+    <button class="nav-btn" data-p="grants">Grants</button>
+    <button class="nav-btn" data-p="weather">Weather</button>
+    <button class="nav-btn" data-p="data">Data</button>
+  </nav>
+</header>
 
-      <!-- OVERVIEW -->
-      <section class="view active" id="home">
-        <div class="hero">
-          <div class="eyebrow">Northern Territory · City of Darwin</div>
-          <h1>Your Territory, <span class="gradtext">in plain language.</span></h1>
-          <p>Ask a question, know your suburb, follow the money — answered from real public data, running entirely on local infrastructure.</p>
-          <div class="row" style="margin:18px 0 0;max-width:560px">
-            <input placeholder="Ask anything… e.g. how much did my ward spend?"/>
-            <button class="btn">Ask</button>
-          </div>
-        </div>
-        <div class="grid g4">
-          <div class="stat"><div class="n gradtext">1,104</div><div class="l">Datasets</div></div>
-          <div class="stat"><div class="n gradtext">31,331</div><div class="l">Records</div></div>
-          <div class="stat"><div class="n gradtext">37</div><div class="l">Suburbs mapped</div></div>
-          <div class="stat"><div class="n gradtext">100%</div><div class="l">On your servers</div></div>
-        </div>
-        <h2 style="margin:22px 0 12px;font-size:16px">How it helps you</h2>
-        <div class="grid g2">
-          <div class="feat"><div class="ic">💬</div><div><b>Ask anything</b><span>Real answers from real data — no jargon.</span></div></div>
-          <div class="feat"><div class="ic">📍</div><div><b>Know your suburb</b><span>People, pets, trees and ward — at a glance.</span></div></div>
-          <div class="feat"><div class="ic">💰</div><div><b>Follow the money</b><span>Every dollar your council spends.</span></div></div>
-          <div class="feat"><div class="ic">⚖️</div><div><b>See if it's fair</b><span>Spending measured against population.</span></div></div>
-          <div class="feat"><div class="ic">🌳</div><div><b>Watch the canopy</b><span>Tree cover &amp; heat, suburb by suburb.</span></div></div>
-          <div class="feat"><div class="ic">🌧️</div><div><b>Beat the wet</b><span>Live weather and flood risk.</span></div></div>
-        </div>
-      </section>
-
-      <!-- ASSISTANT -->
-      <section class="view" id="ask">
-        <h1 class="page">Ask anything <span class="bind">→ /api/ask</span></h1>
-        <p class="lead">Plain English in, real data out.</p>
-        <div class="card">
-          <div class="row"><input value="What does Karama look like, and which ward is it in?"/><button class="btn">Ask</button></div>
-          <div class="answer">Karama sits in <b>Waters Ward</b> (City of Darwin). It has 451 registered pets, a young multicultural population (2021 census), and its council spending is tracked at the Waters Ward level.
-<div class="muted" style="margin-top:8px">suburb_lookup · neighbourhood_profile · query_unified</div></div>
-          <div style="margin-top:10px">
-            <span class="chip">councillor expenses by ward</span><span class="chip">dogs in Malak</span><span class="chip">flood risk now</span><span class="chip">grants for festivals</span>
-          </div>
-        </div>
-      </section>
-
-      <!-- DRAFT -->
-      <section class="view" id="draft">
-        <h1 class="page">From data to document <span class="bind">→ /api/ask (generate)</span></h1>
-        <p class="lead">Briefings, proposals and summaries — grounded in the numbers, never invented.</p>
-        <div class="card">
-          <div class="row">
-            <select><option>Greening proposal</option><option>Councillor briefing</option><option>Grant application</option><option>Plain-language summary</option></select>
-            <input style="flex:1;min-width:200px" value="suburbs with worst canopy loss"/><button class="btn">Generate</button>
-          </div>
-          <div class="answer"><b>Urban Greening Priority — draft</b><br>Stuart Park (−4.2pp), Parap (−3.8pp) and Ludmilla (−3.1pp) show the steepest tree-canopy decline since 2011. With high summer heat exposure, these three warrant priority planting in the next budget.
-<div class="muted" style="margin-top:8px">grounded in: tree-canopy-cover · environment table</div></div>
-        </div>
-      </section>
-
-      <!-- MY SUBURB -->
-      <section class="view" id="hood">
-        <h1 class="page">Know your suburb <span class="bind">→ neighbourhood_profile · suburb_lookup</span></h1>
-        <p class="lead">Everything the data knows — for residents, newcomers and planners.</p>
-        <div class="row"><select><option>Karama</option><option>Malak</option><option>Nightcliff</option><option>Parap</option></select><button class="btn">Show</button></div>
-        <div class="grid g4">
-          <div class="stat"><div class="n">Waters</div><div class="l">Ward</div></div>
-          <div class="stat"><div class="n">7,540</div><div class="l">People (2021)</div></div>
-          <div class="stat"><div class="n">451</div><div class="l">Registered pets</div></div>
-          <div class="stat"><div class="n">18.2%</div><div class="l">Tree canopy</div></div>
-        </div>
-        <div class="grid g2" style="margin-top:16px">
-          <div class="card"><h2>Who lives here</h2>
-            <table><tr><td>Born overseas</td><td>38%</td></tr><tr><td>Speaks another language</td><td>41%</td></tr><tr><td>Median age</td><td>33</td></tr><tr><td>First Nations</td><td>9%</td></tr></table></div>
-          <div class="card"><h2>Pets &amp; green</h2>
-            <table><tr><td>Dogs</td><td>340</td></tr><tr><td>Cats</td><td>111</td></tr><tr><td>Infringements</td><td>148</td></tr><tr><td>Wildlife gardens</td><td>6</td></tr></table></div>
-        </div>
-      </section>
-
-      <!-- ENVIRONMENT -->
-      <section class="view" id="env">
-        <h1 class="page">Canopy &amp; climate <span class="bind">→ query_unified(environment)</span></h1>
-        <p class="lead">Where Darwin is losing its shade — and where it's winning.</p>
-        <div class="card"><h2>Tree-canopy change · 2011 → 2021</h2>
-          <table><tr><th>Suburb</th><th>2011</th><th>2021</th><th>Change</th><th></th></tr>
-          <tr><td>Stuart Park</td><td>22.1%</td><td>17.9%</td><td class="down">−4.2pp</td><td><div class="bar"><span style="width:84%"></span></div></td></tr>
-          <tr><td>Parap</td><td>19.4%</td><td>15.6%</td><td class="down">−3.8pp</td><td><div class="bar"><span style="width:76%"></span></div></td></tr>
-          <tr><td>Ludmilla</td><td>16.0%</td><td>12.9%</td><td class="down">−3.1pp</td><td><div class="bar"><span style="width:62%"></span></div></td></tr>
-          <tr><td>Nightcliff</td><td>24.8%</td><td>26.1%</td><td class="up">+1.3pp</td><td><div class="bar"><span style="width:26%"></span></div></td></tr></table>
-        </div>
-        <div class="grid g2">
-          <div class="card"><h2>Landfill gas · monthly</h2><div class="spark"><i style="height:40%"></i><i style="height:55%"></i><i style="height:50%"></i><i style="height:70%"></i><i style="height:62%"></i><i style="height:80%"></i><i style="height:74%"></i><i style="height:92%"></i></div></div>
-          <div class="card"><h2>Birds spotted</h2><div class="chip">Rainbow Lorikeet</div><div class="chip">Magpie-lark</div><div class="chip">Torresian Crow</div><div class="muted" style="margin-top:8px">Aussie Bird Count · 964 records</div></div>
-        </div>
-      </section>
-
-      <!-- EQUITY -->
-      <section class="view" id="equity">
-        <h1 class="page">Fair share <span class="bind">→ finance ⨝ census (ward bridge)</span></h1>
-        <p class="lead">Does spending match the people? <span class="pill warn">first of its kind</span></p>
-        <div class="card"><h2>Council spend per resident · by ward</h2>
-          <table><tr><th>Ward</th><th>Spend</th><th>People</th><th>$ / resident</th><th></th></tr>
-          <tr><td>Chan</td><td>$436k</td><td>10,400</td><td>$42</td><td><div class="bar"><span style="width:100%"></span></div></td></tr>
-          <tr><td>Lyons</td><td>$340k</td><td>9,200</td><td>$37</td><td><div class="bar"><span style="width:88%"></span></div></td></tr>
-          <tr><td>Waters</td><td>$402k</td><td>12,100</td><td>$33</td><td><div class="bar"><span style="width:78%"></span></div></td></tr>
-          <tr><td>Richardson</td><td>$268k</td><td>11,800</td><td>$23</td><td><div class="bar"><span style="width:55%"></span></div></td></tr></table>
-        </div>
-      </section>
-
-      <!-- MOBILITY -->
-      <section class="view" id="mobility">
-        <h1 class="page">City in motion <span class="bind">→ query_unified(mobility)</span></h1>
-        <p class="lead">How Darwin moves — and the carbon it saves.</p>
-        <div class="grid g3">
-          <div class="stat"><div class="n">28,400</div><div class="l">Trips this month</div></div>
-          <div class="stat"><div class="n">61,200 km</div><div class="l">Distance</div></div>
-          <div class="stat"><div class="n">8.1 t</div><div class="l">CO₂ saved</div></div>
-        </div>
-        <div class="card" style="margin-top:16px"><h2>Trips by month</h2><div class="spark"><i style="height:30%"></i><i style="height:45%"></i><i style="height:55%"></i><i style="height:48%"></i><i style="height:70%"></i><i style="height:85%"></i><i style="height:78%"></i><i style="height:96%"></i></div></div>
-      </section>
-
-      <!-- SPENDING -->
-      <section class="view" id="spend">
-        <h1 class="page">The money <span class="bind">→ query_unified(finance)</span></h1>
-        <p class="lead">Every dollar, by category.</p>
-        <div class="card"><h2>Capital expenditure</h2>
-          <table><tr><th>Category</th><th>Amount</th><th></th></tr>
-          <tr><td>Waste infrastructure</td><td>$49.5M</td><td><div class="bar"><span style="width:100%"></span></div></td></tr>
-          <tr><td>Buildings</td><td>$42.2M</td><td><div class="bar"><span style="width:85%"></span></div></td></tr>
-          <tr><td>Transport</td><td>$31.7M</td><td><div class="bar"><span style="width:64%"></span></div></td></tr>
-          <tr><td>Parks &amp; reserves</td><td>$20.1M</td><td><div class="bar"><span style="width:41%"></span></div></td></tr>
-          <tr><td>Public lighting</td><td>$13.1M</td><td><div class="bar"><span style="width:26%"></span></div></td></tr></table>
-        </div>
-      </section>
-
-      <!-- DECISIONS -->
-      <section class="view" id="decisions">
-        <h1 class="page">What council decided <span class="bind">→ find_records(governance)</span></h1>
-        <p class="lead">1,048 decisions — searchable, and summarised for you.</p>
-        <div class="row"><input value="parking"/><button class="btn">Search</button></div>
-        <div class="card">
-          <table><tr><th>Date</th><th>Decision</th><th>Dept</th></tr>
-          <tr><td>2024-03-12</td><td>Parking management review — CBD</td><td>Infrastructure</td></tr>
-          <tr><td>2023-11-28</td><td>Paid parking trial extension</td><td>Finance</td></tr>
-          <tr><td>2023-08-15</td><td>Accessible bays — Nightcliff</td><td>Community</td></tr></table>
-          <div class="answer" style="margin-top:12px"><b>In short:</b> Council has revisited parking 6 times since 2022 — mostly CBD management and paid-parking trials, plus accessibility upgrades in Nightcliff.</div>
-        </div>
-      </section>
-
-      <!-- GRANTS -->
-      <section class="view" id="grants">
-        <h1 class="page">Find the funding <span class="bind">→ query_unified(finance · grants)</span></h1>
-        <p class="lead">Who's funded, how much — 439 grants &amp; sponsorships.</p>
-        <div class="row"><input placeholder="search organisation or event…"/><select><option>All types</option><option>Cash</option><option>In-kind</option></select><button class="btn">Search</button></div>
-        <div class="card">
-          <table><tr><th>Recipient</th><th>Type</th><th>FY</th><th>Total</th></tr>
-          <tr><td>Darwin Festival</td><td>Cash</td><td>2023</td><td>$45,000</td></tr>
-          <tr><td>Nightcliff Seabreeze Festival</td><td>Cash + in-kind</td><td>2023</td><td>$18,500</td></tr>
-          <tr><td>Local sports clubs</td><td>Cash</td><td>2023</td><td>$12,000</td></tr></table>
-        </div>
-      </section>
-
-      <!-- LIVE -->
-      <section class="view" id="live">
-        <h1 class="page">Know before it floods <span class="bind">→ live_weather · flood_risk</span></h1>
-        <p class="lead">Live conditions and a wet-season flood signal.</p>
-        <div class="grid g4">
-          <div class="stat"><div class="n">25.3°</div><div class="l">Temp</div></div>
-          <div class="stat"><div class="n">66%</div><div class="l">Humidity</div></div>
-          <div class="stat"><div class="n">0 mm</div><div class="l">Rain now</div></div>
-          <div class="stat"><div class="n"><span class="pill good">LOW</span></div><div class="l">Flood risk</div></div>
-        </div>
-        <div class="card" style="margin-top:16px"><h2>Next 5 days</h2>
-          <table><tr><th>Day</th><th>Rain</th><th>Chance</th></tr>
-          <tr><td>Today</td><td>0 mm</td><td>0%</td></tr><tr><td>Tomorrow</td><td>0 mm</td><td>5%</td></tr><tr><td>+2</td><td>2 mm</td><td>30%</td></tr></table>
-          <div class="muted" style="margin-top:8px">Open-Meteo · indicative, not an official BOM warning.</div>
-        </div>
-      </section>
-
-      <!-- REPO -->
-      <section class="view" id="repo">
-        <h1 class="page">All the data, organised <span class="bind">→ repository_stats · list_tables · find_columns</span></h1>
-        <p class="lead">8 categorised tables · 271 searchable columns.</p>
-        <div class="grid g2">
-          <div class="card"><h2>Tables</h2>
-            <table><tr><td>demographics</td><td>20,618</td></tr><tr><td>animals</td><td>7,482</td></tr><tr><td>environment</td><td>1,107</td></tr><tr><td>governance</td><td>1,048</td></tr><tr><td>finance</td><td>730</td></tr><tr><td>economy</td><td>212</td></tr><tr><td>mobility</td><td>133</td></tr></table></div>
-          <div class="card"><h2>Find a column</h2>
-            <div class="row" style="margin-top:0"><input placeholder="e.g. expense, canopy, language"/><button class="btn alt">Find</button></div>
-            <span class="chip">expense_type → finance</span><span class="chip">suburb → demographics</span><span class="chip">net_generation_mwh → environment</span></div>
-        </div>
-      </section>
-
-    </div>
-  </main>
+<!-- TICKER -->
+<div class="ticker" id="ticker">
+  <span class="ticker-item">🌡 Temp <span class="ticker-val">25.3°C</span></span>
+  <span class="ticker-item">💧 Humidity <span class="ticker-val">66%</span></span>
+  <span class="ticker-item">🌳 Datasets <span class="ticker-val">1,104</span></span>
+  <span class="ticker-item">📋 Records <span class="ticker-val">31,331</span></span>
+  <span class="ticker-item">🗺 Suburbs <span class="ticker-val">37 mapped</span></span>
+  <span class="ticker-item">⚖️ Flood risk <span class="ticker-val" style="color:#6ecb9a">LOW</span></span>
+  <span class="ticker-item">🌿 CO₂ saved <span class="ticker-val">8.1 t</span></span>
+  <span class="ticker-item">🏗 Capex FY24 <span class="ticker-val">$156.6M</span></span>
 </div>
 
+<main>
+
+<!-- ══ HOME ══ -->
+<div class="page active" id="home">
+  <div class="content">
+
+    <!-- HEADLINE + SIDEBAR -->
+    <div class="cols cols-7030" style="border-bottom:2px solid var(--ink)">
+      <!-- LEFT -->
+      <div class="border-r" style="padding:32px 40px 32px 0">
+        <div class="hero-kicker anim">Northern Territory · City of Darwin · Live intelligence</div>
+        <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
+        <p class="hero-sub anim anim-d2">Ask a question in plain English. Understand your suburb, follow the money, watch the canopy — all powered by real NT public data, entirely on local servers.</p>
+        <div class="search-bar anim anim-d3">
+          <input placeholder="Try: how much did Waters Ward spend this year?"/>
+          <button>Ask AI →</button>
+        </div>
+        <div class="chip-row anim anim-d4">
+          <div class="chip">dogs in Malak</div>
+          <div class="chip">flood risk now</div>
+          <div class="chip">grants for festivals</div>
+          <div class="chip">canopy loss leaders</div>
+          <div class="chip">Richardson vs Chan spend</div>
+        </div>
+      </div>
+
+      <!-- RIGHT: LIVE VITALS -->
+      <div style="padding:0">
+        <div class="p ruled-b border-r" style="border-right:none">
+          <div class="sec-head">Live vitals</div>
+        </div>
+        <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
+          <div class="bigstat border-r anim anim-d1">
+            <div class="bigstat-n terra" data-count="1104">0</div>
+            <div class="bigstat-label">Datasets</div>
+          </div>
+          <div class="bigstat anim anim-d2">
+            <div class="bigstat-n sun" data-count="31331">0</div>
+            <div class="bigstat-label">Records</div>
+          </div>
+        </div>
+        <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
+          <div class="bigstat border-r anim anim-d3">
+            <div class="bigstat-n sage" data-count="37">0</div>
+            <div class="bigstat-label">Suburbs</div>
+          </div>
+          <div class="bigstat anim anim-d4">
+            <div class="bigstat-n sky">100%</div>
+            <div class="bigstat-label">Self-hosted</div>
+          </div>
+        </div>
+        <div class="bigstat" style="border-top:1px solid var(--rule)">
+          <div class="bigstat-n" style="font-size:36px">25.3°C · <span style="color:var(--sage)">LOW risk</span></div>
+          <div class="bigstat-label">Live · Darwin Airport · Flood signal</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FEATURES: 3 COLUMN EDITORIAL -->
+    <div class="cols cols-3 mt32" style="border-top:2px solid var(--ink)">
+      <div>
+        <div class="p" style="padding-top:20px"><div class="sec-head mb8">Ask & discover</div></div>
+        <div class="feat-block anim anim-d1">
+          <div class="feat-num">01</div>
+          <div class="feat-title">Ask anything</div>
+          <div class="feat-body">Plain English in, real answers out. No jargon, no hallucinations — every response cites the dataset it came from.</div>
+        </div>
+        <div class="feat-block anim anim-d2">
+          <div class="feat-num">02</div>
+          <div class="feat-title">Draft & brief</div>
+          <div class="feat-body">Generate grant applications, councillor briefings or greening proposals grounded entirely in public data.</div>
+        </div>
+      </div>
+      <div style="border-left:1px solid var(--rule);border-right:1px solid var(--rule)">
+        <div class="p" style="padding-top:20px"><div class="sec-head mb8">Explore & compare</div></div>
+        <div class="feat-block anim anim-d2">
+          <div class="feat-num">03</div>
+          <div class="feat-title">Know your suburb</div>
+          <div class="feat-body">37 suburbs mapped with population, pets, tree cover and ward — one search away.</div>
+        </div>
+        <div class="feat-block anim anim-d3">
+          <div class="feat-num">04</div>
+          <div class="feat-title">Canopy & climate</div>
+          <div class="feat-body">Watch Darwin's shade disappear — or return. Suburb-by-suburb canopy change since 2011.</div>
+        </div>
+      </div>
+      <div>
+        <div class="p" style="padding-top:20px"><div class="sec-head mb8">Accountability</div></div>
+        <div class="feat-block anim anim-d3">
+          <div class="feat-num">05</div>
+          <div class="feat-title">Follow the money</div>
+          <div class="feat-body">$156.6M capital expenditure broken down by category, ward and financial year.</div>
+        </div>
+        <div class="feat-block anim anim-d4">
+          <div class="feat-num">06</div>
+          <div class="feat-title">Fair share</div>
+          <div class="feat-body">Council spend per resident by ward — the first equity index of its kind for the Territory.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PULL QUOTE -->
+    <div class="mt32 ruled2">
+      <blockquote class="pull">"Public data, in plain language — for every resident of the Territory."</blockquote>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══ ASK AI ══ -->
+<div class="page" id="ask">
+  <div class="content">
+    <div class="cols cols-6040" style="border-bottom:2px solid var(--ink);gap:0">
+      <div class="border-r" style="padding-right:40px;padding-bottom:32px">
+        <div class="hero-kicker">AI Assistant · /api/ask</div>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;line-height:1;margin-bottom:20px">Ask<br><em>anything.</em></h2>
+        <div class="search-bar" style="max-width:100%">
+          <input id="askInput" value="What does Karama look like, and which ward is it in?"/>
+          <button onclick="doAsk()">Ask →</button>
+        </div>
+        <div class="chip-row">
+          <div class="chip" onclick="setQ(this)">councillor expenses by ward</div>
+          <div class="chip" onclick="setQ(this)">dogs registered in Malak</div>
+          <div class="chip" onclick="setQ(this)">flood risk right now</div>
+          <div class="chip" onclick="setQ(this)">grants for festivals</div>
+        </div>
+
+        <div id="answerWrap" style="margin-top:24px">
+          <div class="sec-head mb8">Answer</div>
+          <div class="answer-panel">
+            <p>Karama sits in <strong>Waters Ward</strong> (City of Darwin). It has <strong>451 registered pets</strong>, a young multicultural population (2021 census), and council spending is tracked at the Waters Ward level. Population sits at approximately <strong>7,540 residents</strong>.</p>
+            <div class="answer-source">
+              <span class="src-tag">suburb_lookup</span>
+              <span class="src-tag">neighbourhood_profile</span>
+              <span class="src-tag">query_unified</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="padding-left:32px;padding-top:20px">
+        <div class="sec-head mb8">How to ask</div>
+        <div style="margin-top:16px">
+          <div class="feat-block" style="padding:16px 0"><div class="feat-num">Specific</div><div class="feat-body">"How much did Nightcliff spend on parks in FY2023?"</div></div>
+          <div class="feat-block" style="padding:16px 0"><div class="feat-num">Comparative</div><div class="feat-body">"Which ward gets the most per resident?"</div></div>
+          <div class="feat-block" style="padding:16px 0"><div class="feat-num">Plain English</div><div class="feat-body">"Tell me about the trees in Parap."</div></div>
+          <div class="feat-block" style="padding:16px 0;border-bottom:none"><div class="feat-num">Action-ready</div><div class="feat-body">"Draft a greening proposal for Stuart Park."</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ SUBURB ══ -->
+<div class="page" id="suburb">
+  <div class="content">
+    <div class="hero-kicker">Neighbourhood Profile · suburb_lookup</div>
+    <div class="cols cols-6040" style="gap:32px;align-items:flex-start">
+      <div>
+        <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:20px;line-height:1">Know your<br><em>suburb.</em></h2>
+        <div style="display:flex;gap:0;margin-bottom:28px;border:2px solid var(--ink)">
+          <select class="field-select" style="flex:1;border:none;border-right:2px solid var(--ink)">
+            <option>📍 Karama</option><option>Malak</option><option>Nightcliff</option><option>Parap</option><option>Stuart Park</option>
+          </select>
+          <button class="btn">Show →</button>
+        </div>
+
+        <!-- SUBURB STATS -->
+        <div class="cols cols-2" style="border:2px solid var(--ink);border-bottom:none">
+          <div class="bigstat border-r" style="border-bottom:2px solid var(--ink)">
+            <div class="bigstat-n terra">Waters</div><div class="bigstat-label">Ward</div>
+          </div>
+          <div class="bigstat" style="border-bottom:2px solid var(--ink)">
+            <div class="bigstat-n">7,540</div><div class="bigstat-label">Residents (2021)</div>
+          </div>
+          <div class="bigstat border-r" style="border-bottom:2px solid var(--ink)">
+            <div class="bigstat-n sun">451</div><div class="bigstat-label">Registered pets</div>
+          </div>
+          <div class="bigstat" style="border-bottom:2px solid var(--ink)">
+            <div class="bigstat-n sage">18.2%</div><div class="bigstat-label">Tree canopy</div>
+          </div>
+        </div>
+        <div style="border:2px solid var(--ink);border-top:none;padding:20px">
+          <table class="dt">
+            <thead><tr><th>Demographic</th><th>Value</th></tr></thead>
+            <tbody>
+              <tr><td>Born overseas</td><td class="num">38%</td></tr>
+              <tr><td>Speaks another language</td><td class="num">41%</td></tr>
+              <tr><td>Median age</td><td class="num">33 yrs</td></tr>
+              <tr><td>First Nations</td><td class="num">9%</td></tr>
+              <tr><td>🐕 Dogs</td><td class="num">340</td></tr>
+              <tr><td>🐈 Cats</td><td class="num">111</td></tr>
+              <tr><td>Animal infringements</td><td class="num">148</td></tr>
+              <tr><td>🌿 Wildlife gardens</td><td class="num">6</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <blockquote class="pull" style="font-size:22px;margin-bottom:24px">"Karama — multicultural, young, Waters Ward."</blockquote>
+        <div class="answer-panel">
+          <p>Karama is one of Darwin's most diverse suburbs — <strong>38% born overseas</strong>, <strong>41% speak a language other than English</strong>. With a median age of just 33, it skews young. Its <strong>18.2% tree canopy</strong> is below the Darwin average, and pet ownership is high relative to population size.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CANOPY ══ -->
+<div class="page" id="canopy">
+  <div class="content">
+    <div class="hero-kicker">Environment · query_unified(environment)</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:28px;line-height:1">Where Darwin<br>is losing its <em>shade.</em></h2>
+
+    <div class="cols cols-6040" style="gap:32px;align-items:flex-start">
+      <div>
+        <div class="sec-head" style="margin-bottom:16px">Tree canopy change · 2011 → 2021</div>
+        <div id="canopyChart">
+          <div class="chart-row" style="grid-template-columns:140px 1fr 80px 60px">
+            <div><div class="chart-label">Stuart Park</div><div class="chart-sub">17.9% (2021)</div></div>
+            <div class="track"><div class="fill fill-terra" style="width:0%" data-w="84%"></div></div>
+            <div style="font-size:15px;font-family:'Barlow Condensed',sans-serif;font-weight:900;text-align:right;color:var(--ink)">17.9%</div>
+            <div class="chg-dn" style="text-align:right">−4.2pp</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:140px 1fr 80px 60px">
+            <div><div class="chart-label">Parap</div><div class="chart-sub">15.6% (2021)</div></div>
+            <div class="track"><div class="fill fill-terra" style="width:0%" data-w="76%"></div></div>
+            <div style="font-size:15px;font-family:'Barlow Condensed',sans-serif;font-weight:900;text-align:right;color:var(--ink)">15.6%</div>
+            <div class="chg-dn" style="text-align:right">−3.8pp</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:140px 1fr 80px 60px">
+            <div><div class="chart-label">Ludmilla</div><div class="chart-sub">12.9% (2021)</div></div>
+            <div class="track"><div class="fill fill-sun" style="width:0%" data-w="62%"></div></div>
+            <div style="font-size:15px;font-family:'Barlow Condensed',sans-serif;font-weight:900;text-align:right;color:var(--ink)">12.9%</div>
+            <div class="chg-dn" style="text-align:right">−3.1pp</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:140px 1fr 80px 60px">
+            <div><div class="chart-label">Nightcliff</div><div class="chart-sub">26.1% (2021)</div></div>
+            <div class="track"><div class="fill fill-sage" style="width:0%" data-w="26%"></div></div>
+            <div style="font-size:15px;font-family:'Barlow Condensed',sans-serif;font-weight:900;text-align:right;color:var(--ink)">26.1%</div>
+            <div class="chg-up" style="text-align:right">+1.3pp</div>
+          </div>
+        </div>
+
+        <div style="margin-top:28px">
+          <div class="sec-head" style="margin-bottom:16px">Landfill gas output · monthly (kWh index)</div>
+          <div class="spark" id="lgSpark" style="height:72px;gap:4px"></div>
+          <div style="display:flex;justify-content:space-between;margin-top:6px">
+            <span style="font-size:11px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em">JAN</span>
+            <span style="font-size:11px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em">AUG</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <blockquote class="pull" style="font-size:20px;margin-bottom:24px">"Stuart Park has lost 4.2 percentage points of canopy since 2011."</blockquote>
+        <div class="answer-panel">
+          <p>Three suburbs account for the most significant canopy loss: <strong>Stuart Park</strong>, <strong>Parap</strong>, and <strong>Ludmilla</strong>. Combined with high summer heat exposure, these areas are priority candidates for the next budget's planting program. Only <strong>Nightcliff</strong> shows net canopy gain.</p>
+        </div>
+        <div style="margin-top:20px">
+          <div class="sec-head" style="margin-bottom:12px">Birds spotted · 964 records</div>
+          <div class="chip-row">
+            <div class="chip">🦜 Rainbow Lorikeet</div>
+            <div class="chip">🐦 Magpie-lark</div>
+            <div class="chip">🐦‍⬛ Torresian Crow</div>
+            <div class="chip">🦢 Brolga</div>
+          </div>
+          <p style="font-size:12px;color:var(--ink3);font-weight:300;margin-top:8px">Aussie Bird Count · Top species by observation frequency</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ EQUITY ══ -->
+<div class="page" id="equity">
+  <div class="content">
+    <div class="hero-kicker">Accountability · finance ⨝ census (ward bridge)</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:8px;line-height:1">Does spending<br>match the <em>people?</em></h2>
+    <p style="color:var(--ink3);font-weight:300;font-size:15px;margin-bottom:32px">Council spend per resident — the Territory's first ward equity index. <span class="badge badge-terra">First of its kind</span></p>
+
+    <div id="equityChart">
+      <div class="chart-row" style="grid-template-columns:130px 60px 80px 1fr 70px;padding:18px 0">
+        <div class="chart-label">Chan Ward</div>
+        <div style="font-size:12px;color:var(--ink3);font-weight:300">10,400 ppl</div>
+        <div style="font-size:13px;color:var(--ink3);font-weight:300;text-align:right">$436k</div>
+        <div class="track"><div class="fill fill-terra" style="width:0%" data-w="100%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--terra);text-align:right">$42</div>
+      </div>
+      <div class="chart-row" style="grid-template-columns:130px 60px 80px 1fr 70px;padding:18px 0">
+        <div class="chart-label">Lyons Ward</div>
+        <div style="font-size:12px;color:var(--ink3);font-weight:300">9,200 ppl</div>
+        <div style="font-size:13px;color:var(--ink3);font-weight:300;text-align:right">$340k</div>
+        <div class="track"><div class="fill fill-sun" style="width:0%" data-w="88%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:#8a6500;text-align:right">$37</div>
+      </div>
+      <div class="chart-row" style="grid-template-columns:130px 60px 80px 1fr 70px;padding:18px 0">
+        <div class="chart-label">Waters Ward</div>
+        <div style="font-size:12px;color:var(--ink3);font-weight:300">12,100 ppl</div>
+        <div style="font-size:13px;color:var(--ink3);font-weight:300;text-align:right">$402k</div>
+        <div class="track"><div class="fill fill-sage" style="width:0%" data-w="78%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--sage);text-align:right">$33</div>
+      </div>
+      <div class="chart-row" style="grid-template-columns:130px 60px 80px 1fr 70px;padding:18px 0">
+        <div class="chart-label">Richardson</div>
+        <div style="font-size:12px;color:var(--ink3);font-weight:300">11,800 ppl</div>
+        <div style="font-size:13px;color:var(--ink3);font-weight:300;text-align:right">$268k</div>
+        <div class="track"><div class="fill fill-sky" style="width:0%" data-w="55%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:22px;color:var(--sky);text-align:right">$23</div>
+      </div>
+    </div>
+
+    <div class="answer-panel mt32">
+      <p>Richardson Ward residents receive <strong>45% less</strong> council spend per capita than Chan Ward. With a population of <strong>11,800</strong> — larger than Chan — the gap raises meaningful equity questions for the next budget cycle.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MOTION ══ -->
+<div class="page" id="motion">
+  <div class="content">
+    <div class="hero-kicker">Mobility · query_unified(mobility)</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:28px;line-height:1">How Darwin<br><em>moves.</em></h2>
+    <div class="cols cols-3" style="border:2px solid var(--ink);border-bottom:none">
+      <div class="bigstat border-r">
+        <div class="bigstat-n terra">28,400</div><div class="bigstat-label">Trips this month</div>
+      </div>
+      <div class="bigstat border-r">
+        <div class="bigstat-n sun">61,200 km</div><div class="bigstat-label">Total distance</div>
+      </div>
+      <div class="bigstat">
+        <div class="bigstat-n sage">8.1 t</div><div class="bigstat-label">CO₂ saved</div>
+      </div>
+    </div>
+    <div style="border:2px solid var(--ink);padding:24px">
+      <div class="sec-head" style="margin-bottom:20px">Trips by month · 2024</div>
+      <div class="spark" id="mobSpark" style="height:100px;gap:6px"></div>
+      <div style="display:flex;justify-content:space-between;margin-top:8px">
+        <span style="font-size:11px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase">Jan</span>
+        <span style="font-size:11px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.06em;text-transform:uppercase">Aug</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MONEY ══ -->
+<div class="page" id="money">
+  <div class="content">
+    <div class="hero-kicker">Finance · query_unified(finance)</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:8px;line-height:1">Every dollar,<br><em>accounted for.</em></h2>
+    <p style="color:var(--ink3);font-weight:300;margin-bottom:32px">Capital expenditure FY2023–24 · $156.6M total</p>
+
+    <div id="moneyChart">
+      <div class="chart-row" style="grid-template-columns:200px 1fr 100px;padding:16px 0">
+        <div><div class="chart-label">♻️ Waste infrastructure</div></div>
+        <div class="track"><div class="fill fill-terra" style="width:0%" data-w="100%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-align:right">$49.5M</div>
+      </div>
+      <div class="chart-row" style="grid-template-columns:200px 1fr 100px;padding:16px 0">
+        <div><div class="chart-label">🏢 Buildings</div></div>
+        <div class="track"><div class="fill fill-ink" style="width:0%" data-w="85%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-align:right">$42.2M</div>
+      </div>
+      <div class="chart-row" style="grid-template-columns:200px 1fr 100px;padding:16px 0">
+        <div><div class="chart-label">🚌 Transport</div></div>
+        <div class="track"><div class="fill fill-sun" style="width:0%" data-w="64%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-align:right">$31.7M</div>
+      </div>
+      <div class="chart-row" style="grid-template-columns:200px 1fr 100px;padding:16px 0">
+        <div><div class="chart-label">🌿 Parks & reserves</div></div>
+        <div class="track"><div class="fill fill-sage" style="width:0%" data-w="41%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-align:right">$20.1M</div>
+      </div>
+      <div class="chart-row" style="grid-template-columns:200px 1fr 100px;padding:16px 0">
+        <div><div class="chart-label">💡 Public lighting</div></div>
+        <div class="track"><div class="fill fill-sky" style="width:0%" data-w="26%"></div></div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:18px;text-align:right">$13.1M</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DECISIONS ══ -->
+<div class="page" id="decisions">
+  <div class="content">
+    <div class="hero-kicker">Governance · find_records · 1,048 decisions</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:24px;line-height:1">What council<br><em>decided.</em></h2>
+    <div class="search-bar" style="max-width:560px;margin-bottom:28px">
+      <input value="parking"/>
+      <button>Search →</button>
+    </div>
+    <table class="dt" style="margin-bottom:24px">
+      <thead><tr><th>Date</th><th>Decision</th><th>Department</th></tr></thead>
+      <tbody>
+        <tr><td style="color:var(--ink3);font-weight:300">2024-03-12</td><td><strong>Parking management review — CBD</strong></td><td><span class="badge badge-sky">Infrastructure</span></td></tr>
+        <tr><td style="color:var(--ink3);font-weight:300">2023-11-28</td><td><strong>Paid parking trial extension</strong></td><td><span class="badge badge-sun">Finance</span></td></tr>
+        <tr><td style="color:var(--ink3);font-weight:300">2023-08-15</td><td><strong>Accessible bays — Nightcliff foreshore</strong></td><td><span class="badge badge-sage">Community</span></td></tr>
+      </tbody>
+    </table>
+    <div class="answer-panel">
+      <p>Council has revisited parking <strong>6 times</strong> since 2022 — mostly CBD management and paid-parking trials, plus accessibility upgrades along the Nightcliff foreshore. No outcome has been formally reversed.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GRANTS ══ -->
+<div class="page" id="grants">
+  <div class="content">
+    <div class="hero-kicker">Finance · grants & sponsorships · 439 total</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:24px;line-height:1">Find<br><em>the funding.</em></h2>
+    <div style="display:flex;gap:0;border:2px solid var(--ink);max-width:620px;margin-bottom:28px">
+      <input class="field" style="border:none;border-right:2px solid var(--ink);flex:1" placeholder="Search organisation or event…"/>
+      <select class="field-select" style="border:none;border-right:2px solid var(--ink)"><option>All types</option><option>Cash</option><option>In-kind</option></select>
+      <button class="btn">Search →</button>
+    </div>
+    <table class="dt">
+      <thead><tr><th>Recipient</th><th>Type</th><th>FY</th><th style="text-align:right">Total</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Darwin Festival</strong></td><td><span class="badge badge-sage">Cash</span></td><td style="color:var(--ink3)">2023</td><td class="num">$45,000</td></tr>
+        <tr><td><strong>Nightcliff Seabreeze Festival</strong></td><td><span class="badge badge-sun">Cash + in-kind</span></td><td style="color:var(--ink3)">2023</td><td class="num">$18,500</td></tr>
+        <tr><td><strong>Local sports clubs</strong></td><td><span class="badge badge-sage">Cash</span></td><td style="color:var(--ink3)">2023</td><td class="num">$12,000</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══ WEATHER ══ -->
+<div class="page" id="weather">
+  <div class="content">
+    <div class="hero-kicker">Live · Open-Meteo · indicative — not an official BOM warning</div>
+    <div class="cols cols-6040" style="gap:40px">
+      <div>
+        <div class="wx-temp">25.3°</div>
+        <div class="wx-cond" style="margin:4px 0 28px">Clear skies · Darwin</div>
+        <div class="cols cols-3" style="border:2px solid var(--ink);border-bottom:none">
+          <div class="bigstat border-r"><div class="bigstat-n sage">66%</div><div class="bigstat-label">Humidity</div></div>
+          <div class="bigstat border-r"><div class="bigstat-n">0 mm</div><div class="bigstat-label">Rain now</div></div>
+          <div class="bigstat"><div class="bigstat-n sage" style="font-size:28px">LOW</div><div class="bigstat-label">Flood risk</div></div>
+        </div>
+        <div style="border:2px solid var(--ink);border-top:none;padding:20px">
+          <table class="dt">
+            <thead><tr><th>Day</th><th>Conditions</th><th>Rain</th><th style="text-align:right">Chance</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Today</strong></td><td>☀️ Clear</td><td>0 mm</td><td class="num"><span class="badge badge-sage">0%</span></td></tr>
+              <tr><td><strong>Tomorrow</strong></td><td>🌤 Partly cloudy</td><td>0 mm</td><td class="num"><span class="badge badge-sage">5%</span></td></tr>
+              <tr><td><strong>+2 days</strong></td><td>⛅ Overcast</td><td>2 mm</td><td class="num"><span class="badge badge-sun">30%</span></td></tr>
+              <tr><td><strong>+3 days</strong></td><td>🌦 Showers</td><td>8 mm</td><td class="num"><span class="badge badge-terra">65%</span></td></tr>
+              <tr><td><strong>+4 days</strong></td><td>☀️ Clearing</td><td>0 mm</td><td class="num"><span class="badge badge-sage">10%</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div>
+        <blockquote class="pull">"Flood risk is LOW. Wet season typically peaks December–March."</blockquote>
+        <div class="answer-panel" style="margin-top:20px">
+          <p>No flood warnings active. Current humidity at <strong>66%</strong> with zero rainfall. Conditions may change from <strong>+2 days</strong> — check official BOM warnings before acting.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ DATA ══ -->
+<div class="page" id="data">
+  <div class="content">
+    <div class="hero-kicker">Repository · repository_stats · list_tables · find_columns</div>
+    <h2 style="font-family:'Playfair Display',serif;font-weight:900;font-size:44px;letter-spacing:-.03em;margin-bottom:28px;line-height:1">The data,<br><em>organised.</em></h2>
+    <div class="cols cols-6040" style="gap:32px">
+      <div>
+        <div class="sec-head" style="margin-bottom:16px">Tables & record counts</div>
+        <div id="dataChart">
+          <div class="chart-row" style="grid-template-columns:130px 1fr 80px;padding:14px 0">
+            <div class="chart-label">demographics</div>
+            <div class="track"><div class="fill fill-terra" style="width:0%" data-w="100%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-align:right">20,618</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:130px 1fr 80px;padding:14px 0">
+            <div class="chart-label">animals</div>
+            <div class="track"><div class="fill fill-sun" style="width:0%" data-w="36%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-align:right">7,482</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:130px 1fr 80px;padding:14px 0">
+            <div class="chart-label">environment</div>
+            <div class="track"><div class="fill fill-sage" style="width:0%" data-w="14%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-align:right">1,107</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:130px 1fr 80px;padding:14px 0">
+            <div class="chart-label">governance</div>
+            <div class="track"><div class="fill fill-sky" style="width:0%" data-w="12%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-align:right">1,048</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:130px 1fr 80px;padding:14px 0">
+            <div class="chart-label">finance</div>
+            <div class="track"><div class="fill fill-ink" style="width:0%" data-w="9%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-align:right">730</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:130px 1fr 80px;padding:14px 0">
+            <div class="chart-label">economy</div>
+            <div class="track"><div class="fill fill-terra" style="width:0%" data-w="5%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-align:right">212</div>
+          </div>
+          <div class="chart-row" style="grid-template-columns:130px 1fr 80px;padding:14px 0">
+            <div class="chart-label">mobility</div>
+            <div class="track"><div class="fill fill-sage" style="width:0%" data-w="3%"></div></div>
+            <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:16px;text-align:right">133</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head" style="margin-bottom:16px">Find a column</div>
+        <div style="display:flex;gap:0;border:2px solid var(--ink);margin-bottom:16px">
+          <input class="field" style="border:none;border-right:2px solid var(--ink);flex:1" placeholder="e.g. expense, canopy…"/>
+          <button class="btn">Find →</button>
+        </div>
+        <div class="chip-row">
+          <div class="chip">expense_type → finance</div>
+          <div class="chip">suburb → demographics</div>
+          <div class="chip">net_generation_mwh → environment</div>
+          <div class="chip">dog_breed → animals</div>
+        </div>
+        <div class="cols cols-2" style="border:2px solid var(--ink);margin-top:20px">
+          <div class="bigstat border-r"><div class="bigstat-n terra">271</div><div class="bigstat-label">Columns</div></div>
+          <div class="bigstat"><div class="bigstat-n sky">8</div><div class="bigstat-label">Tables</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+
 <script>
-  // theme: persisted, defaults to system preference
-  const root=document.documentElement, lbl=document.getElementById('themeLbl');
-  const saved=localStorage.getItem('at-theme');
-  root.dataset.theme = saved || (matchMedia('(prefers-color-scheme: light)').matches?'light':'dark');
-  const paint=()=>lbl.textContent = root.dataset.theme==='dark' ? '🌙 Dark' : '☀️ Light';
-  paint();
-  document.getElementById('themeBtn').onclick=()=>{
-    root.dataset.theme = root.dataset.theme==='dark' ? 'light':'dark';
-    localStorage.setItem('at-theme', root.dataset.theme); paint();
-  };
-  // nav
-  document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
-    document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
-    document.querySelectorAll('.view').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); document.getElementById(b.dataset.v).classList.add('active');
+// DATE
+const d=new Date();
+document.getElementById('mdate').textContent=
+  d.toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · Darwin, NT';
+
+// NAV
+document.querySelectorAll('.nav-btn').forEach(b=>{
+  b.onclick=()=>{
+    document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.p).classList.add('active');
     window.scrollTo(0,0);
+    setTimeout(animateBars,80);
+    setTimeout(animateCounters,80);
+  };
+});
+
+// ANIMATED COUNTERS
+function animateCounters(){
+  document.querySelectorAll('[data-count]').forEach(el=>{
+    const target=parseInt(el.dataset.count);
+    let v=0,dur=1200,steps=60,inc=target/steps;
+    const t=setInterval(()=>{
+      v=Math.min(v+inc,target);
+      el.textContent=Math.round(v).toLocaleString();
+      if(v>=target)clearInterval(t);
+    },dur/steps);
   });
+}
+animateCounters();
+
+// ANIMATE BARS
+function animateBars(){
+  document.querySelectorAll('.fill[data-w]').forEach(el=>{
+    el.style.width='0%';
+    requestAnimationFrame(()=>requestAnimationFrame(()=>el.style.width=el.dataset.w));
+  });
+}
+setTimeout(animateBars,200);
+
+// SPARKLINES
+function buildSpark(id,data,color){
+  const w=document.getElementById(id);
+  if(!w)return;
+  const max=Math.max(...data);
+  w.innerHTML='';
+  data.forEach((v,i)=>{
+    const b=document.createElement('div');
+    b.className='spark-b';
+    b.style.cssText=`background:${color};height:0%;transition:height 0.9s cubic-bezier(.22,1,.36,1) ${i*70}ms`;
+    w.appendChild(b);
+    setTimeout(()=>b.style.height=Math.round((v/max)*100)+'%',120);
+  });
+}
+buildSpark('lgSpark',[40,55,50,70,62,80,74,92],'var(--terra)');
+buildSpark('mobSpark',[30,45,55,48,70,85,78,96],'var(--sage)');
+
+// ASK CHIPS
+function setQ(el){document.getElementById('askInput').value=el.textContent;doAsk()}
+function doAsk(){}
+
+// TICKER SCROLL
+const tk=document.getElementById('ticker');
+let pos=0;
+const tickerContent=tk.innerHTML;
+tk.innerHTML=tickerContent+tickerContent;
+setInterval(()=>{pos+=0.6;if(pos>tk.scrollWidth/2)pos=0;tk.scrollLeft=pos;},16);
 </script>
 </body>
 </html>
