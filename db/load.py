@@ -12,6 +12,7 @@ Run migrations first, then this:
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 from pathlib import Path
 
@@ -131,6 +132,8 @@ def load_localities(db: Database) -> dict:
             if isinstance(lga, list):
                 lga = lga[0] if lga else None
             if isinstance(sub, str) and sub.strip():
+                # census appends a "(NT)" suffix — strip it so names match the ward map
+                sub = re.sub(r"\s*\(NT\)\s*$", "", sub).strip()
                 key = sub.upper()
                 if key not in seen:                    # don't overwrite ward entries
                     seen[key] = (sub, lga, None)
