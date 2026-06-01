@@ -27,6 +27,10 @@ class Database:
             # with a lock, so sharing one connection across threads is safe.
             self.conn = sqlite3.connect(self.cfg.sqlite_path, check_same_thread=False)
             self.conn.row_factory = sqlite3.Row
+            # WAL lets a background writer (auto-refresh) and readers run
+            # concurrently without "database is locked"; busy_timeout waits briefly.
+            self.conn.execute("PRAGMA journal_mode=WAL")
+            self.conn.execute("PRAGMA busy_timeout=5000")
         else:  # postgresql
             try:
                 import psycopg

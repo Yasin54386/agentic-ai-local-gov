@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import os
 import threading
+import time
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
@@ -29,6 +30,45 @@ PORT = int(os.environ.get("PORT", "8000"))
 
 repo = Repository()
 _lock = threading.Lock()  # serialise access to the shared sqlite connection
+
+# --- refresh-on-access: keep live data fresh without blocking requests --------
+# When a data API is hit and the data is older than REFRESH_TTL seconds, kick off
+# a single background sync. Set AUTOREFRESH=0 to disable; REFRESH_TTL=0 forces
+# every request (not recommended — hammers the source). --datasets stays on the
+# scheduled 6h job; on-access refresh is the light, live feed only.
+AUTOREFRESH = os.environ.get("AUTOREFRESH", "1") != "0"
+REFRESH_TTL = int(os.environ.get("REFRESH_TTL", "600"))   # 10 minutes default
+_refresh_at = 0.0          # monotonic time of last refresh start
+_refreshing = threading.Lock()
+_last_result = {"ran_at": None, "live": None}
+
+
+def _do_refresh():
+    """Background: sync the live feed into the DB via the existing refresh logic."""
+    from db.connection import Database
+    from ingestion.refresh import refresh_live
+    db = Database().connect()
+    try:
+        res = refresh_live(db)
+        _last_result.update(ran_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), live=res)
+    except Exception as exc:
+        _last_result.update(error=str(exc))
+    finally:
+        db.close()
+        _refreshing.release()
+
+
+def maybe_refresh():
+    """Non-blocking, throttled, single-flight trigger."""
+    global _refresh_at
+    if not AUTOREFRESH:
+        return
+    if time.monotonic() - _refresh_at < REFRESH_TTL:
+        return
+    if not _refreshing.acquire(blocking=False):   # one refresh at a time
+        return
+    _refresh_at = time.monotonic()
+    threading.Thread(target=_do_refresh, daemon=True).start()
 
 
 def tool(name, args=None):
@@ -65,6 +105,9 @@ class Handler(BaseHTTPRequestHandler):
     def do_GET(self):
         u = urlparse(self.path)
         q = parse_qs(u.query)
+        # data loads opportunistically keep the live data fresh (throttled, async)
+        if u.path.startswith("/api/") and u.path != "/api/health":
+            maybe_refresh()
         if u.path in ("/", "/index.html"):
             return self._file(STATIC / "index.html", "text/html; charset=utf-8")
         if u.path in ("/concept", "/concept.html"):
@@ -102,8 +145,11 @@ class Handler(BaseHTTPRequestHandler):
         if u.path == "/api/columns":
             return self._json(tool("find_columns", {"query": q.get("q", [""])[0]}))
         if u.path == "/api/health":
+            age = None if not _refresh_at else round(time.monotonic() - _refresh_at)
             return self._json({"ok": True, "model_server": llm.server_up(),
-                               "model": llm.DEFAULT_MODEL})
+                               "model": llm.DEFAULT_MODEL,
+                               "autorefresh": AUTOREFRESH, "refresh_ttl_s": REFRESH_TTL,
+                               "last_refresh_age_s": age, "last_refresh": _last_result})
         return self._json({"error": "not found"}, 404)
 
     def do_POST(self):
