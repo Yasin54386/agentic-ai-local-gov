@@ -49,7 +49,8 @@ def _ensure_tracking(db: Database) -> None:
 
 def _applied(db: Database) -> set[str]:
     try:
-        return {r[0] for r in db.fetchall("SELECT version FROM schema_migrations")}
+        # named access works on both engines (sqlite3.Row and psycopg dict_row)
+        return {r["version"] for r in db.fetchall("SELECT version FROM schema_migrations")}
     except Exception:
         return set()
 

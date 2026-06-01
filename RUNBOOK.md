@@ -19,8 +19,11 @@ git clone <your-repo-url> agentic-ai-local-gov
 cd agentic-ai-local-gov
 ```
 
-The repo ships with `data/catalog.db`, `data/unified.db`, and `data/raw/...`
-already built, so you can skip straight to step 3 if you just want to run it.
+The repo ships with the source data (`data/catalog.db`, `data/unified.db`,
+`data/column_catalog.json`). The app now reads from a single **migrated database**
+(`data/askterritory.db`) that you build once — see step 1.5.
+
+> Shortcut: `bash scripts/try.sh` does the database build + launch for you.
 
 ---
 
@@ -39,6 +42,20 @@ Verify:
 python3 -c "import sqlite3;print(sqlite3.connect('data/unified.db').execute('SELECT COUNT(*) FROM records').fetchone()[0],'records')"
 # -> 31330 records
 ```
+
+---
+
+## 1.5. Build the local database (required, one-time)
+
+The app reads from one migrated database. Create it from the shipped source data:
+
+```bash
+python3 -m db.migrate     # create the schema
+python3 -m db.load        # load datasets + records + categorised tables + catalog
+```
+
+This builds `data/askterritory.db` (gitignored, rebuilt anytime). To use
+PostgreSQL instead, set `DATABASE_URL` first — see **DB-SETUP.md**.
 
 ---
 

@@ -12,12 +12,13 @@ if ! command -v python3 >/dev/null 2>&1; then
 fi
 echo "==> Using $(python3 --version)"
 
-# 2. Make sure the data is present (it ships with the repo; rebuild if missing).
-if [ ! -f data/unified.db ]; then
-  echo "==> Unified data not found — building it (one-time, ~1 min)…"
-  python3 -m ingestion.harvest --report
-  python3 -m ingestion.fetch_data --api-sources
-  python3 -m ingestion.unify
+# 2. Build the local database if it doesn't exist (migrate + load).
+#    The source artifacts (catalog.db, unified.db, column_catalog.json) ship with
+#    the repo, so this just creates data/askterritory.db from them.
+if [ ! -f data/askterritory.db ]; then
+  echo "==> Local database not found — creating it (migrate + load)…"
+  python3 -m db.migrate
+  python3 -m db.load
 fi
 
 # 3. Note about the chat tab.

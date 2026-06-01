@@ -40,6 +40,15 @@ CREATE TABLE IF NOT EXISTS records (
     ingested_at    TEXT
 );
 
+CREATE TABLE IF NOT EXISTS resources (
+    dataset_id      TEXT,
+    name            TEXT,
+    fmt             TEXT,
+    url             TEXT,
+    downloaded_path TEXT
+);
+CREATE INDEX IF NOT EXISTS idx_resources_dataset ON resources(dataset_id);
+
 CREATE INDEX IF NOT EXISTS idx_records_dataset ON records(dataset_id);
 CREATE INDEX IF NOT EXISTS idx_records_table   ON records(table_name);
 CREATE INDEX IF NOT EXISTS idx_records_area    ON records(area_name);

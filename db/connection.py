@@ -23,18 +23,22 @@ class Database:
         if self.cfg.engine == "sqlite":
             import sqlite3
             Path(self.cfg.sqlite_path).parent.mkdir(parents=True, exist_ok=True)
-            self.conn = sqlite3.connect(self.cfg.sqlite_path)
+            # check_same_thread=False: the threaded web server serialises access
+            # with a lock, so sharing one connection across threads is safe.
+            self.conn = sqlite3.connect(self.cfg.sqlite_path, check_same_thread=False)
             self.conn.row_factory = sqlite3.Row
         else:  # postgresql
             try:
                 import psycopg
+                from psycopg.rows import dict_row
             except ImportError as e:
                 raise RuntimeError(
                     "PostgreSQL selected but `psycopg` is not installed.\n"
                     "  pip install \"psycopg[binary]\"") from e
+            # dict_row so rows support r["col"] access like sqlite3.Row
             self.conn = psycopg.connect(
                 host=self.cfg.host, port=self.cfg.port, user=self.cfg.user,
-                password=self.cfg.password, dbname=self.cfg.dbname)
+                password=self.cfg.password, dbname=self.cfg.dbname, row_factory=dict_row)
         return self
 
     def close(self) -> None:

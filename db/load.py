@@ -60,6 +60,18 @@ def load_datasets(db: Database) -> int:
     return _insert_batches(db, "datasets", cols, rows)
 
 
+def load_resources(db: Database) -> int:
+    if not Path(CATALOG_DB).exists():
+        return 0
+    src = _src(CATALOG_DB)
+    cols = ["dataset_id", "name", "fmt", "url", "downloaded_path"]
+    rows = [tuple(r[c] for c in cols)
+            for r in src.execute(f"SELECT {','.join(cols)} FROM resources")]
+    src.close()
+    db.execute("DELETE FROM resources")
+    return _insert_batches(db, "resources", cols, rows)
+
+
 def load_records(db: Database) -> dict:
     if not Path(UNIFIED_DB).exists():
         return {"records": 0}
@@ -114,11 +126,12 @@ def main() -> int:
     db = Database().connect()
     try:
         nd = load_datasets(db)
+        nr = load_resources(db)
         rc = load_records(db)
         ncat = load_column_catalog(db)
     finally:
         db.close()
-    print(f"[load] datasets: {nd}")
+    print(f"[load] datasets: {nd}  resources: {nr}")
     print(f"[load] records: {rc.get('records', 0)} (themed: "
           + ", ".join(f"{k} {v}" for k, v in rc.items() if k != 'records') + ")")
     print(f"[load] column_catalog: {ncat}")
