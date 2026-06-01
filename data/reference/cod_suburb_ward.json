@@ -1,0 +1,11 @@
+{
+  "source": "City of Darwin official ward pages (https://www.darwin.nt.gov.au/council/about-council/lord-mayor-councillors), retrieved 2026",
+  "lga": "City of Darwin",
+  "note": "Ward boundaries exist only for the City of Darwin LGA. Other NT councils are mostly not divided into wards.",
+  "wards": {
+    "Chan Ward": ["Coconut Grove", "East Point", "Fannie Bay", "Jingili", "Ludmilla", "Millner", "Nightcliff", "Rapid Creek"],
+    "Lyons Ward": ["Bayview", "Darwin City", "The Gardens", "The Narrows", "Larrakeyah", "Parap", "Stuart Park", "Woolner"],
+    "Richardson Ward": ["Alawa", "Brinkin", "Casuarina", "Leanyer", "Lee Point", "Lyons", "Muirhead", "Nakara", "Tiwi", "Wanguri"],
+    "Waters Ward": ["Anula", "Berrimah", "Coonawarra", "Eaton", "Karama", "Malak", "Marrara", "Moil", "Wagaman", "Winnellie", "Wulagi"]
+  }
+}

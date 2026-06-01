@@ -221,6 +221,31 @@ class Repository:
                              "value": r["metric_value"],
                              "detail": json.loads(r["payload"])} for r in rows]}
 
+    def suburb_lookup(self, suburb: str) -> dict:
+        """Resolve a suburb to its LGA (council) and — for City of Darwin — its ward,
+        so suburb questions can reach ward/LGA-level data (e.g. council spending)."""
+        if not self.ready:
+            return self._not_ready()
+        s = suburb.strip().upper()
+        rows = self.db.fetchall(
+            "SELECT suburb, lga, ward FROM suburb_locality WHERE UPPER(suburb) = ?", (s,))
+        if not rows:
+            rows = self.db.fetchall(
+                "SELECT suburb, lga, ward FROM suburb_locality WHERE UPPER(suburb) LIKE ?",
+                (f"%{s}%",))
+        if not rows:
+            return {"suburb": suburb, "found": False,
+                    "hint": "Unknown suburb. Try list_suburbs."}
+        r = rows[0]
+        out = {"suburb": r["suburb"], "lga": r["lga"], "ward": r["ward"], "found": True}
+        if r["ward"]:
+            out["hint"] = (f"{r['suburb']} is in {r['ward']} (City of Darwin). For its "
+                           f"council spending, query the finance table with area='{r['ward']}'.")
+        else:
+            out["hint"] = (f"{r['suburb']} is in {r['lga']}. Ward-level data exists only "
+                           "for City of Darwin suburbs.")
+        return out
+
     def find_records(self, area: str = "", keyword: str = "", limit: int = 50) -> dict:
         """Cross-dataset co-occurrence search: every record matching BOTH a place
         (area) AND a term (keyword, matched against the payload, category,

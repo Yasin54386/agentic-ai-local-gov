@@ -103,6 +103,47 @@ def load_records(db: Database) -> dict:
     return counts
 
 
+def load_localities(db: Database) -> dict:
+    """Build suburb -> (lga, ward). Ward from the City of Darwin reference file
+    (authoritative); LGA for all NT suburbs derived from the census records."""
+    seen: dict[str, tuple] = {}   # SUBURB_UPPER -> (suburb, lga, ward)
+
+    # 1. City of Darwin ward map (authoritative, sourced).
+    ref_path = Path("data/reference/cod_suburb_ward.json")
+    if ref_path.exists():
+        ref = json.loads(ref_path.read_text(encoding="utf-8"))
+        for ward, suburbs in ref["wards"].items():
+            for s in suburbs:
+                seen[s.upper()] = (s, ref["lga"], ward)
+
+    # 2. NT-wide suburb -> LGA, derived from our own census payloads.
+    if Path(UNIFIED_DB).exists():
+        src = _src(UNIFIED_DB)
+        for r in src.execute("SELECT payload FROM records"):
+            try:
+                p = json.loads(r["payload"])
+            except Exception:
+                continue
+            sub = p.get("suburb")
+            if isinstance(sub, list):
+                sub = sub[0] if sub else None
+            lga = p.get("lga_name") or p.get("abs_lga") or p.get("lga")
+            if isinstance(lga, list):
+                lga = lga[0] if lga else None
+            if isinstance(sub, str) and sub.strip():
+                key = sub.upper()
+                if key not in seen:                    # don't overwrite ward entries
+                    seen[key] = (sub, lga, None)
+        src.close()
+
+    rows = list(seen.values())
+    db.execute("DELETE FROM suburb_locality")
+    cols = ["suburb", "lga", "ward"]
+    _insert_batches(db, "suburb_locality", cols, rows)
+    wards = sum(1 for _, _, w in rows if w)
+    return {"total": len(rows), "with_ward": wards}
+
+
 def load_column_catalog(db: Database) -> int:
     if not Path(COLUMN_CATALOG).exists():
         return 0
@@ -128,12 +169,14 @@ def main() -> int:
         nd = load_datasets(db)
         nr = load_resources(db)
         rc = load_records(db)
+        loc = load_localities(db)
         ncat = load_column_catalog(db)
     finally:
         db.close()
     print(f"[load] datasets: {nd}  resources: {nr}")
     print(f"[load] records: {rc.get('records', 0)} (themed: "
           + ", ".join(f"{k} {v}" for k, v in rc.items() if k != 'records') + ")")
+    print(f"[load] suburb_locality: {loc['total']} suburbs ({loc['with_ward']} with a Darwin ward)")
     print(f"[load] column_catalog: {ncat}")
     return 0
 

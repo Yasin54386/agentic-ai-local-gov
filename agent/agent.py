@@ -24,6 +24,9 @@ for that place, then dig in with query_unified(area=...).
 - "How much / how many / total / by ward / by category / by year"? -> use \
 query_unified(table=..., group_by=..., op="sum" or "count") or \
 aggregate(dataset_id, group_by, value, op).
+- A SUBURB's council spending/cost (e.g. "how much for Karama")? Council money is \
+by WARD, not suburb. So FIRST call suburb_lookup(suburb) to get its ward, THEN \
+query_unified(table="finance", area=<that ward>, group_by="category", op="sum").
 - A place AND a concept together (e.g. "Karama and expenses", "trees in Malak")? \
 -> call find_records(area=..., keyword=...) to get exactly the records where both \
 co-occur. If it returns 0, say so honestly and read its "note".

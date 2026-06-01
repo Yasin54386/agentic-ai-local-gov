@@ -148,6 +148,18 @@ TOOLS: list[dict[str, Any]] = [
         },
     },
     {
+        "name": "suburb_lookup",
+        "description": "Resolve a suburb to its council (LGA) and, for City of Darwin "
+                       "suburbs, its WARD. Council money is recorded by ward, so to answer "
+                       "a suburb's spending: call this to get the ward, then query the "
+                       "finance table with area=<ward>.",
+        "input_schema": {
+            "type": "object",
+            "properties": {"suburb": {"type": "string"}},
+            "required": ["suburb"],
+        },
+    },
+    {
         "name": "find_records",
         "description": "Cross-dataset co-occurrence search: return every record that "
                        "matches BOTH a place (area) AND a term (keyword). The keyword is "
@@ -209,6 +221,8 @@ def dispatch(repo: Repository, name: str, args: dict[str, Any]) -> Any:
     if name == "find_columns":
         return repo.find_columns(args.get("query", ""), args.get("semantic_class", ""),
                                  args.get("limit", 20))
+    if name == "suburb_lookup":
+        return repo.suburb_lookup(args["suburb"])
     if name == "find_records":
         return repo.find_records(args.get("area", ""), args.get("keyword", ""),
                                  args.get("limit", 50))
