@@ -19,6 +19,26 @@ from ingestion.themes import THEMES, THEME_DESCRIPTIONS
 THEMED_TABLES = [*THEMES, "other"]
 RECORD_TABLES = {"records", *THEMED_TABLES}
 
+# Dataset ids used by the panel-specific views.
+DS_CANOPY = "smart.darwin.nt.gov.au:tree-canopy-cover"
+DS_MOBILITY = "smart.darwin.nt.gov.au:micromobility-data-neuron-beam"
+DS_DECISIONS = "smart.darwin.nt.gov.au:councillor-decisions"
+DS_GRANTS = "smart.darwin.nt.gov.au:sponsorships-and-grants-data"
+DS_CAPITAL = "smart.darwin.nt.gov.au:year_by_year_capital_expenditure0"
+DS_EXPENSES = "smart.darwin.nt.gov.au:councillor-expenses"
+
+
+def _f(v):
+    """Best-effort float from messy values."""
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return float(v)
+    try:
+        return float(str(v).replace(",", "").replace("$", "").strip())
+    except ValueError:
+        return None
+
 
 class Repository:
     def __init__(self, url: str | None = None):
@@ -324,6 +344,96 @@ class Repository:
             if len(hits) >= limit:
                 break
         return {"query": query, "matches": len(hits), "columns": hits}
+
+    # ---- panel views (real data for the web UI) --------------------------
+
+    def canopy_change(self, limit: int = 14) -> dict:
+        """Tree-canopy % change 2011→2021 by area (most loss first)."""
+        if not self.ready:
+            return self._not_ready()
+        out = []
+        for p in self._records_for(DS_CANOPY):
+            name = p.get("name") or p.get("name_1")
+            a, b = _f(p.get("tcc2011")), _f(p.get("tcc2021"))
+            if name and a is not None and b is not None:
+                out.append({"area": str(name), "y2011": round(a, 1), "y2021": round(b, 1),
+                            "change": round(b - a, 1)})
+        out.sort(key=lambda x: x["change"])
+        return {"areas": out[:limit]}
+
+    def mobility_trend(self) -> dict:
+        """Micromobility trips/distance/CO2 aggregated by month."""
+        if not self.ready:
+            return self._not_ready()
+        from collections import defaultdict
+        bym = defaultdict(lambda: {"trips": 0.0, "km": 0.0, "co2": 0.0})
+        for p in self._records_for(DS_MOBILITY):
+            m = p.get("month")
+            if not m:
+                continue
+            bym[m]["trips"] += _f(p.get("total_trips")) or 0
+            bym[m]["km"] += _f(p.get("total_distance_in_km")) or 0
+            bym[m]["co2"] += _f(p.get("co2_offset")) or 0
+        months = sorted(bym)
+        series = [{"month": m, "trips": round(bym[m]["trips"]),
+                   "km": round(bym[m]["km"]), "co2": round(bym[m]["co2"], 1)} for m in months]
+        last = series[-1] if series else {}
+        return {"series": series, "latest": last,
+                "total_trips": round(sum(s["trips"] for s in series)),
+                "total_km": round(sum(s["km"] for s in series)),
+                "total_co2": round(sum(s["co2"] for s in series), 1)}
+
+    def capital_by_category(self, limit: int = 12) -> dict:
+        """Capital expenditure summed by category (the real capital dataset)."""
+        if not self.ready:
+            return self._not_ready()
+        from collections import defaultdict
+        agg = defaultdict(float)
+        for p in self._records_for(DS_CAPITAL):
+            agg[str(p.get("category", "?"))] += _f(p.get("expenditure")) or 0
+        items = sorted(agg.items(), key=lambda x: -x[1])[:limit]
+        return {"total": round(sum(agg.values())),
+                "categories": [{"category": k, "amount": round(v)} for k, v in items]}
+
+    def decisions(self, query: str = "", limit: int = 20) -> dict:
+        """Council decisions, newest first, optional text filter."""
+        if not self.ready:
+            return self._not_ready()
+        data = self._records_for(DS_DECISIONS)
+        if query:
+            ql = query.lower()
+            data = [p for p in data if ql in json.dumps(p, default=str).lower()]
+        data.sort(key=lambda p: str(p.get("meeting_date", "")), reverse=True)
+        return {"total": len(data),
+                "decisions": [{"date": p.get("meeting_date"), "title": p.get("title"),
+                               "department": p.get("department"),
+                               "type": p.get("meeting_type")} for p in data[:limit]]}
+
+    def grants(self, query: str = "", limit: int = 20) -> dict:
+        """Grants & sponsorships, largest first, optional text filter."""
+        if not self.ready:
+            return self._not_ready()
+        data = self._records_for(DS_GRANTS)
+        if query:
+            ql = query.lower()
+            data = [p for p in data if ql in json.dumps(p, default=str).lower()]
+        data.sort(key=lambda p: _f(p.get("total")) or 0, reverse=True)
+        return {"total": len(data),
+                "total_value": round(sum(_f(p.get("total")) or 0 for p in data)),
+                "grants": [{"recipient": p.get("organisation_event"),
+                            "type": p.get("grant_type"), "fy": p.get("financial_year"),
+                            "total": _f(p.get("total"))} for p in data[:limit]]}
+
+    def ward_spend(self) -> dict:
+        """Real councillor-expense spend by ward (basis for the equity view)."""
+        if not self.ready:
+            return self._not_ready()
+        from collections import defaultdict
+        agg = defaultdict(float)
+        for p in self._records_for(DS_EXPENSES):
+            agg[str(p.get("ward", "?"))] += _f(p.get("amount")) or 0
+        wards = [{"ward": k, "spend": round(v)} for k, v in sorted(agg.items(), key=lambda x: -x[1])]
+        return {"wards": wards, "total": round(sum(w["spend"] for w in wards))}
 
     def close(self) -> None:
         self.db.close()

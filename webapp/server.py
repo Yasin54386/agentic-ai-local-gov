@@ -36,6 +36,12 @@ def tool(name, args=None):
         return dispatch(repo, name, args or {})
 
 
+def _call(fn):
+    """Run a repository method under the lock (for panel views not exposed as tools)."""
+    with _lock:
+        return fn(repo)
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, *args):  # quieter console
         return
@@ -78,10 +84,23 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"error": "pass ?suburb="}, 400)
             return self._json(tool("neighbourhood_profile", {"suburb": suburb}))
         if u.path == "/api/transparency":
-            # council capital expenditure by category (sum) — a transparency view
-            return self._json(tool("query_unified", {
-                "domain": "finance & procurement", "group_by": "category",
-                "op": "sum", "limit": 15}))
+            return self._json(_call(lambda r: r.capital_by_category()))
+        if u.path == "/api/suburb_lookup":
+            return self._json(_call(lambda r: r.suburb_lookup(q.get("suburb", [""])[0])))
+        if u.path == "/api/canopy":
+            return self._json(_call(lambda r: r.canopy_change()))
+        if u.path == "/api/mobility":
+            return self._json(_call(lambda r: r.mobility_trend()))
+        if u.path == "/api/decisions":
+            return self._json(_call(lambda r: r.decisions(q.get("q", [""])[0])))
+        if u.path == "/api/grants":
+            return self._json(_call(lambda r: r.grants(q.get("q", [""])[0])))
+        if u.path == "/api/equity":
+            return self._json(_call(lambda r: r.ward_spend()))
+        if u.path == "/api/tables":
+            return self._json(tool("list_tables", {}))
+        if u.path == "/api/columns":
+            return self._json(tool("find_columns", {"query": q.get("q", [""])[0]}))
         if u.path == "/api/health":
             return self._json({"ok": True, "model_server": llm.server_up(),
                                "model": llm.DEFAULT_MODEL})

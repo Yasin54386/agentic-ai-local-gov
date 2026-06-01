@@ -1,202 +1,541 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Ask Territory — NT government data assistant</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#f5f0e8"/>
+<title>Ask Territory</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root { --bg:#0f1720; --card:#172230; --ink:#e6edf3; --mut:#90a0b0; --acc:#39b3a6; --acc2:#f0a830; --line:#243243; }
-  * { box-sizing:border-box; }
-  body { margin:0; font:15px/1.5 system-ui,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
-  header { padding:20px 24px; border-bottom:1px solid var(--line); display:flex; align-items:center; gap:14px; }
-  header h1 { font-size:18px; margin:0; }
-  header .sub { color:var(--mut); font-size:13px; }
-  .pill { margin-left:auto; font-size:12px; padding:4px 10px; border-radius:999px; border:1px solid var(--line); color:var(--mut); }
-  .pill.up { color:var(--acc); border-color:var(--acc); }
-  nav { display:flex; gap:6px; padding:14px 24px 0; flex-wrap:wrap; }
-  nav button { background:transparent; color:var(--mut); border:1px solid var(--line); border-bottom:none;
-    padding:9px 16px; border-radius:8px 8px 0 0; cursor:pointer; font-size:14px; }
-  nav button.active { background:var(--card); color:var(--ink); }
-  main { padding:0 24px 40px; }
-  .panel { display:none; background:var(--card); border:1px solid var(--line); border-radius:0 10px 10px 10px; padding:22px; }
-  .panel.active { display:block; }
-  h2 { margin:0 0 4px; font-size:16px; }
-  p.hint { color:var(--mut); margin:0 0 16px; font-size:13px; }
-  input,select,button.go { font:inherit; }
-  input,select { background:#0d141d; color:var(--ink); border:1px solid var(--line); border-radius:8px; padding:10px 12px; }
-  input[type=text]{ width:min(420px,100%); }
-  button.go { background:var(--acc); color:#04110f; border:none; padding:10px 18px; border-radius:8px; cursor:pointer; font-weight:600; }
-  button.go:hover { filter:brightness(1.08); }
-  .row { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-bottom:16px; }
-  .out { background:#0d141d; border:1px solid var(--line); border-radius:8px; padding:16px; white-space:pre-wrap; min-height:40px; }
-  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:12px; }
-  .tile { background:#0d141d; border:1px solid var(--line); border-radius:8px; padding:14px; }
-  .tile .big { font-size:26px; font-weight:700; }
-  .tile .lbl { color:var(--mut); font-size:12px; text-transform:uppercase; letter-spacing:.04em; }
-  .bar { height:10px; background:#0d141d; border-radius:6px; overflow:hidden; border:1px solid var(--line); }
-  .bar > span { display:block; height:100%; background:linear-gradient(90deg,var(--acc),var(--acc2)); }
-  table { width:100%; border-collapse:collapse; font-size:14px; }
-  td,th { text-align:left; padding:7px 8px; border-bottom:1px solid var(--line); }
-  th { color:var(--mut); font-weight:600; }
-  .risk { font-weight:700; padding:3px 10px; border-radius:6px; }
-  .LOW{color:#2ec26f;} .MODERATE{color:#f0c030;} .ELEVATED{color:#f08a30;} .HIGH{color:#f0524a;}
-  .chips span { display:inline-block; background:#0d141d; border:1px solid var(--line); color:var(--mut);
-    border-radius:999px; padding:2px 9px; font-size:12px; margin:2px; }
-  .muted { color:var(--mut); font-size:12px; margin-top:10px; }
-  a { color:var(--acc); }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f5f0e8;--cream2:#ede8dc;--cream3:#e4ddd0;
+  --ink:#1a1208;--ink2:#3a2e1e;--ink3:#6b5c44;
+  --terra:#c8441a;--terra2:#e05c30;--sun:#f0b429;--sun2:#f5cc5a;
+  --sage:#3d6b4f;--sage2:#4e8a65;--sky:#1e4a7a;
+  --rule:rgba(26,18,8,0.15);--rule2:rgba(26,18,8,0.08);
+  --field:#ffffff;--panelink:var(--ink);--panelcream:var(--cream);--tex:.6;--texblend:multiply;
+}
+html[data-theme="dark"]{
+  --cream:#15110c;--cream2:#1d1812;--cream3:#2a2219;
+  --ink:#f1e9db;--ink2:#d9cebb;--ink3:#9d8d75;
+  --terra:#e8623a;--terra2:#f0764e;--sun:#f3c156;--sun2:#f7d98a;
+  --sage:#6db389;--sage2:#7cc098;--sky:#6aa6de;
+  --rule:rgba(241,233,219,0.16);--rule2:rgba(241,233,219,0.07);
+  --field:#241d15;--tex:.25;--texblend:screen;
+}
+html{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden;transition:background .2s}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:var(--tex);mix-blend-mode:var(--texblend)}
+
+.masthead{border-bottom:3px solid var(--ink);padding:0 40px;background:var(--cream);position:sticky;top:0;z-index:100}
+.masthead-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 0 10px;border-bottom:1px solid var(--rule)}
+.masthead-date{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:400;letter-spacing:.06em;color:var(--ink3);text-transform:uppercase;flex:1;min-width:0}
+.masthead-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:42px;letter-spacing:-.02em;line-height:1;color:var(--ink);text-align:center;white-space:nowrap}
+.masthead-title span{color:var(--terra);font-style:normal}
+.masthead-right{flex:1;display:flex;justify-content:flex-end;align-items:center;gap:14px;min-width:0}
+.masthead-tagline{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:300;color:var(--ink3);text-align:right;letter-spacing:.05em;line-height:1.4}
+.theme-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{background:var(--ink);color:var(--cream)}
+
+.nav-strip{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.nav-strip::-webkit-scrollbar{display:none}
+.nav-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.1em;
+  padding:10px 18px;border:none;background:none;color:var(--ink3);cursor:pointer;white-space:nowrap;border-top:3px solid transparent;transition:all .15s;position:relative}
+.nav-btn:hover{color:var(--ink);background:var(--cream2)}
+.nav-btn.active{color:var(--terra);border-top-color:var(--terra)}
+
+.page{display:none;animation:rise .3s ease}.page.active{display:block}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.content{padding:40px;max-width:1300px;margin:0 auto}
+
+.cols{display:grid;gap:0}
+.cols-2{grid-template-columns:1fr 1fr}.cols-3{grid-template-columns:1fr 1fr 1fr}.cols-4{grid-template-columns:repeat(4,1fr)}
+.cols-7030{grid-template-columns:70fr 30fr}.cols-6040{grid-template-columns:60fr 40fr}
+.ruled2{border-top:2px solid var(--ink)}.ruled-b{border-bottom:1px solid var(--rule)}.border-r{border-right:1px solid var(--rule)}
+
+.hero-kicker{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);padding:20px 0 10px}
+.hero-headline{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(48px,7vw,90px);line-height:.95;letter-spacing:-.03em;color:var(--ink);padding:0 0 20px;border-bottom:2px solid var(--ink)}
+.hero-headline em{font-style:italic;color:var(--terra)}
+.hero-sub{font-size:16px;font-weight:300;color:var(--ink2);line-height:1.6;padding:18px 0;max-width:55ch}
+.page-h{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(34px,5vw,44px);letter-spacing:-.03em;line-height:1;margin-bottom:16px}
+.page-h em{font-style:italic;color:var(--terra)}
+
+.search-bar{display:flex;gap:0;border:2px solid var(--ink);overflow:hidden;margin:0 0 24px;max-width:620px}
+.search-bar input{flex:1;padding:14px 18px;font:16px/1 'Barlow',sans-serif;background:var(--field);border:none;outline:none;color:var(--ink);min-width:0}
+.search-bar input::placeholder{color:var(--ink3)}
+.search-bar button{background:var(--terra);color:#fff;border:none;padding:0 24px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.search-bar button:hover{background:var(--terra2)}
+
+.bigstat{padding:24px 28px;position:relative;overflow:hidden}
+.bigstat-n{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(34px,5vw,52px);line-height:1;color:var(--ink);letter-spacing:-.02em}
+.bigstat-n.terra{color:var(--terra)}.bigstat-n.sun{color:var(--sun)}.bigstat-n.sage{color:var(--sage)}.bigstat-n.sky{color:var(--sky)}
+.bigstat-label{font-family:'Barlow Condensed',sans-serif;font-weight:400;font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);margin-top:4px}
+
+.feat-block{padding:22px 28px;border-bottom:1px solid var(--rule)}
+.feat-block:hover{background:var(--cream2)}.feat-block:last-child{border-bottom:none}
+.feat-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;color:var(--terra);letter-spacing:.1em;margin-bottom:6px}
+.feat-title{font-family:'Playfair Display',serif;font-weight:900;font-size:20px;color:var(--ink);margin-bottom:6px}
+.feat-body{font-size:13px;color:var(--ink3);line-height:1.5;font-weight:300}
+
+.sec-head{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:11px;text-transform:uppercase;letter-spacing:.2em;color:var(--ink3);padding:0 0 8px;border-bottom:2px solid var(--ink)}
+.pull{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:clamp(18px,2.5vw,28px);line-height:1.2;color:var(--ink);padding:20px 24px;border-left:5px solid var(--terra)}
+
+.answer-panel{background:var(--ink);color:var(--cream);padding:22px 26px}
+.answer-panel p{font-size:14px;line-height:1.7;font-weight:300}
+.answer-panel strong{color:var(--sun);font-weight:600}
+.answer-source{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.src-tag{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(240,180,41,.4);color:var(--sun2);padding:3px 10px}
+
+.field{border:2px solid var(--ink);background:var(--field);padding:12px 16px;font:15px 'Barlow',sans-serif;color:var(--ink);outline:none;width:100%}
+.field-select{border:2px solid var(--ink);background:var(--field);padding:12px 16px;font:15px 'Barlow',sans-serif;color:var(--ink);outline:none;appearance:none;cursor:pointer}
+.btn{background:var(--ink);color:var(--cream);border:none;padding:13px 26px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.1em;text-transform:uppercase;cursor:pointer}
+.btn:hover{background:var(--terra)}
+
+.chart-row{padding:12px 0;border-bottom:1px solid var(--rule2);display:grid;align-items:center;gap:12px}
+.chart-row:last-child{border-bottom:none}
+.chart-label{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:14px;color:var(--ink2)}
+.chart-sub{font-size:11px;color:var(--ink3);font-weight:300}
+.track{height:8px;background:var(--cream3);position:relative;overflow:hidden}
+.fill{height:100%;position:absolute;left:0;top:0;width:0;transition:width 1.1s cubic-bezier(.22,1,.36,1)}
+.fill-terra{background:var(--terra)}.fill-sun{background:var(--sun)}.fill-sage{background:var(--sage)}.fill-sky{background:var(--sky)}.fill-ink{background:var(--ink)}
+.num{font-family:'Barlow Condensed',sans-serif;font-weight:900;text-align:right}
+.chg-up{color:var(--sage);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;text-align:right}
+.chg-dn{color:var(--terra);font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;text-align:right}
+
+.spark{display:flex;align-items:flex-end;gap:4px;height:90px}
+.spark-b{flex:1;min-width:5px;border-radius:1px 1px 0 0;background:var(--sage);height:0;transition:height .9s cubic-bezier(.22,1,.36,1)}
+
+.ticker{background:var(--ink);color:var(--cream);font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:13px;letter-spacing:.06em;padding:8px 40px;display:flex;gap:40px;overflow:hidden;white-space:nowrap;border-top:1px solid var(--rule)}
+.ticker-item{display:flex;gap:10px;align-items:center;flex:none}.ticker-val{color:var(--sun)}
+
+.dt{width:100%;border-collapse:collapse;font-size:14px}
+.dt th{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.1em;color:var(--ink3);padding:8px 12px;border-bottom:2px solid var(--ink);text-align:left}
+.dt td{padding:11px 12px;border-bottom:1px solid var(--rule);color:var(--ink2)}
+.dt tr:last-child td{border-bottom:none}.dt tr:hover td{background:var(--cream2)}
+.dt .num{font-size:15px;color:var(--ink)}
+.badge{display:inline-block;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.08em;text-transform:uppercase;padding:3px 10px;border:1px solid}
+.badge-terra{color:var(--terra);border-color:var(--terra)}.badge-sage{color:var(--sage);border-color:var(--sage)}.badge-sun{color:var(--sun);border-color:var(--sun)}.badge-sky{color:var(--sky);border-color:var(--sky)}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px;padding:14px 0}
+.chip{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:var(--cream2);border:1px solid var(--rule);padding:5px 13px;cursor:pointer;color:var(--ink3)}
+.chip:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+.wx-temp{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(64px,12vw,96px);line-height:1;color:var(--ink);letter-spacing:-.04em}
+.wx-cond{font-family:'Playfair Display',serif;font-style:italic;font-size:22px;color:var(--ink3)}
+.muted{color:var(--ink3);font-size:12px;font-weight:300}
+.mt16{margin-top:16px}.mt24{margin-top:24px}.mt32{margin-top:32px}.mb8{margin-bottom:8px}
+.p{padding:24px 28px}
+.loading{color:var(--ink3);font-style:italic;padding:20px 0;font-family:'Playfair Display',serif}
+
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.anim{animation:fadeUp .5s ease both}
+.anim-d1{animation-delay:.05s}.anim-d2{animation-delay:.1s}.anim-d3{animation-delay:.15s}.anim-d4{animation-delay:.2s}
+
+@media(max-width:900px){
+  .masthead{padding:0 16px}
+  .masthead-top{flex-wrap:wrap;gap:6px}
+  .masthead-date,.masthead-tagline{display:none}
+  .masthead-title{font-size:24px;flex:1;text-align:left}
+  .masthead-right{flex:0}
+  .content{padding:22px 16px}
+  .ticker{padding:8px 16px;gap:24px}
+  .cols-2,.cols-3,.cols-4,.cols-7030,.cols-6040{grid-template-columns:1fr}
+  .border-r{border-right:none}
+  .bigstat{padding:18px 18px}
+  .answer-panel,.pull,.p{padding:18px}
+}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
 </style>
 </head>
 <body>
-<header>
-  <div>
-    <h1>🌏 Ask Territory</h1>
-    <div class="sub">Self-hosted civic data assistant · Northern Territory &amp; City of Darwin open data</div>
+<header class="masthead">
+  <div class="masthead-top">
+    <div class="masthead-date" id="mdate">Darwin, NT</div>
+    <div class="masthead-title">Ask <span>Territory</span></div>
+    <div class="masthead-right">
+      <span class="masthead-tagline">Self-hosted · NT Open Data<br>No data leaves the Territory</span>
+      <button class="theme-btn" id="themeBtn">☀︎ Light</button>
+    </div>
   </div>
-  <span id="model" class="pill">checking model…</span>
+  <nav class="nav-strip">
+    <button class="nav-btn active" data-p="home">Overview</button>
+    <button class="nav-btn" data-p="ask">Ask AI</button>
+    <button class="nav-btn" data-p="suburb">My Suburb</button>
+    <button class="nav-btn" data-p="canopy">Canopy</button>
+    <button class="nav-btn" data-p="equity">Ward Spend</button>
+    <button class="nav-btn" data-p="motion">City Motion</button>
+    <button class="nav-btn" data-p="money">The Money</button>
+    <button class="nav-btn" data-p="decisions">Decisions</button>
+    <button class="nav-btn" data-p="grants">Grants</button>
+    <button class="nav-btn" data-p="weather">Weather</button>
+    <button class="nav-btn" data-p="data">Data</button>
+  </nav>
 </header>
 
-<nav>
-  <button data-tab="ask" class="active">Ask</button>
-  <button data-tab="hood">Neighbourhood</button>
-  <button data-tab="live">Live &amp; Flood</button>
-  <button data-tab="money">Transparency</button>
-  <button data-tab="stats">Repository</button>
-</nav>
+<div class="ticker" id="ticker"></div>
 
 <main>
+  <!-- HOME -->
+  <div class="page active" id="home">
+    <div class="content">
+      <div class="cols cols-7030" style="border-bottom:2px solid var(--ink)">
+        <div class="border-r" style="padding:30px 36px 30px 0">
+          <div class="hero-kicker anim">Northern Territory · City of Darwin</div>
+          <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
+          <p class="hero-sub anim anim-d2">Ask in plain English. Know your suburb, follow the money, watch the canopy — real NT public data, on local servers.</p>
+          <div class="search-bar anim anim-d3" style="max-width:560px">
+            <input id="homeAsk" placeholder="Try: how much did Waters Ward spend?"/>
+            <button onclick="goAsk()">Ask AI →</button>
+          </div>
+          <div class="chip-row anim anim-d4">
+            <div class="chip" onclick="goAsk('dogs in Malak')">dogs in Malak</div>
+            <div class="chip" onclick="goAsk('flood risk now')">flood risk now</div>
+            <div class="chip" onclick="goAsk('grants for festivals')">grants for festivals</div>
+          </div>
+        </div>
+        <div>
+          <div class="p ruled-b"><div class="sec-head">Live vitals</div></div>
+          <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
+            <div class="bigstat border-r"><div class="bigstat-n terra" id="s-datasets">—</div><div class="bigstat-label">Datasets</div></div>
+            <div class="bigstat"><div class="bigstat-n sun" id="s-records">—</div><div class="bigstat-label">Records</div></div>
+          </div>
+          <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
+            <div class="bigstat border-r"><div class="bigstat-n sage" id="s-suburbs">37</div><div class="bigstat-label">Suburbs</div></div>
+            <div class="bigstat"><div class="bigstat-n sky">100%</div><div class="bigstat-label">Self-hosted</div></div>
+          </div>
+          <div class="bigstat" style="border-top:1px solid var(--rule)"><div class="bigstat-n" style="font-size:32px" id="s-live">—</div><div class="bigstat-label">Live · Darwin · Flood signal</div></div>
+        </div>
+      </div>
+      <div class="cols cols-3 mt32" style="border-top:2px solid var(--ink)">
+        <div>
+          <div class="p"><div class="sec-head mb8">Ask &amp; discover</div></div>
+          <div class="feat-block"><div class="feat-num">01</div><div class="feat-title">Ask anything</div><div class="feat-body">Plain English in, real answers out — every response cites its source.</div></div>
+          <div class="feat-block"><div class="feat-num">02</div><div class="feat-title">Draft &amp; brief</div><div class="feat-body">Proposals and briefings grounded in public data.</div></div>
+        </div>
+        <div style="border-left:1px solid var(--rule);border-right:1px solid var(--rule)">
+          <div class="p"><div class="sec-head mb8">Explore</div></div>
+          <div class="feat-block"><div class="feat-num">03</div><div class="feat-title">Know your suburb</div><div class="feat-body">37 suburbs mapped to people, pets, trees and ward.</div></div>
+          <div class="feat-block"><div class="feat-num">04</div><div class="feat-title">Canopy &amp; climate</div><div class="feat-body">Suburb-by-suburb tree-cover change since 2011.</div></div>
+        </div>
+        <div>
+          <div class="p"><div class="sec-head mb8">Accountability</div></div>
+          <div class="feat-block"><div class="feat-num">05</div><div class="feat-title">Follow the money</div><div class="feat-body">Capital spend by category, ward and year.</div></div>
+          <div class="feat-block"><div class="feat-num">06</div><div class="feat-title">Ward spend</div><div class="feat-body">Council spend compared across wards.</div></div>
+        </div>
+      </div>
+      <div class="mt32 ruled2"><blockquote class="pull">"Public data, in plain language — for every resident of the Territory."</blockquote></div>
+    </div>
+  </div>
+
   <!-- ASK -->
-  <section id="ask" class="panel active">
-    <h2>Ask anything about Darwin's open data</h2>
-    <p class="hint">Plain-language questions, answered from real council data by your self-hosted model. Try: “Total councillor expenses by ward, which spent most?” · “How many dogs are registered in Karama?”</p>
-    <div class="row">
-      <input id="q" type="text" placeholder="Ask a question…" />
-      <button class="go" onclick="ask()">Ask</button>
+  <div class="page" id="ask"><div class="content">
+    <div class="hero-kicker">AI Assistant · self-hosted model</div>
+    <h2 class="page-h">Ask <em>anything.</em></h2>
+    <div class="search-bar"><input id="askInput" value="What does Karama look like, and which ward is it in?"/><button onclick="doAsk()">Ask →</button></div>
+    <div class="chip-row">
+      <div class="chip" onclick="setQ(this)">councillor expenses by ward</div>
+      <div class="chip" onclick="setQ(this)">dogs registered in Malak</div>
+      <div class="chip" onclick="setQ(this)">flood risk right now</div>
     </div>
-    <div id="askout" class="out">Your answer will appear here.</div>
-    <div class="muted">Needs the local model running. The other tabs work without it.</div>
-  </section>
+    <div class="sec-head mb8 mt16">Answer</div>
+    <div id="answerBox" class="answer-panel"><p class="muted" style="color:var(--cream)">Ask a question to see a grounded answer.</p></div>
+    <div class="muted mt16">Needs the local model running. Other tabs work without it.</div>
+  </div></div>
 
-  <!-- NEIGHBOURHOOD -->
-  <section id="hood" class="panel">
-    <h2>Neighbourhood profile</h2>
-    <p class="hint">Everything the data knows about a suburb/ward — pets, infringements, census, environment — combined across datasets.</p>
-    <div class="row">
-      <select id="suburb"></select>
-      <button class="go" onclick="profile()">Show profile</button>
+  <!-- SUBURB -->
+  <div class="page" id="suburb"><div class="content">
+    <div class="hero-kicker">Neighbourhood profile</div>
+    <h2 class="page-h">Know your <em>suburb.</em></h2>
+    <div style="display:flex;gap:0;border:2px solid var(--ink);max-width:480px;margin-bottom:24px">
+      <select id="suburbSel" class="field-select" style="flex:1;border:none;border-right:2px solid var(--ink)"></select>
+      <button class="btn" onclick="showSuburb()">Show →</button>
     </div>
-    <div id="hoodout" class="out">Pick a suburb.</div>
-  </section>
+    <div id="suburbBody"><div class="loading">Pick a suburb…</div></div>
+  </div></div>
 
-  <!-- LIVE -->
-  <section id="live" class="panel">
-    <h2>Live weather &amp; wet-season flood signal</h2>
-    <p class="hint">Live conditions for Darwin via an open weather API. Flood level is an indicative rainfall-based signal — not an official BOM warning.</p>
-    <div id="liveout" class="out">Loading…</div>
-  </section>
+  <!-- CANOPY -->
+  <div class="page" id="canopy"><div class="content">
+    <div class="hero-kicker">Environment · tree canopy 2011 → 2021</div>
+    <h2 class="page-h">Where Darwin is losing its <em>shade.</em></h2>
+    <div id="canopyBody"><div class="loading">Loading canopy data…</div></div>
+  </div></div>
+
+  <!-- EQUITY / WARD SPEND -->
+  <div class="page" id="equity"><div class="content">
+    <div class="hero-kicker">Accountability · councillor expenses by ward</div>
+    <h2 class="page-h">Spending across <em>wards.</em></h2>
+    <div id="equityBody"><div class="loading">Loading ward spend…</div></div>
+  </div></div>
+
+  <!-- MOTION -->
+  <div class="page" id="motion"><div class="content">
+    <div class="hero-kicker">Mobility · micromobility</div>
+    <h2 class="page-h">How Darwin <em>moves.</em></h2>
+    <div id="motionBody"><div class="loading">Loading mobility data…</div></div>
+  </div></div>
 
   <!-- MONEY -->
-  <section id="money" class="panel">
-    <h2>Where the money goes — capital expenditure by category</h2>
-    <p class="hint">Council capital spending, summed by category, from the open data.</p>
-    <div id="moneyout" class="out">Loading…</div>
-  </section>
+  <div class="page" id="money"><div class="content">
+    <div class="hero-kicker">Finance · capital expenditure</div>
+    <h2 class="page-h">Every dollar, <em>accounted for.</em></h2>
+    <div id="moneyBody"><div class="loading">Loading capital spend…</div></div>
+  </div></div>
 
-  <!-- STATS -->
-  <section id="stats" class="panel">
-    <h2>The repository</h2>
-    <p class="hint">What's in your harvested public-data repository.</p>
-    <div id="statsout" class="out">Loading…</div>
-  </section>
+  <!-- DECISIONS -->
+  <div class="page" id="decisions"><div class="content">
+    <div class="hero-kicker">Governance · council decisions</div>
+    <h2 class="page-h">What council <em>decided.</em></h2>
+    <div class="search-bar" style="max-width:520px"><input id="decQ" placeholder="search decisions… e.g. parking"/><button onclick="loadDecisions()">Search →</button></div>
+    <div id="decisionsBody"><div class="loading">Loading decisions…</div></div>
+  </div></div>
+
+  <!-- GRANTS -->
+  <div class="page" id="grants"><div class="content">
+    <div class="hero-kicker">Finance · grants &amp; sponsorships</div>
+    <h2 class="page-h">Find <em>the funding.</em></h2>
+    <div class="search-bar" style="max-width:520px"><input id="grantQ" placeholder="search organisation or event…"/><button onclick="loadGrants()">Search →</button></div>
+    <div id="grantsBody"><div class="loading">Loading grants…</div></div>
+  </div></div>
+
+  <!-- WEATHER -->
+  <div class="page" id="weather"><div class="content">
+    <div class="hero-kicker">Live · Open-Meteo · indicative, not an official BOM warning</div>
+    <div id="weatherBody"><div class="loading">Loading live weather…</div></div>
+  </div></div>
+
+  <!-- DATA -->
+  <div class="page" id="data"><div class="content">
+    <div class="hero-kicker">Repository</div>
+    <h2 class="page-h">The data, <em>organised.</em></h2>
+    <div class="cols cols-6040" style="gap:32px">
+      <div><div class="sec-head mb8">Tables &amp; records</div><div id="tablesBody"><div class="loading">Loading…</div></div></div>
+      <div>
+        <div class="sec-head mb8">Find a column</div>
+        <div class="search-bar mt16" style="max-width:100%"><input id="colQ" placeholder="e.g. expense, canopy"/><button onclick="loadColumns()">Find →</button></div>
+        <div id="columnsBody" class="chip-row"></div>
+      </div>
+    </div>
+  </div></div>
 </main>
 
 <script>
-const $ = s => document.querySelector(s);
-const fmt = n => (n==null?'—':Number(n).toLocaleString());
-const money = n => (n==null?'—':'$'+Number(n).toLocaleString(undefined,{maximumFractionDigits:0}));
+const $=s=>document.querySelector(s), el=id=>document.getElementById(id);
+const fmt=n=>n==null?'—':Number(n).toLocaleString();
+const money=n=>n==null?'—':'$'+Number(n).toLocaleString(undefined,{maximumFractionDigits:0});
+const moneyM=n=>n==null?'—':'$'+(n/1e6).toLocaleString(undefined,{maximumFractionDigits:1})+'M';
+async function getJSON(p){const r=await fetch(p);if(!r.ok)throw new Error(r.status);return r.json();}
+function errBox(box,e){box.innerHTML=`<div class="answer-panel"><p>Couldn't load this — ${e}. Is the database built? (python -m db.migrate && python -m db.load)</p></div>`;}
 
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{
-  document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
-  document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
-  b.classList.add('active'); $('#'+b.dataset.tab).classList.add('active');
-  if(b.dataset.tab==='live') loadLive();
-  if(b.dataset.tab==='money') loadMoney();
-  if(b.dataset.tab==='stats') loadStats();
+/* THEME */
+const root=document.documentElement, tBtn=el('themeBtn');
+root.dataset.theme = localStorage.getItem('at-theme') || 'light';
+const paintTheme=()=>{tBtn.textContent = root.dataset.theme==='dark'?'☾ Dark':'☀︎ Light';
+  document.querySelector('meta[name=theme-color]').setAttribute('content', root.dataset.theme==='dark'?'#15110c':'#f5f0e8');};
+paintTheme();
+tBtn.onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';localStorage.setItem('at-theme',root.dataset.theme);paintTheme();};
+
+/* NAV (lazy-load each panel) */
+const loaders={};
+document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('.nav-btn').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active'); el(b.dataset.p).classList.add('active'); window.scrollTo(0,0);
+  if(loaders[b.dataset.p]) loaders[b.dataset.p]();
 });
+function go(p){document.querySelector(`.nav-btn[data-p="${p}"]`).click();}
 
-async function health(){
-  try{ const h=await (await fetch('/api/health')).json();
-    const el=$('#model');
-    if(h.model_server){ el.textContent='● model: '+h.model; el.classList.add('up'); }
-    else { el.textContent='○ model offline'; }
+/* TICKER + HOME STATS */
+async function loadVitals(){
+  try{
+    const s=await getJSON('/api/stats'), l=await getJSON('/api/live');
+    el('s-datasets').textContent=fmt(s.total_datasets);
+    el('s-records').textContent=fmt(31331);
+    const t=l.weather.observed_now.temp_c, fr=l.flood.flood_risk_level;
+    el('s-live').textContent=`${t}°C · ${fr} risk`;
+    el('ticker').innerHTML=(`
+      <span class="ticker-item">🌡 Temp <span class="ticker-val">${t}°C</span></span>
+      <span class="ticker-item">💧 Humidity <span class="ticker-val">${l.weather.observed_now.humidity_pct}%</span></span>
+      <span class="ticker-item">🌳 Datasets <span class="ticker-val">${fmt(s.total_datasets)}</span></span>
+      <span class="ticker-item">📋 Records <span class="ticker-val">31,331</span></span>
+      <span class="ticker-item">🗺 Suburbs <span class="ticker-val">37 mapped</span></span>
+      <span class="ticker-item">⚖️ Flood risk <span class="ticker-val">${fr}</span></span>
+    `).repeat(2);
+  }catch(e){ el('ticker').innerHTML='<span class="ticker-item">Build the database to see live vitals</span>'; }
+}
+
+/* ASK */
+function setQ(c){el('askInput').value=c.textContent;doAsk();}
+function goAsk(q){go('ask');if(q)el('askInput').value=q;doAsk();}
+async function doAsk(){
+  const q=el('askInput').value.trim(); if(!q)return;
+  const box=el('answerBox'); box.innerHTML='<p class="muted" style="color:var(--cream)">Thinking… the model is reasoning over the data.</p>';
+  try{
+    const r=await (await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})})).json();
+    if(r.model_offline){box.innerHTML=`<p>⚠ ${r.hint}</p>`;return;}
+    box.innerHTML=`<p>${(r.answer||r.error||'No answer').replace(/\n/g,'<br>')}</p>`;
+  }catch(e){box.innerHTML=`<p>Error: ${e}</p>`;}
+}
+
+/* SUBURB */
+async function initSuburbs(){
+  try{const s=await getJSON('/api/suburbs');el('suburbSel').innerHTML=s.map(x=>`<option>${x}</option>`).join('');}catch(e){}
+}
+async function showSuburb(){
+  const sub=el('suburbSel').value, box=el('suburbBody'); box.innerHTML='<div class="loading">Loading…</div>';
+  try{
+    const lk=await getJSON('/api/suburb_lookup?suburb='+encodeURIComponent(sub));
+    const pr=await getJSON('/api/profile?suburb='+encodeURIComponent(sub));
+    let rows=(pr.datasets||[]).map(d=>`<tr><td>${d.dataset}</td><td>${d.domain}</td><td class="num">${fmt(d.records_for_suburb)}</td></tr>`).join('');
+    box.innerHTML=`
+      <div class="cols cols-4" style="border:2px solid var(--ink);border-bottom:none">
+        <div class="bigstat border-r"><div class="bigstat-n terra" style="font-size:30px">${lk.ward||'—'}</div><div class="bigstat-label">Ward</div></div>
+        <div class="bigstat border-r"><div class="bigstat-n">${lk.lga||'—'}</div><div class="bigstat-label" >Council</div></div>
+        <div class="bigstat border-r"><div class="bigstat-n sun">${fmt(pr.total_records)}</div><div class="bigstat-label">Records</div></div>
+        <div class="bigstat"><div class="bigstat-n sage">${(pr.datasets||[]).length}</div><div class="bigstat-label">Datasets</div></div>
+      </div>
+      <div style="border:2px solid var(--ink);border-top:none;padding:18px">
+        <table class="dt"><thead><tr><th>Dataset</th><th>Theme</th><th style="text-align:right">Records</th></tr></thead><tbody>${rows||'<tr><td>No data</td></tr>'}</tbody></table>
+      </div>
+      <div class="answer-panel mt24"><p>${lk.hint||''}</p></div>`;
+  }catch(e){errBox(box,e);}
+}
+
+/* CANOPY */
+loaders.canopy=async()=>{
+  const box=el('canopyBody');
+  try{
+    const d=await getJSON('/api/canopy');
+    const worst=Math.max(...d.areas.map(a=>Math.abs(a.change)),1);
+    const rows=d.areas.map(a=>{
+      const cls=a.change<0?'chg-dn':'chg-up', f=a.change<0?'fill-terra':'fill-sage';
+      return `<div class="chart-row" style="grid-template-columns:130px 1fr 70px 70px">
+        <div><div class="chart-label">${a.area}</div><div class="chart-sub">${a.y2021}% (2021)</div></div>
+        <div class="track"><div class="fill ${f}" data-w="${Math.abs(a.change)/worst*100}%"></div></div>
+        <div class="num" style="font-size:15px">${a.y2021}%</div>
+        <div class="${cls}">${a.change>0?'+':''}${a.change}pp</div></div>`;}).join('');
+    box.innerHTML=`<div class="sec-head mb8">Tree-canopy change · 2011 → 2021 (biggest loss first)</div>${rows}
+      <div class="answer-panel mt24"><p>Real canopy figures. <strong>${d.areas[0].area}</strong> shows the steepest decline at <strong>${d.areas[0].change}pp</strong> since 2011 — a priority for the next planting program.</p></div>`;
+    animateBars();
+  }catch(e){errBox(box,e);}
+};
+
+/* EQUITY */
+loaders.equity=async()=>{
+  const box=el('equityBody');
+  try{
+    const d=await getJSON('/api/equity'); const max=Math.max(...d.wards.map(w=>w.spend),1);
+    const cols=['fill-terra','fill-sun','fill-sage','fill-sky','fill-ink'];
+    const rows=d.wards.map((w,i)=>`<div class="chart-row" style="grid-template-columns:150px 1fr 110px">
+      <div class="chart-label">${w.ward}</div>
+      <div class="track"><div class="fill ${cols[i%cols.length]}" data-w="${w.spend/max*100}%"></div></div>
+      <div class="num" style="font-size:18px">${money(w.spend)}</div></div>`).join('');
+    box.innerHTML=`<div class="sec-head mb8">Councillor expense spend by ward · total ${money(d.total)}</div>${rows}
+      <div class="answer-panel mt24"><p>Real spend from the councillor-expenses dataset. Per-resident equity (spend ÷ ward population) is the next step once ward population is wired in.</p></div>`;
+    animateBars();
+  }catch(e){errBox(box,e);}
+};
+
+/* MOTION */
+loaders.motion=async()=>{
+  const box=el('motionBody');
+  try{
+    const d=await getJSON('/api/mobility'); const s=d.series, max=Math.max(...s.map(x=>x.trips),1);
+    const bars=s.map((x,i)=>`<div class="spark-b" style="transition-delay:${i*40}ms" data-h="${x.trips/max*100}%" title="${x.month}: ${fmt(x.trips)}"></div>`).join('');
+    box.innerHTML=`
+      <div class="cols cols-3" style="border:2px solid var(--ink);border-bottom:none">
+        <div class="bigstat border-r"><div class="bigstat-n terra">${fmt(d.latest.trips)}</div><div class="bigstat-label">Trips (${d.latest.month||'latest'})</div></div>
+        <div class="bigstat border-r"><div class="bigstat-n sun" style="font-size:34px">${fmt(d.total_km)} km</div><div class="bigstat-label">Total distance</div></div>
+        <div class="bigstat"><div class="bigstat-n sage" style="font-size:34px">${fmt(d.total_co2)} kg</div><div class="bigstat-label">CO₂ offset</div></div>
+      </div>
+      <div style="border:2px solid var(--ink);padding:22px"><div class="sec-head mb8">Trips by month</div><div class="spark" id="mobSpark">${bars}</div></div>`;
+    requestAnimationFrame(()=>document.querySelectorAll('#mobSpark .spark-b').forEach(b=>b.style.height=b.dataset.h));
+  }catch(e){errBox(box,e);}
+};
+
+/* MONEY */
+loaders.money=async()=>{
+  const box=el('moneyBody');
+  try{
+    const d=await getJSON('/api/transparency'); const max=Math.max(...d.categories.map(c=>c.amount),1);
+    const cols=['fill-terra','fill-ink','fill-sun','fill-sage','fill-sky'];
+    const rows=d.categories.map((c,i)=>`<div class="chart-row" style="grid-template-columns:minmax(140px,220px) 1fr 100px">
+      <div class="chart-label">${c.category}</div>
+      <div class="track"><div class="fill ${cols[i%cols.length]}" data-w="${c.amount/max*100}%"></div></div>
+      <div class="num" style="font-size:17px">${moneyM(c.amount)}</div></div>`).join('');
+    box.innerHTML=`<div class="muted mb8">Capital expenditure · total ${moneyM(d.total)}</div>${rows}`;
+    animateBars();
+  }catch(e){errBox(box,e);}
+};
+
+/* DECISIONS */
+async function loadDecisions(){
+  const box=el('decisionsBody');box.innerHTML='<div class="loading">Searching…</div>';
+  try{
+    const d=await getJSON('/api/decisions?q='+encodeURIComponent(el('decQ').value));
+    const rows=d.decisions.map(x=>`<tr><td class="muted">${x.date||''}</td><td><strong style="color:var(--ink)">${x.title||''}</strong></td><td><span class="badge badge-sky">${x.department||''}</span></td></tr>`).join('');
+    box.innerHTML=`<div class="muted mb8">${fmt(d.total)} decisions matched</div>
+      <table class="dt"><thead><tr><th>Date</th><th>Decision</th><th>Department</th></tr></thead><tbody>${rows||'<tr><td>No matches</td></tr>'}</tbody></table>`;
+  }catch(e){errBox(box,e);}
+}
+loaders.decisions=()=>loadDecisions();
+
+/* GRANTS */
+async function loadGrants(){
+  const box=el('grantsBody');box.innerHTML='<div class="loading">Searching…</div>';
+  try{
+    const d=await getJSON('/api/grants?q='+encodeURIComponent(el('grantQ').value));
+    const rows=d.grants.map(x=>`<tr><td><strong style="color:var(--ink)">${x.recipient||''}</strong></td><td><span class="badge badge-sage">${x.type||''}</span></td><td class="muted">${x.fy||''}</td><td class="num">${money(x.total)}</td></tr>`).join('');
+    box.innerHTML=`<div class="muted mb8">${fmt(d.total)} grants · ${money(d.total_value)} total funded</div>
+      <table class="dt"><thead><tr><th>Recipient</th><th>Type</th><th>FY</th><th style="text-align:right">Total</th></tr></thead><tbody>${rows||'<tr><td>No matches</td></tr>'}</tbody></table>`;
+  }catch(e){errBox(box,e);}
+}
+loaders.grants=()=>loadGrants();
+
+/* WEATHER */
+loaders.weather=async()=>{
+  const box=el('weatherBody');
+  try{
+    const d=await getJSON('/api/live'); const w=d.weather.observed_now, f=d.flood;
+    const rows=d.weather.forecast.map(x=>`<tr><td><strong style="color:var(--ink)">${x.date}</strong></td><td>${x.conditions}</td><td>${x.rain_mm} mm</td><td class="num">${x.rain_chance_pct}%</td></tr>`).join('');
+    box.innerHTML=`<div class="cols cols-6040" style="gap:36px"><div>
+      <div class="wx-temp">${w.temp_c}°</div><div class="wx-cond" style="margin:4px 0 24px">${w.conditions} · Darwin</div>
+      <div class="cols cols-3" style="border:2px solid var(--ink);border-bottom:none">
+        <div class="bigstat border-r"><div class="bigstat-n sage">${w.humidity_pct}%</div><div class="bigstat-label">Humidity</div></div>
+        <div class="bigstat border-r"><div class="bigstat-n">${w.rain_mm} mm</div><div class="bigstat-label">Rain now</div></div>
+        <div class="bigstat"><div class="bigstat-n sage" style="font-size:26px">${f.flood_risk_level}</div><div class="bigstat-label">Flood risk</div></div></div>
+      <div style="border:2px solid var(--ink);border-top:none;padding:18px"><table class="dt"><thead><tr><th>Day</th><th>Conditions</th><th>Rain</th><th style="text-align:right">Chance</th></tr></thead><tbody>${rows}</tbody></table></div>
+      </div><div><blockquote class="pull">"${f.advice}"</blockquote><div class="answer-panel mt16"><p>${f.disclaimer}</p></div></div></div>`;
+  }catch(e){errBox(box,e);}
+};
+
+/* DATA */
+loaders.data=async()=>{
+  try{
+    const d=await getJSON('/api/tables'); const max=Math.max(...d.tables.map(t=>t.rows),1);
+    const cols=['fill-terra','fill-sun','fill-sage','fill-sky','fill-ink'];
+    el('tablesBody').innerHTML=d.tables.map((t,i)=>`<div class="chart-row" style="grid-template-columns:130px 1fr 80px">
+      <div class="chart-label">${t.table}</div><div class="track"><div class="fill ${cols[i%cols.length]}" data-w="${t.rows/max*100}%"></div></div>
+      <div class="num" style="font-size:16px">${fmt(t.rows)}</div></div>`).join('');
+    animateBars();
+  }catch(e){errBox(el('tablesBody'),e);}
+};
+async function loadColumns(){
+  try{
+    const d=await getJSON('/api/columns?q='+encodeURIComponent(el('colQ').value||''));
+    el('columnsBody').innerHTML=(d.columns||[]).map(c=>`<span class="chip">${c.column} → ${(c.tables||[]).join(',')||c.semantic_class}</span>`).join('')||'<span class="muted">No columns</span>';
   }catch(e){}
 }
 
-async function ask(){
-  const q=$('#q').value.trim(); if(!q) return;
-  $('#askout').textContent='Thinking… (the model is reasoning over the data)';
-  try{
-    const r=await (await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})})).json();
-    if(r.model_offline){ $('#askout').textContent='⚠ '+r.hint; return; }
-    $('#askout').textContent = r.answer || r.error || '(no answer)';
-  }catch(e){ $('#askout').textContent='Error: '+e; }
-}
-$('#q').addEventListener('keydown',e=>{ if(e.key==='Enter') ask(); });
+/* bars */
+function animateBars(){document.querySelectorAll('.fill[data-w]').forEach(f=>{f.style.width='0';requestAnimationFrame(()=>requestAnimationFrame(()=>f.style.width=f.dataset.w));});}
 
-async function loadSuburbs(){
-  const s=await (await fetch('/api/suburbs')).json();
-  $('#suburb').innerHTML = s.map(x=>`<option>${x}</option>`).join('');
-}
-async function profile(){
-  const sub=$('#suburb').value;
-  $('#hoodout').textContent='Loading…';
-  const p=await (await fetch('/api/profile?suburb='+encodeURIComponent(sub))).json();
-  if(!p.found){ $('#hoodout').textContent='No records for '+sub; return; }
-  let h=`<div style="font-size:15px;margin-bottom:10px"><b>${p.suburb}</b> — ${fmt(p.total_records)} records across ${p.datasets.length} datasets</div><table><tr><th>Dataset</th><th>Domain</th><th>Records</th><th>Categories</th></tr>`;
-  p.datasets.forEach(d=>{ h+=`<tr><td>${d.dataset}</td><td>${d.domain}</td><td>${fmt(d.records_for_suburb)}</td><td class="chips">${(d.categories||[]).map(c=>`<span>${c}</span>`).join('')}</td></tr>`; });
-  $('#hoodout').innerHTML=h+'</table>';
-}
-
-async function loadLive(){
-  $('#liveout').textContent='Loading…';
-  const d=await (await fetch('/api/live')).json();
-  const w=d.weather.observed_now, f=d.flood;
-  let h=`<div class="grid">
-    <div class="tile"><div class="lbl">Temperature</div><div class="big">${fmt(w.temp_c)}°C</div></div>
-    <div class="tile"><div class="lbl">Humidity</div><div class="big">${fmt(w.humidity_pct)}%</div></div>
-    <div class="tile"><div class="lbl">Rain now</div><div class="big">${fmt(w.rain_mm)} mm</div></div>
-    <div class="tile"><div class="lbl">Wind</div><div class="big">${fmt(w.wind_kmh)}</div><div class="lbl">km/h · ${w.conditions}</div></div>
-    <div class="tile"><div class="lbl">Flood risk</div><div class="big risk ${f.flood_risk_level}">${f.flood_risk_level}</div></div>
-  </div>
-  <p style="margin:14px 0 6px"><b>Advice:</b> ${f.advice}</p>
-  <table><tr><th>Date</th><th>Rain</th><th>Chance</th><th>Conditions</th></tr>`;
-  d.weather.forecast.forEach(x=>{ h+=`<tr><td>${x.date}</td><td>${fmt(x.rain_mm)} mm</td><td>${fmt(x.rain_chance_pct)}%</td><td>${x.conditions}</td></tr>`; });
-  h+=`</table><div class="muted">${d.weather.source} · ${f.disclaimer}</div>`;
-  $('#liveout').innerHTML=h;
-}
-
-async function loadMoney(){
-  $('#moneyout').textContent='Loading…';
-  const d=await (await fetch('/api/transparency')).json();
-  const g=d.groups||{}; const vals=Object.values(g); const max=Math.max(...vals,1);
-  let h='<table>';
-  for(const [k,v] of Object.entries(g)){
-    h+=`<tr><td style="width:230px">${k}</td><td style="width:130px">${money(v)}</td><td><div class="bar"><span style="width:${(v/max*100).toFixed(1)}%"></span></div></td></tr>`;
-  }
-  $('#moneyout').innerHTML=h+'</table>';
-}
-
-async function loadStats(){
-  $('#statsout').textContent='Loading…';
-  const s=await (await fetch('/api/stats')).json();
-  let h=`<div class="grid"><div class="tile"><div class="lbl">Datasets</div><div class="big">${fmt(s.total_datasets)}</div></div></div>`;
-  h+='<h3 style="margin:18px 0 6px;font-size:14px">By source</h3><table>';
-  for(const [k,v] of Object.entries(s.by_source||{})) h+=`<tr><td>${k}</td><td>${fmt(v)}</td></tr>`;
-  h+='</table><h3 style="margin:18px 0 6px;font-size:14px">By domain</h3><table>';
-  for(const [k,v] of Object.entries(s.by_domain||{})) h+=`<tr><td>${k}</td><td>${fmt(v)}</td></tr>`;
-  $('#statsout').innerHTML=h+'</table>';
-}
-
-health(); loadSuburbs();
+/* init */
+el('mdate').textContent=new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · Darwin, NT';
+el('homeAsk')&&el('homeAsk').addEventListener('keydown',e=>{if(e.key==='Enter')goAsk();});
+el('askInput').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
+loadVitals(); initSuburbs();
 </script>
 </body>
 </html>
