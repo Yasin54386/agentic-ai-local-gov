@@ -148,6 +148,23 @@ TOOLS: list[dict[str, Any]] = [
         },
     },
     {
+        "name": "find_records",
+        "description": "Cross-dataset co-occurrence search: return every record that "
+                       "matches BOTH a place (area) AND a term (keyword). The keyword is "
+                       "matched against the record's data, category, metric and dataset "
+                       "title. Use for questions like 'everything about Karama and "
+                       "expenses' or 'X in <suburb>'. Either filter may be empty. If it "
+                       "returns 0, report that honestly (don't substitute other data).",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "area": {"type": "string", "description": "suburb/ward, e.g. Karama, Chan Ward"},
+                "keyword": {"type": "string", "description": "concept term, e.g. cost, expense, dog, population"},
+                "limit": {"type": "integer", "default": 50},
+            },
+        },
+    },
+    {
         "name": "live_weather",
         "description": "Get LIVE current weather + 5-day rain forecast for Darwin "
                        "(Open-Meteo). Use for 'what's the weather' / wet-season questions.",
@@ -192,6 +209,9 @@ def dispatch(repo: Repository, name: str, args: dict[str, Any]) -> Any:
     if name == "find_columns":
         return repo.find_columns(args.get("query", ""), args.get("semantic_class", ""),
                                  args.get("limit", 20))
+    if name == "find_records":
+        return repo.find_records(args.get("area", ""), args.get("keyword", ""),
+                                 args.get("limit", 50))
     if name == "live_weather":
         from ingestion import live
         return live.get_weather()

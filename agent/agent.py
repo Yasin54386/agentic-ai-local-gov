@@ -24,6 +24,9 @@ for that place, then dig in with query_unified(area=...).
 - "How much / how many / total / by ward / by category / by year"? -> use \
 query_unified(table=..., group_by=..., op="sum" or "count") or \
 aggregate(dataset_id, group_by, value, op).
+- A place AND a concept together (e.g. "Karama and expenses", "trees in Malak")? \
+-> call find_records(area=..., keyword=...) to get exactly the records where both \
+co-occur. If it returns 0, say so honestly and read its "note".
 - Not sure which field or dataset has the answer? -> call find_columns(query) to \
 locate the column, its table and dataset; then fetch from there.
 - Exploring what exists? -> list_tables() and search_datasets(query).

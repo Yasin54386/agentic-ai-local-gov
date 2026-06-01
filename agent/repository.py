@@ -221,6 +221,44 @@ class Repository:
                              "value": r["metric_value"],
                              "detail": json.loads(r["payload"])} for r in rows]}
 
+    def find_records(self, area: str = "", keyword: str = "", limit: int = 50) -> dict:
+        """Cross-dataset co-occurrence search: every record matching BOTH a place
+        (area) AND a term (keyword, matched against the payload, category,
+        metric and dataset title). Either filter is optional."""
+        if not self.ready:
+            return self._not_ready()
+        where, params = [], []
+        if area:
+            where.append("UPPER(area_name) LIKE ?"); params.append(f"%{area.upper()}%")
+        if keyword:
+            kw = f"%{keyword.lower()}%"
+            where.append("(LOWER(payload) LIKE ? OR LOWER(COALESCE(category,'')) LIKE ? "
+                         "OR LOWER(COALESCE(metric_name,'')) LIKE ? "
+                         "OR LOWER(COALESCE(dataset_title,'')) LIKE ?)")
+            params += [kw, kw, kw, kw]
+        clause = (" WHERE " + " AND ".join(where)) if where else ""
+        total = self.db.fetchone(
+            f"SELECT COUNT(*) AS c FROM records{clause}", tuple(params))["c"]
+        # accurate per-dataset counts (not capped by the sample limit)
+        counts = self.db.fetchall(
+            f"SELECT dataset_title, table_name, COUNT(*) AS c FROM records{clause} "
+            f"GROUP BY dataset_title, table_name ORDER BY c DESC", tuple(params))
+        # a few real example rows
+        samples = [json.loads(r["payload"]) for r in self.db.fetchall(
+            f"SELECT payload FROM records{clause} LIMIT ?", (*params, min(limit, 5)))]
+        result = {
+            "area": area, "keyword": keyword, "total_matching": total,
+            "by_dataset": [{"dataset": r["dataset_title"], "table": r["table_name"],
+                            "records": r["c"]} for r in counts],
+            "examples": samples,
+        }
+        if total == 0 and area and keyword:
+            result["note"] = (
+                f"No records combine '{area}' with '{keyword}'. Money (expenses, "
+                "capital, grants) is recorded by WARD, but suburbs are not wards — "
+                "so a suburb + cost search has no matches by design.")
+        return result
+
     # ---- column catalog --------------------------------------------------
 
     def _catalog(self) -> list[dict]:
