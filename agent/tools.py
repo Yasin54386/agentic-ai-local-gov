@@ -119,6 +119,24 @@ TOOLS: list[dict[str, Any]] = [
             "limit": {"type": "integer", "default": 80}}},
     },
     {
+        "name": "find_columns",
+        "description": "Search the column catalog (semantic dictionary of all 271 data "
+                       "fields) to discover WHICH column — and which dataset — holds the "
+                       "answer to a question. Returns columns with their meaning, type, "
+                       "and the datasets they live in. Use this FIRST to locate the right "
+                       "field, then fetch with get_dataset_records/aggregate.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "what you're looking for, e.g. 'rainfall', 'expenses', 'population'"},
+                "semantic_class": {"type": "string",
+                    "enum": ["TIME", "PLACE", "MEASURE", "CATEGORY", "IDENTITY", "TEXT"],
+                    "description": "optional filter by kind of column"},
+                "limit": {"type": "integer", "default": 20},
+            },
+        },
+    },
+    {
         "name": "live_weather",
         "description": "Get LIVE current weather + 5-day rain forecast for Darwin "
                        "(Open-Meteo). Use for 'what's the weather' / wet-season questions.",
@@ -158,6 +176,9 @@ def dispatch(repo: Repository, name: str, args: dict[str, Any]) -> Any:
                                   limit=args.get("limit", 25))
     if name == "list_suburbs":
         return repo.list_suburbs(args.get("limit", 80))
+    if name == "find_columns":
+        return repo.find_columns(args.get("query", ""), args.get("semantic_class", ""),
+                                 args.get("limit", 20))
     if name == "live_weather":
         from ingestion import live
         return live.get_weather()

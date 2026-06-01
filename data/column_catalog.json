@@ -1,0 +1,6119 @@
+{
+  "generated_from": "data/raw/smart.darwin.nt.gov.au/*",
+  "total_columns": 271,
+  "by_class": {
+    "TIME": 22,
+    "PLACE": 35,
+    "MEASURE": 149,
+    "TEXT": 23,
+    "IDENTITY": 19,
+    "CATEGORY": 23
+  },
+  "columns": [
+    {
+      "column": "0_4_years",
+      "original_field": "0_4_years",
+      "label": "0 4 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        0.0,
+        16.0,
+        13.0,
+        6.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "15_24_years",
+      "original_field": "15_24_years",
+      "label": "15 24 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        18.0,
+        6.0,
+        0.0,
+        35.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "25_44_years",
+      "original_field": "25_44_years",
+      "label": "25 44 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        64.0,
+        23.0,
+        3.0,
+        264.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "45_54_years",
+      "original_field": "45_54_years",
+      "label": "45 54 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        83.0,
+        6.0,
+        7.0,
+        62.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "55_64_years",
+      "original_field": "55_64_years",
+      "label": "55 64 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        39.0,
+        0.0,
+        6.0,
+        43.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "5_14_years",
+      "original_field": "5_14_years",
+      "label": "5 14 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        13.0,
+        0.0,
+        58.0,
+        4.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "5_to_10_years_no",
+      "original_field": "5_to_10_years_no",
+      "label": "5 to 10 years count",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        19262.0,
+        19919.0,
+        19755.0,
+        19260.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "65_74_years",
+      "original_field": "65_74_years",
+      "label": "65 74 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        25.0,
+        0.0,
+        5.0,
+        31.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "75_84_years",
+      "original_field": "75_84_years",
+      "label": "75 84 years",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        3.0,
+        0.0,
+        8.0,
+        19.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "85_years_and_older",
+      "original_field": "85_years_and_older",
+      "label": "85 years and older",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        0.0,
+        3.0,
+        7.0,
+        5.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "lga",
+      "original_field": "abs_lga",
+      "label": "Abs local government area",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [
+        "Darwin"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "accommodation_and_food_services",
+      "original_field": "accommodation_and_food_services",
+      "label": "Accommodation and food services",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        7.0,
+        8.0,
+        9.1
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "accommodation_and_food_services_no",
+      "original_field": "accommodation_and_food_services_no",
+      "label": "Accommodation and food services count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        446.0,
+        376.0,
+        384.0,
+        411.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "administrative_and_support_services",
+      "original_field": "administrative_and_support_services",
+      "label": "Administrative and support services",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.2,
+        3.1
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "administrative_and_support_services_no",
+      "original_field": "administrative_and_support_services_no",
+      "label": "Administrative and support services count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        408.0,
+        321.0,
+        386.0,
+        344.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "agricultural_production_total_gross_value_m",
+      "original_field": "agricultural_production_total_gross_value_m",
+      "label": "Agricultural production total gross value m",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": true
+    },
+    {
+      "column": "agriculture_forestry_and_fishing",
+      "original_field": "agriculture_forestry_and_fishing",
+      "label": "Agriculture forestry and fishing",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0.6,
+        0.5,
+        0.7
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "agriculture_forestry_and_fishing_no",
+      "original_field": "agriculture_forestry_and_fishing_no",
+      "label": "Agriculture forestry and fishing count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        139.0,
+        130.0,
+        134.0,
+        138.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "amount",
+      "original_field": "amount",
+      "label": "Amount",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-expenses",
+          "records": 245
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        15010.25,
+        0.0,
+        2200.0,
+        3776.57
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "animal_breed",
+      "original_field": "animal_breed",
+      "label": "Animal breed",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:animal-infringements",
+          "records": 1387
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Wolfhound",
+        "Mixed Breed",
+        "Staffordshire Bull Terrier",
+        "Shar Pei"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "animal_name",
+      "original_field": "animal_name",
+      "label": "Animal name",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Beatrice",
+        "Raphael",
+        "Banjo",
+        "Dash"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "animal_neut",
+      "original_field": "animal_neut",
+      "label": "Animal neut",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Y",
+        "N"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "animal_sex",
+      "original_field": "animal_sex",
+      "label": "Animal sex",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "F",
+        "M",
+        "U"
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "animal_type",
+      "original_field": "animal_type",
+      "label": "Animal type",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Dog",
+        "Cat"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "area",
+      "original_field": "area",
+      "label": "Area",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        49675.03515625,
+        268329.34375,
+        185210.25,
+        7483.166015625
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "area_of_holding_total_area_ha",
+      "original_field": "area_of_holding_total_area_ha",
+      "label": "Area of holding total area hectares",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        4.0
+      ],
+      "null_rate": 0.875,
+      "needs_review": true
+    },
+    {
+      "column": "articulated_trucks_no",
+      "original_field": "articulated_trucks_no",
+      "label": "Articulated trucks count",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        343.0,
+        309.0,
+        193.0,
+        191.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "arts_and_recreation_services",
+      "original_field": "arts_and_recreation_services",
+      "label": "Arts and recreation services",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        2.3,
+        2.4,
+        2.2
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "arts_and_recreation_services_no",
+      "original_field": "arts_and_recreation_services_no",
+      "label": "Arts and recreation services count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        119.0,
+        105.0,
+        107.0,
+        97.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "ave_dist_per_trip",
+      "original_field": "ave_dist_per_trip",
+      "label": "Average distance per trip",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1.6624537246155284,
+        1.7995355062285763,
+        2.1544034036354147,
+        1.8264929074404006
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "bird_species",
+      "original_field": "bird_species",
+      "label": "Bird species",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:aussie-bird-count-year",
+          "records": 964
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Red-collared Lorikeet",
+        "Bar-shouldered Dove",
+        "Black Kite",
+        "Masked Lapwing"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "birthplace_not_stated_b",
+      "original_field": "birthplace_not_stated_b",
+      "label": "Birthplace not stated b",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        9.0,
+        158.0,
+        3.0,
+        374.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "births",
+      "original_field": "births",
+      "label": "Births",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "both_parents_born_in_australia",
+      "original_field": "both_parents_born_in_australia",
+      "label": "Both parents born in australia",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        137.0,
+        5667.0,
+        112.0,
+        9.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "both_parents_born_overseas",
+      "original_field": "both_parents_born_overseas",
+      "label": "Both parents born overseas",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        322.0,
+        36.0,
+        194.0,
+        35.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "broadacre_crops_total_area_ha",
+      "original_field": "broadacre_crops_total_area_ha",
+      "label": "Broadacre crops total area hectares",
+      "semantic_class": "PLACE",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "buses_no",
+      "original_field": "buses_no",
+      "label": "Buses count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1454.0,
+        1529.0,
+        1331.0,
+        1319.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "campervans_no",
+      "original_field": "campervans_no",
+      "label": "Campervans count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        68.0,
+        66.0,
+        71.0,
+        82.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "cash",
+      "original_field": "cash",
+      "label": "Cash",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+          "records": 439
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        5245,
+        1500,
+        9929,
+        0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "category",
+      "original_field": "category",
+      "label": "Category",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:year_by_year_capital_expenditure0",
+          "records": 46
+        }
+      ],
+      "dataset_count": 7,
+      "examples": [
+        "Age groups",
+        "Highest year of school completed(e)",
+        "Indigenous persons",
+        "Count of persons in other dwellings"
+      ],
+      "null_rate": 0.158,
+      "needs_review": false
+    },
+    {
+      "column": "year",
+      "original_field": "census_year",
+      "label": "Census year",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 9,
+      "examples": [
+        "2011",
+        "2006",
+        "2016",
+        "2021"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "centroid",
+      "original_field": "centroid",
+      "label": "Centroid",
+      "semantic_class": "PLACE",
+      "data_type": "json",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "cha201116",
+      "original_field": "cha201116",
+      "label": "Cha16 2011",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        15.163044,
+        -6.838692,
+        7.18648,
+        4.554248
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "cha201621",
+      "original_field": "cha201621",
+      "label": "Cha21 2016",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        -42.8305987627,
+        -56.287141125,
+        -36.6770667592,
+        -43.4302188318
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "clerical_and_administrative_workers_no",
+      "original_field": "clerical_and_administrative_workers_no",
+      "label": "Clerical and administrative workers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        12.0,
+        24.0,
+        3.0,
+        22.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "co2_offset",
+      "original_field": "co2_offset",
+      "label": "Co2 offset",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        7105.912655410801,
+        2869.9566233178407,
+        6605.82020309512,
+        8611.720990975202
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "code",
+      "original_field": "code",
+      "label": "Code",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "71000"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "community_and_personal_service_workers_no",
+      "original_field": "community_and_personal_service_workers_no",
+      "label": "Community and personal service workers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        27.0,
+        13.0,
+        10.0,
+        19.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "construction",
+      "original_field": "construction",
+      "label": "Construction",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        8.1,
+        9.8,
+        6.8
+      ],
+      "null_rate": 0.625,
+      "needs_review": false
+    },
+    {
+      "column": "construction_no",
+      "original_field": "construction_no",
+      "label": "Construction count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1185.0,
+        1274.0,
+        1153.0,
+        1215.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "councillor_name",
+      "original_field": "councillor_name",
+      "label": "Councillor name",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-expenses",
+          "records": 245
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Councillor - Peter Pangquee",
+        "Councillor - Ed Smelt",
+        "Councillor -Julie Fraser",
+        "Lord Mayor - Peter Styles"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "count",
+      "original_field": "count",
+      "label": "Count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:aussie-bird-count-year",
+          "records": 964
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree_planting_numbers_by_program",
+          "records": 28
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        4320,
+        1416,
+        1182,
+        983
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "count",
+      "original_field": "count_amt",
+      "label": "Count amount",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:total-economy",
+          "records": 204
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        24.0,
+        30.0,
+        111.0,
+        115.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "country_of_birth",
+      "original_field": "country_of_birth",
+      "label": "Country of birth",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        "Papua New Guinea",
+        "Lebanon",
+        "South Eastern Europe, nfd(d)",
+        "Sri Lanka"
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "cpc201116",
+      "original_field": "cpc201116",
+      "label": "Cpc16 2011",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0.21104146594,
+        -0.05988636648,
+        0.11027830753,
+        0.02892018053
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "cpc201621",
+      "original_field": "cpc201621",
+      "label": "Cpc21 2016",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        -0.49223958043,
+        -0.52430471024,
+        -0.50691671526,
+        -0.26803694282
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "crops_total_gross_value_m",
+      "original_field": "crops_total_gross_value_m",
+      "label": "Crops total gross value m",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": true
+    },
+    {
+      "column": "currently_unknown_no",
+      "original_field": "currently_unknown_no",
+      "label": "Currently unknown count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        20.0,
+        25.0,
+        19.0,
+        15.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "dairy_cattle_total_no",
+      "original_field": "dairy_cattle_total_no",
+      "label": "Dairy cattle total count",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "deaths",
+      "original_field": "deaths",
+      "label": "Deaths",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "debtors_entering_business_related_personal_insolvencies_no",
+      "original_field": "debtors_entering_business_related_personal_insolvencies_no",
+      "label": "Debtors entering business related personal insolvencies count",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        38.0,
+        33.0,
+        13.0,
+        25.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": false
+    },
+    {
+      "column": "debtors_entering_non_business_related_personal_insolvencies_no",
+      "original_field": "debtors_entering_non_business_related_personal_insolvencies_no",
+      "label": "Debtors entering non business related personal insolvencies count",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        77.0,
+        94.0,
+        53.0,
+        89.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "debtors_with_other_or_unknown_occupations_no",
+      "original_field": "debtors_with_other_or_unknown_occupations_no",
+      "label": "Debtors with other or unknown occupations count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        5.0,
+        6.0,
+        7.0,
+        3.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "density",
+      "original_field": "density",
+      "label": "Density",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0,
+        772,
+        87,
+        81
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "department",
+      "original_field": "department",
+      "label": "Department",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-decisions",
+          "records": 1048
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Office of the Lord Mayor and CEO",
+        "Community",
+        "Innovation",
+        "Engineering & City Services"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "diesel_no",
+      "original_field": "diesel_no",
+      "label": "Diesel count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        22134.0,
+        23461.0,
+        23495.0,
+        23008.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "education_and_training",
+      "original_field": "education_and_training",
+      "label": "Education and training",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        8.5,
+        8.7,
+        8.9
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "education_and_training_no",
+      "original_field": "education_and_training_no",
+      "label": "Education and training count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        116.0,
+        88.0,
+        104.0,
+        93.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "electric_no",
+      "original_field": "electric_no",
+      "label": "Electric count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        6.0,
+        14.0,
+        24.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "electricity_gas_water_and_waste_services",
+      "original_field": "electricity_gas_water_and_waste_services",
+      "label": "Electricity gas water and waste services",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1.4,
+        1.6,
+        1.5
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "electricity_gas_water_and_waste_services_no",
+      "original_field": "electricity_gas_water_and_waste_services_no",
+      "label": "Electricity gas water and waste services count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        29.0,
+        20.0,
+        19.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "expenditure",
+      "original_field": "expenditure",
+      "label": "Expenditure",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:year_by_year_capital_expenditure0",
+          "records": 46
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        8150000,
+        9655000,
+        2550000,
+        278000
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "expense_type",
+      "original_field": "expense_type",
+      "label": "Expense type",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-expenses",
+          "records": 245
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Allowance - Extra Meetings",
+        "Allowance - IT Hardware/Software",
+        "Allowance - Prof Development",
+        "Deductions"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "father_only_born_overseas",
+      "original_field": "father_only_born_overseas",
+      "label": "Father only born overseas",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        30.0,
+        338.0,
+        37.0,
+        3.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "females",
+      "original_field": "females",
+      "label": "Females",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [
+        63,
+        9,
+        94,
+        5
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "financial_and_insurance_services",
+      "original_field": "financial_and_insurance_services",
+      "label": "Financial and insurance services",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1.8,
+        1.4,
+        1.2
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "financial_and_insurance_services_no",
+      "original_field": "financial_and_insurance_services_no",
+      "label": "Financial and insurance services count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        272.0,
+        239.0,
+        250.0,
+        273.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "financial_year",
+      "original_field": "financial_year",
+      "label": "Financial year",
+      "semantic_class": "TIME",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+          "records": 439
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree_planting_numbers_by_program",
+          "records": 28
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        "22/23",
+        "20/21",
+        "23/24",
+        "24/25"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "financial_year",
+      "original_field": "fy",
+      "label": "Financial year",
+      "semantic_class": "TIME",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:year_by_year_capital_expenditure0",
+          "records": 46
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "FY 2024/25",
+        "FY 2022/23",
+        "FY 2023/24",
+        "FY 2021/22"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "financial_year",
+      "original_field": "fy_year",
+      "label": "Financial year year",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-expenses",
+          "records": 245
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "2022",
+        "2024",
+        "2023",
+        "2026"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "gardens",
+      "original_field": "gardens",
+      "label": "Gardens",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:gardens-for-wildlife-suburbs",
+          "records": 34
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        31,
+        25,
+        24,
+        23
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "geo_point_2d",
+      "original_field": "geo_point_2d",
+      "label": "Geo point 2d",
+      "semantic_class": "PLACE",
+      "data_type": "json",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "geo_shape",
+      "original_field": "geo_shape",
+      "label": "Geo shape",
+      "semantic_class": "PLACE",
+      "data_type": "geojson",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "geom",
+      "original_field": "geom",
+      "label": "Geom",
+      "semantic_class": "PLACE",
+      "data_type": "geojson",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "grant_type",
+      "original_field": "grant_type",
+      "label": "Grant type",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+          "records": 439
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Sponsorships",
+        "Environmental Grant",
+        "Community Grant",
+        "Cyclone Tracy 50th Anniversary Commemoration Grants"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "ha2011",
+      "original_field": "ha2011",
+      "label": "Hectares 2011",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        71.848648,
+        114.194472,
+        65.16676,
+        157.476472
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "ha2016",
+      "original_field": "ha2016",
+      "label": "Hectares 2016",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        87.011692,
+        107.35578,
+        72.35324,
+        162.03072
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "ha2021",
+      "original_field": "ha2021",
+      "label": "Hectares 2021",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        44.1810932373,
+        51.068638875,
+        35.6761732408,
+        118.600501168
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "health_care_and_social_assistance",
+      "original_field": "health_care_and_social_assistance",
+      "label": "Health care and social assistance",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        10.7,
+        11.3,
+        16.1
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "health_care_and_social_assistance_no",
+      "original_field": "health_care_and_social_assistance_no",
+      "label": "Health care and social assistance count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        615.0,
+        491.0,
+        500.0,
+        503.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "heavy_rigid_trucks_no",
+      "original_field": "heavy_rigid_trucks_no",
+      "label": "Heavy rigid trucks count",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1587.0,
+        1552.0,
+        1299.0,
+        1327.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "in_kind_support",
+      "original_field": "in_kind_support",
+      "label": "In kind support",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+          "records": 439
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0,
+        149,
+        260,
+        2500
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "industry_of_employment_inadequately_described_or_not_stated",
+      "original_field": "industry_of_employment_inadequately_described_or_not_stated",
+      "label": "Industry of employment inadequately described or not stated",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1.5,
+        4.2,
+        3.8
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "information_media_and_telecommunications",
+      "original_field": "information_media_and_telecommunications",
+      "label": "Information media and telecommunications",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1.4,
+        1.2,
+        0.9
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "information_media_and_telecommunications_no",
+      "original_field": "information_media_and_telecommunications_no",
+      "label": "Information media and telecommunications count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        54.0,
+        45.0,
+        62.0,
+        60.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "infringment_date",
+      "original_field": "infringment_date",
+      "label": "Infringment date",
+      "semantic_class": "TIME",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:animal-infringements",
+          "records": 1387
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "2018-07",
+        "2018-10",
+        "2018-05",
+        "2018-08"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "initiative",
+      "original_field": "initiative",
+      "label": "Initiative",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+          "records": 439
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Quiz for Dili",
+        "SERA 2021 Sponsorship Session (Society for Ecological Restoration Australasia)",
+        "Nine week Virtual Reality Gaming program for ages 13 years plus (targeting LGBTQI and girls). 3 x 1.5hr VR E-sports gaming sessions (one per week at 3.30pm at The Shak (Sanderson Middle school). The last gaming session (on Sat 10/12) will be a special event allowing a \u201cplay off\u201d between participants selected by Debbe throughout the program (based on skill, sportsmanship/most improved).",
+        "Healthy Darwin Dry Season \u2013 Outdoor Aqua Fun & Fitness"
+      ],
+      "null_rate": 0.185,
+      "needs_review": false
+    },
+    {
+      "column": "internal_arrivals",
+      "original_field": "internal_arrivals",
+      "label": "Internal arrivals",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "internal_departures",
+      "original_field": "internal_departures",
+      "label": "Internal departures",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "joint_regional_groups",
+      "original_field": "joint_regional_groups",
+      "label": "Joint regional groups",
+      "semantic_class": "PLACE",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 4,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "labourers_no",
+      "original_field": "labourers_no",
+      "label": "Labourers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        15.0,
+        6.0,
+        3.0,
+        9.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "less_than_5_years_no",
+      "original_field": "less_than_5_years_no",
+      "label": "Less than 5 years count",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        27340.0,
+        27445.0,
+        24650.0,
+        26171.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "lga",
+      "original_field": "lga",
+      "label": "Local government area",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 6,
+      "examples": [
+        "Darwin",
+        "Darwin (C)"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "lga_code",
+      "original_field": "lga_code",
+      "label": "Local government area code",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        "71000",
+        "71000,72300,72800,79399",
+        "71000,79399",
+        "71000,71150"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "lga_code_2020",
+      "original_field": "lga_code_2020",
+      "label": "Local government area code 2020",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "74660",
+        "72330",
+        "73600",
+        "74050"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "lga",
+      "original_field": "lga_name",
+      "label": "Local government area name",
+      "semantic_class": "PLACE",
+      "data_type": "json",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "lga",
+      "original_field": "lga_name_2020",
+      "label": "Local government area name 2020",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "West Arnhem (R)",
+        "MacDonnell (R)",
+        "Roper Gulf (R)",
+        "Tiwi Islands (R)"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "lga_name_2023",
+      "original_field": "lga_name_2023",
+      "label": "Local government area name 2023",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Darwin"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "light_commercial_vehicles_no",
+      "original_field": "light_commercial_vehicles_no",
+      "label": "Light commercial vehicles count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        16977.0,
+        17347.0,
+        16675.0,
+        16773.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "light_rigid_trucks_no",
+      "original_field": "light_rigid_trucks_no",
+      "label": "Light rigid trucks count",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        275.0,
+        296.0,
+        290.0,
+        325.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "livestock_slaughtered_and_other_disposals_total_gross_value_m",
+      "original_field": "livestock_slaughtered_and_other_disposals_total_gross_value_m",
+      "label": "Livestock slaughtered and other disposals total gross value m",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": true
+    },
+    {
+      "column": "lpg_dual_other_no",
+      "original_field": "lpg_dual_other_no",
+      "label": "Lpg dual other count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        270.0,
+        251.0,
+        176.0,
+        207.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "m2pc2011",
+      "original_field": "m2pc2011",
+      "label": "M2pc 2011",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0.0,
+        2306.9590303,
+        787.038164251,
+        1089.04890733
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "m2pc2016",
+      "original_field": "m2pc2016",
+      "label": "M2pc 2016",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0.0,
+        1416.30316623,
+        9777.46486486,
+        1043.3401159
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "m2pc2021",
+      "original_field": "m2pc2021",
+      "label": "M2pc 2021",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0.0,
+        639.957880639,
+        17838.0866204,
+        896.451255995
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "machinery_operators_and_drivers_no",
+      "original_field": "machinery_operators_and_drivers_no",
+      "label": "Machinery operators and drivers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        8.0,
+        12.0,
+        5.0,
+        9.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "main_breed",
+      "original_field": "main_breed",
+      "label": "Main breed",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Maltese",
+        "Terrier",
+        "Beagle",
+        "Domestic Short Haired"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "main_color",
+      "original_field": "main_color",
+      "label": "Main color",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Black",
+        "Tan",
+        "Tri Colour",
+        "White"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "males",
+      "original_field": "males",
+      "label": "Males",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [
+        61,
+        0,
+        105,
+        75
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "managers_no",
+      "original_field": "managers_no",
+      "label": "Managers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        17.0,
+        16.0,
+        11.0,
+        12.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": false
+    },
+    {
+      "column": "manufacturing",
+      "original_field": "manufacturing",
+      "label": "Manufacturing",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.6,
+        2.5,
+        2.1
+      ],
+      "null_rate": 0.625,
+      "needs_review": false
+    },
+    {
+      "column": "manufacturing_no",
+      "original_field": "manufacturing_no",
+      "label": "Manufacturing count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        219.0,
+        222.0,
+        216.0,
+        215.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "measure",
+      "original_field": "measure",
+      "label": "Measure",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:total-economy",
+          "records": 204
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Establishments",
+        "Employment",
+        "Turnover (A$m)"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "meat_cattle_total_no",
+      "original_field": "meat_cattle_total_no",
+      "label": "Meat cattle total count",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "meat_chickens_total_no",
+      "original_field": "meat_chickens_total_no",
+      "label": "Meat chickens total count",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "median_price_of_attached_dwelling_transfers",
+      "original_field": "median_price_of_attached_dwelling_transfers",
+      "label": "Median price of attached dwelling transfers",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        460000.0,
+        378500.0,
+        300000.0,
+        338750.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "median_price_of_established_house_transfers",
+      "original_field": "median_price_of_established_house_transfers",
+      "label": "Median price of established house transfers",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        550000.0,
+        520000.0,
+        471750.0,
+        510000.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "meeting_date",
+      "original_field": "meeting_date",
+      "label": "Meeting date",
+      "semantic_class": "TIME",
+      "data_type": "date",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-decisions",
+          "records": 1048
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "2019-07-16",
+        "2019-07-30",
+        "2019-08-27",
+        "2019-09-24"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "meeting_type",
+      "original_field": "meeting_type",
+      "label": "Meeting type",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-decisions",
+          "records": 1048
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Ordinary Council"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "mining",
+      "original_field": "mining",
+      "label": "Mining",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1.6,
+        1.5
+      ],
+      "null_rate": 0.625,
+      "needs_review": false
+    },
+    {
+      "column": "mining_no",
+      "original_field": "mining_no",
+      "label": "Mining count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        31.0,
+        30.0,
+        26.0,
+        28.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "month",
+      "original_field": "month",
+      "label": "Month",
+      "semantic_class": "TIME",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:landfill-gas-generation-by-month-sept22-nov25",
+          "records": 39
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        "2022-09-01",
+        "2022-10-01",
+        "2023-01-01",
+        "2023-03-01"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "mother_only_born_overseas",
+      "original_field": "mother_only_born_overseas",
+      "label": "Mother only born overseas",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        40.0,
+        179.0,
+        35.0,
+        0.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "motorcycles_no",
+      "original_field": "motorcycles_no",
+      "label": "Motorcycles count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        2931.0,
+        2890.0,
+        2537.0,
+        2698.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "name",
+      "original_field": "name",
+      "label": "Name",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "HIDDEN VALLEY",
+        "BERRIMAH",
+        "COONAWARRA",
+        "MARRARA"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "name_1",
+      "original_field": "name_1",
+      "label": "Name 1",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "HIDDEN VALLEY",
+        "BERRIMAH",
+        "COONAWARRA",
+        "MARRARA"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "natural_increase",
+      "original_field": "natural_increase",
+      "label": "Natural increase",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        52,
+        896,
+        5,
+        73
+      ],
+      "null_rate": 0.661,
+      "needs_review": false
+    },
+    {
+      "column": "net_generation_mwh",
+      "original_field": "net_generation_mwh",
+      "label": "Net generation megawatt hours",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:landfill-gas-generation-by-month-sept22-nov25",
+          "records": 39
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        742.877,
+        706.18,
+        756.472,
+        763.567
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "net_internal_migration",
+      "original_field": "net_internal_migration",
+      "label": "Net internal migration",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        -47,
+        -1388,
+        -3,
+        -159
+      ],
+      "null_rate": 0.661,
+      "needs_review": true
+    },
+    {
+      "column": "net_overseas_migration",
+      "original_field": "net_overseas_migration",
+      "label": "Net overseas migration",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3,
+        1119,
+        2,
+        50
+      ],
+      "null_rate": 0.661,
+      "needs_review": true
+    },
+    {
+      "column": "non_freight_carrying_trucks_no",
+      "original_field": "non_freight_carrying_trucks_no",
+      "label": "Non freight carrying trucks count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        169.0,
+        179.0,
+        188.0,
+        168.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "not_stated_b",
+      "original_field": "not_stated_b",
+      "label": "Not stated b",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        0.0,
+        4.0,
+        11.0,
+        3.0
+      ],
+      "null_rate": 0.025,
+      "needs_review": true
+    },
+    {
+      "column": "not_well_or_not_at_all",
+      "original_field": "not_well_or_not_at_all",
+      "label": "Not well or not at all",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        10.0,
+        0.0,
+        28.0,
+        11.0
+      ],
+      "null_rate": 0.025,
+      "needs_review": true
+    },
+    {
+      "column": "note",
+      "original_field": "note",
+      "label": "Note",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree_planting_numbers_by_program",
+          "records": 28
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "as of Jan 26"
+      ],
+      "null_rate": 0.857,
+      "needs_review": false
+    },
+    {
+      "column": "number_of_attached_dwelling_transfers_no",
+      "original_field": "number_of_attached_dwelling_transfers_no",
+      "label": "Number of attached dwelling transfers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        542.0,
+        422.0,
+        442.0,
+        420.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_entries_with_turnover_of_10m_or_more",
+      "original_field": "number_of_business_entries_with_turnover_of_10m_or_more",
+      "label": "Number of business entries with turnover of 10m or more",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_entries_with_turnover_of_200k_to_less_than_2m",
+      "original_field": "number_of_business_entries_with_turnover_of_200k_to_less_than_2m",
+      "label": "Number of business entries with turnover of 200k to less than 2m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        256.0,
+        158.0,
+        187.0,
+        213.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_entries_with_turnover_of_2m_to_less_than_5m",
+      "original_field": "number_of_business_entries_with_turnover_of_2m_to_less_than_5m",
+      "label": "Number of business entries with turnover of 2m to less than 5m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        9.0,
+        11.0,
+        13.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_entries_with_turnover_of_50k_to_less_than_200k",
+      "original_field": "number_of_business_entries_with_turnover_of_50k_to_less_than_200k",
+      "label": "Number of business entries with turnover of 50k to less than 200k",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        498.0,
+        391.0,
+        372.0,
+        377.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_entries_with_turnover_of_5m_to_less_than_10m",
+      "original_field": "number_of_business_entries_with_turnover_of_5m_to_less_than_10m",
+      "label": "Number of business entries with turnover of 5m to less than 10m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.0,
+        5.0,
+        4.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_entries_with_turnover_of_zero_to_less_than_50k",
+      "original_field": "number_of_business_entries_with_turnover_of_zero_to_less_than_50k",
+      "label": "Number of business entries with turnover of zero to less than 50k",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        532.0,
+        529.0,
+        444.0,
+        515.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_exits_with_turnover_of_10m_or_more",
+      "original_field": "number_of_business_exits_with_turnover_of_10m_or_more",
+      "label": "Number of business exits with turnover of 10m or more",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.0,
+        5.0,
+        7.0
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_exits_with_turnover_of_200k_to_less_than_2m",
+      "original_field": "number_of_business_exits_with_turnover_of_200k_to_less_than_2m",
+      "label": "Number of business exits with turnover of 200k to less than 2m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        170.0,
+        177.0,
+        185.0,
+        148.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_exits_with_turnover_of_2m_to_less_than_5m",
+      "original_field": "number_of_business_exits_with_turnover_of_2m_to_less_than_5m",
+      "label": "Number of business exits with turnover of 2m to less than 5m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        5.0,
+        7.0,
+        12.0,
+        9.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_exits_with_turnover_of_50k_to_less_than_200k",
+      "original_field": "number_of_business_exits_with_turnover_of_50k_to_less_than_200k",
+      "label": "Number of business exits with turnover of 50k to less than 200k",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        254.0,
+        295.0,
+        273.0,
+        269.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_exits_with_turnover_of_5m_to_less_than_10m",
+      "original_field": "number_of_business_exits_with_turnover_of_5m_to_less_than_10m",
+      "label": "Number of business exits with turnover of 5m to less than 10m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.0
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_business_exits_with_turnover_of_zero_to_less_than_50k",
+      "original_field": "number_of_business_exits_with_turnover_of_zero_to_less_than_50k",
+      "label": "Number of business exits with turnover of zero to less than 50k",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        479.0,
+        389.0,
+        401.0,
+        443.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_businesses_with_turnover_of_10m_or_more",
+      "original_field": "number_of_businesses_with_turnover_of_10m_or_more",
+      "label": "Number of businesses with turnover of 10m or more",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        121.0,
+        114.0,
+        112.0,
+        110.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_businesses_with_turnover_of_200k_to_less_than_2m",
+      "original_field": "number_of_businesses_with_turnover_of_200k_to_less_than_2m",
+      "label": "Number of businesses with turnover of 200k to less than 2m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        2699.0,
+        2507.0,
+        2470.0,
+        2530.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_businesses_with_turnover_of_2m_to_less_than_5m",
+      "original_field": "number_of_businesses_with_turnover_of_2m_to_less_than_5m",
+      "label": "Number of businesses with turnover of 2m to less than 5m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        428.0,
+        382.0,
+        373.0,
+        388.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_businesses_with_turnover_of_50k_to_less_than_200k",
+      "original_field": "number_of_businesses_with_turnover_of_50k_to_less_than_200k",
+      "label": "Number of businesses with turnover of 50k to less than 200k",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        2135.0,
+        2042.0,
+        2127.0,
+        2063.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_businesses_with_turnover_of_5m_to_less_than_10m",
+      "original_field": "number_of_businesses_with_turnover_of_5m_to_less_than_10m",
+      "label": "Number of businesses with turnover of 5m to less than 10m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        158.0,
+        131.0,
+        124.0,
+        133.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_businesses_with_turnover_of_zero_to_less_than_50k",
+      "original_field": "number_of_businesses_with_turnover_of_zero_to_less_than_50k",
+      "label": "Number of businesses with turnover of zero to less than 50k",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1980.0,
+        1523.0,
+        1802.0,
+        1604.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_business_entries_1_4_employees",
+      "original_field": "number_of_employing_business_entries_1_4_employees",
+      "label": "Number of employing business entries 1 4 employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        336.0,
+        233.0,
+        201.0,
+        308.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_business_entries_20_or_more_employees",
+      "original_field": "number_of_employing_business_entries_20_or_more_employees",
+      "label": "Number of employing business entries 20 or more employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.0,
+        11.0,
+        9.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_business_entries_5_19_employees",
+      "original_field": "number_of_employing_business_entries_5_19_employees",
+      "label": "Number of employing business entries 5 19 employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        50.0,
+        36.0,
+        33.0,
+        40.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_business_exits_1_4_employees",
+      "original_field": "number_of_employing_business_exits_1_4_employees",
+      "label": "Number of employing business exits 1 4 employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        196.0,
+        152.0,
+        165.0,
+        139.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_business_exits_20_or_more_employees",
+      "original_field": "number_of_employing_business_exits_20_or_more_employees",
+      "label": "Number of employing business exits 20 or more employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        9.0,
+        8.0,
+        7.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_business_exits_5_19_employees",
+      "original_field": "number_of_employing_business_exits_5_19_employees",
+      "label": "Number of employing business exits 5 19 employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        47.0,
+        42.0,
+        31.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_businesses_1_4_employees",
+      "original_field": "number_of_employing_businesses_1_4_employees",
+      "label": "Number of employing businesses 1 4 employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1879.0,
+        1614.0,
+        1573.0,
+        1571.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_businesses_20_or_more_employees",
+      "original_field": "number_of_employing_businesses_20_or_more_employees",
+      "label": "Number of employing businesses 20 or more employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        295.0,
+        283.0,
+        264.0,
+        311.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_employing_businesses_5_19_employees",
+      "original_field": "number_of_employing_businesses_5_19_employees",
+      "label": "Number of employing businesses 5 19 employees",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        886.0,
+        882.0,
+        858.0,
+        849.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_established_house_transfers_no",
+      "original_field": "number_of_established_house_transfers_no",
+      "label": "Number of established house transfers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        500.0,
+        471.0,
+        463.0,
+        465.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_non_employing_business_entries",
+      "original_field": "number_of_non_employing_business_entries",
+      "label": "Number of non employing business entries",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        916.0,
+        821.0,
+        782.0,
+        767.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_non_employing_business_exits",
+      "original_field": "number_of_non_employing_business_exits",
+      "label": "Number of non employing business exits",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        669.0,
+        668.0,
+        655.0,
+        698.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "number_of_non_employing_businesses",
+      "original_field": "number_of_non_employing_businesses",
+      "label": "Number of non employing businesses",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        4464.0,
+        3929.0,
+        4320.0,
+        4105.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "objectid",
+      "original_field": "objectid",
+      "label": "Objectid",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        2.0,
+        3.0,
+        5.0,
+        7.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "offence",
+      "original_field": "offence",
+      "label": "Offence",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:animal-infringements",
+          "records": 1387
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Dog at Large",
+        "Fail To Contain Dog",
+        "Unregistered Dog",
+        "Abandon Dog"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "orchard_fruit_trees_and_nut_trees_produce_intended_for_sale_total_area_ha",
+      "original_field": "orchard_fruit_trees_and_nut_trees_produce_intended_for_sale_total_area_ha",
+      "label": "Orchard fruit trees and nut trees produce intended for sale total area hectares",
+      "semantic_class": "PLACE",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": true
+    },
+    {
+      "column": "organisation_event",
+      "original_field": "organisation_event",
+      "label": "Organisation event",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+          "records": 439
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Action for Change Foundation",
+        "Agentur Pty Ltd",
+        "Amazing XR",
+        "Aqua Ann"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "other_groups",
+      "original_field": "other_groups",
+      "label": "Other groups",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "other_services",
+      "original_field": "other_services",
+      "label": "Other services",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.4,
+        3.1,
+        3.6
+      ],
+      "null_rate": 0.625,
+      "needs_review": false
+    },
+    {
+      "column": "other_services_no",
+      "original_field": "other_services_no",
+      "label": "Other services count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        399.0,
+        347.0,
+        365.0,
+        359.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "over_10_years_no",
+      "original_field": "over_10_years_no",
+      "label": "Over 10 years count",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        21936.0,
+        23788.0,
+        24666.0,
+        24046.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "overseas_arrivals",
+      "original_field": "overseas_arrivals",
+      "label": "Overseas arrivals",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "overseas_departures",
+      "original_field": "overseas_departures",
+      "label": "Overseas departures",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "passenger_vehicles_no",
+      "original_field": "passenger_vehicles_no",
+      "label": "Passenger vehicles count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        44743.0,
+        46987.0,
+        46482.0,
+        46592.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "persons",
+      "original_field": "persons",
+      "label": "Persons",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [
+        124,
+        9,
+        199,
+        5
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "petrol_no",
+      "original_field": "petrol_no",
+      "label": "Petrol count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        46120.0,
+        47426.0,
+        45363.0,
+        46256.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "pigs_total_no",
+      "original_field": "pigs_total_no",
+      "label": "Pigs total count",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "place_id",
+      "original_field": "place_id",
+      "label": "Place id",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        2100,
+        2011,
+        2023,
+        2062
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "pop2011",
+      "original_field": "pop2011",
+      "label": "Population 2011",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        7,
+        495,
+        828,
+        1446
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "pop2016",
+      "original_field": "pop2016",
+      "label": "Population 2016",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0,
+        758,
+        74,
+        1553
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "pop2021",
+      "original_field": "pop2021",
+      "label": "Population 2021",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0,
+        798,
+        20,
+        1323
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "population",
+      "original_field": "population",
+      "label": "Population",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        7060,
+        6753,
+        7329,
+        2777
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "population_change",
+      "original_field": "population_change",
+      "label": "Population change",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        -986,
+        -1,
+        19,
+        9
+      ],
+      "null_rate": 0.784,
+      "needs_review": false
+    },
+    {
+      "column": "pos_count",
+      "original_field": "pos_count",
+      "label": "Pos count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree_planting_numbers_by_program",
+          "records": 28
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        562,
+        1372,
+        4000,
+        227
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "primaryindex",
+      "original_field": "primaryindex",
+      "label": "Primaryindex",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        540.0,
+        534.0,
+        536.0,
+        537.0
+      ],
+      "null_rate": 0.087,
+      "needs_review": false
+    },
+    {
+      "column": "private_sector_dwellings_excluding_houses_no",
+      "original_field": "private_sector_dwellings_excluding_houses_no",
+      "label": "Private sector dwellings excluding houses count",
+      "semantic_class": "CATEGORY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        11.0,
+        2.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": false
+    },
+    {
+      "column": "private_sector_houses_no",
+      "original_field": "private_sector_houses_no",
+      "label": "Private sector houses count",
+      "semantic_class": "CATEGORY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        54.0,
+        93.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": false
+    },
+    {
+      "column": "professional_scientific_and_technical_services",
+      "original_field": "professional_scientific_and_technical_services",
+      "label": "Professional scientific and technical services",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        6.5,
+        6.7
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "professional_scientific_and_technical_services_no",
+      "original_field": "professional_scientific_and_technical_services_no",
+      "label": "Professional scientific and technical services count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        965.0,
+        833.0,
+        873.0,
+        842.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "professionals_no",
+      "original_field": "professionals_no",
+      "label": "Professionals count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        20.0,
+        16.0,
+        9.0,
+        19.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "program",
+      "original_field": "program",
+      "label": "Program",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree_planting_numbers_by_program",
+          "records": 28
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Tree Removal",
+        "Revegetation",
+        "Street & Park Trees",
+        "Native Plant Giveaway"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "provider",
+      "original_field": "provider",
+      "label": "Provider",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Neuron",
+        "Beam"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "public_administration_and_safety",
+      "original_field": "public_administration_and_safety",
+      "label": "Public administration and safety",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        20.6,
+        18.3,
+        18.0
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "public_administration_and_safety_no",
+      "original_field": "public_administration_and_safety_no",
+      "label": "Public administration and safety count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        29.0,
+        34.0,
+        32.0,
+        36.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "rank",
+      "original_field": "rank",
+      "label": "Rank",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:aussie-bird-count-year",
+          "records": 964
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1,
+        2,
+        5,
+        6
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "rental_hiring_and_real_estate_services",
+      "original_field": "rental_hiring_and_real_estate_services",
+      "label": "Rental hiring and real estate services",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1.9,
+        1.7,
+        1.4
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "rental_hiring_and_real_estate_services_no",
+      "original_field": "rental_hiring_and_real_estate_services_no",
+      "label": "Rental hiring and real estate services count",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1079.0,
+        1083.0,
+        1065.0,
+        1073.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "report_type",
+      "original_field": "report_type",
+      "label": "Report type",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-decisions",
+          "records": 1048
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Action Required",
+        "Receive & Note",
+        "Notice of Motion",
+        "Information Item"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "reporting_rate",
+      "original_field": "reporting_rate",
+      "label": "Reporting rate",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:aussie-bird-count-year",
+          "records": 964
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        0.085416667,
+        0.197740113,
+        0.285109983,
+        0.227873856
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "retail_trade",
+      "original_field": "retail_trade",
+      "label": "Retail trade",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        8.3,
+        7.5,
+        7.1
+      ],
+      "null_rate": 0.625,
+      "needs_review": false
+    },
+    {
+      "column": "retail_trade_no",
+      "original_field": "retail_trade_no",
+      "label": "Retail trade count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        429.0,
+        396.0,
+        418.0,
+        402.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "sal_id",
+      "original_field": "sal_id",
+      "label": "Sal id",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Hidden Valley (NT)",
+        "Berrimah",
+        "Coonawarra (NT)",
+        "Marrara"
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "sales_workers_no",
+      "original_field": "sales_workers_no",
+      "label": "Sales workers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        8.0,
+        12.0,
+        9.0,
+        7.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": false
+    },
+    {
+      "column": "scc_code",
+      "original_field": "scc_code",
+      "label": "State suburb code code",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        "70003",
+        "70025",
+        "70040",
+        "70059"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "season",
+      "original_field": "season",
+      "label": "Season",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Nov - Apr",
+        "May - Oct"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "second_breed",
+      "original_field": "second_breed",
+      "label": "Second breed",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Shih Tzu",
+        "Cross Breed",
+        "Poodle (Miniature)",
+        "Mixed Breed"
+      ],
+      "null_rate": 0.68,
+      "needs_review": false
+    },
+    {
+      "column": "second_color",
+      "original_field": "second_color",
+      "label": "Second color",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "White",
+        "Black",
+        "Brown",
+        "Roan"
+      ],
+      "null_rate": 0.57,
+      "needs_review": false
+    },
+    {
+      "column": "section",
+      "original_field": "section",
+      "label": "Section",
+      "semantic_class": "TEXT",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-decisions",
+          "records": 1048
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Action Reports",
+        "Receive and Note Reports",
+        "Notices of Motion",
+        "Information Item"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "sector",
+      "original_field": "sector",
+      "label": "Sector",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:total-economy",
+          "records": 204
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Drink",
+        "Leisure & Entertainment",
+        "Food",
+        "Accommodation"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "sheep_and_lambs_total_no",
+      "original_field": "sheep_and_lambs_total_no",
+      "label": "Sheep and lambs total count",
+      "semantic_class": "TEXT",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": true
+    },
+    {
+      "column": "speaks_english_only",
+      "original_field": "speaks_english_only",
+      "label": "Speaks english only",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        49114.0,
+        48953.0,
+        2442.0,
+        1259.0
+      ],
+      "null_rate": 0.975,
+      "needs_review": false
+    },
+    {
+      "column": "state",
+      "original_field": "state",
+      "label": "State",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 9,
+      "examples": [
+        "Northern Territory"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "state_code_2020",
+      "original_field": "state_code_2020",
+      "label": "State code 2020",
+      "semantic_class": "PLACE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        7.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "state_name_2020",
+      "original_field": "state_name_2020",
+      "label": "State name 2020",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Northern Territory"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "state_name_2021",
+      "original_field": "state_name_2021",
+      "label": "State name 2021",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Northern Territory"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "status",
+      "original_field": "status",
+      "label": "Status",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "CURRENT"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "sub_category",
+      "original_field": "sub_category",
+      "label": "Sub category",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 7,
+      "examples": [
+        "20-24 years",
+        "85 years and over",
+        "Year 11 or equivalent",
+        "Both Aboriginal and Torres Strait Islander(a)"
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "subha",
+      "original_field": "subha",
+      "label": "Sub-area hectares",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        295.494427657,
+        591.725465342,
+        191.605927165,
+        320.524935736
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "suburb",
+      "original_field": "suburb",
+      "label": "Suburb",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:gardens-for-wildlife-suburbs",
+          "records": 34
+        }
+      ],
+      "dataset_count": 6,
+      "examples": [
+        "Alawa",
+        "Anula",
+        "Bayview (NT)",
+        "Brinkin"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "suburb",
+      "original_field": "suburb_name",
+      "label": "Suburb name",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:cod-animal-registrations",
+          "records": 6095
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:animal-infringements",
+          "records": 1387
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        "MUIRHEAD",
+        "COCONUT GROVE",
+        "ANULA",
+        "LEANYER"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "tcc2011",
+      "original_field": "tcc2011",
+      "label": "Tree canopy cover 2011",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        24.314721793,
+        19.298556288,
+        34.010826785999996,
+        49.130802144
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "tcc2016",
+      "original_field": "tcc2016",
+      "label": "Tree canopy cover 2016",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        29.446136325,
+        18.142835874,
+        37.761483202,
+        50.551673812
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "tcc2021",
+      "original_field": "tcc2021",
+      "label": "Tree canopy cover 2021",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        14.951582535,
+        8.630461568,
+        18.619556174,
+        37.001957709
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "technicians_and_trades_workers_no",
+      "original_field": "technicians_and_trades_workers_no",
+      "label": "Technicians and trades workers count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        14.0,
+        23.0,
+        7.0,
+        22.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "title",
+      "original_field": "title",
+      "label": "Title",
+      "semantic_class": "IDENTITY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-decisions",
+          "records": 1048
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Submission to the draft Local Government Bill consultation",
+        "Access and Inclusion Advisory Committee Meeting Minutes 2 July 2019",
+        "Confirmation of executive committee meeting minutes - 2018",
+        "Incoming Correspondence from the Member for Sanderson - Velodrome Upgrade"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "total",
+      "original_field": "total",
+      "label": "Total",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-suburb-level-g09",
+          "records": 3692
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:sponsorships-and-grants-data",
+          "records": 439
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-country-of-birth-of-person-by-age-lga-level-g09",
+          "records": 104
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [
+        245.0,
+        44.0,
+        27.0,
+        526.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "total_1",
+      "original_field": "total_1",
+      "label": "Total 1",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        137.0,
+        34.0,
+        359.0,
+        284.0
+      ],
+      "null_rate": 0.025,
+      "needs_review": false
+    },
+    {
+      "column": "total_2",
+      "original_field": "total_2",
+      "label": "Total 2",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        136.0,
+        34.0,
+        363.0,
+        294.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "total_debtors_entering_personal_insolvencies_no",
+      "original_field": "total_debtors_entering_personal_insolvencies_no",
+      "label": "Total debtors entering personal insolvencies count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        118.0,
+        128.0,
+        63.0,
+        119.0
+      ],
+      "null_rate": 0.25,
+      "needs_review": false
+    },
+    {
+      "column": "total_distance_in_km",
+      "original_field": "total_distance_in_km",
+      "label": "Total distance in km",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        53293.27905,
+        21524.24419,
+        49542.66067,
+        64586.6157
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "total_distinct_users",
+      "original_field": "total_distinct_users",
+      "label": "Total distinct users",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        7178,
+        2265,
+        5129,
+        7657
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "total_dwelling_units_no",
+      "original_field": "total_dwelling_units_no",
+      "label": "Total dwelling units count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        65.0,
+        95.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": false
+    },
+    {
+      "column": "total_number_of_business_entries",
+      "original_field": "total_number_of_business_entries",
+      "label": "Total number of business entries",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        1300.0,
+        1089.0,
+        1023.0,
+        1120.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "total_number_of_business_exits",
+      "original_field": "total_number_of_business_exits",
+      "label": "Total number of business exits",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        917.0,
+        876.0,
+        874.0,
+        885.0
+      ],
+      "null_rate": 0.5,
+      "needs_review": true
+    },
+    {
+      "column": "total_number_of_businesses",
+      "original_field": "total_number_of_businesses",
+      "label": "Total number of businesses",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        7520.0,
+        6705.0,
+        7010.0,
+        6832.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "total_persons_employed_aged_15_years_and_over_no",
+      "original_field": "total_persons_employed_aged_15_years_and_over_no",
+      "label": "Total persons employed aged 15 years and over count",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        38782.0,
+        42077.0,
+        44133.0
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "total_private_sector_dwelling_units_no",
+      "original_field": "total_private_sector_dwelling_units_no",
+      "label": "Total private sector dwelling units count",
+      "semantic_class": "CATEGORY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        65.0,
+        95.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": false
+    },
+    {
+      "column": "total_registered_motor_vehicles_no",
+      "original_field": "total_registered_motor_vehicles_no",
+      "label": "Total registered motor vehicles count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        68540.0,
+        71155.0,
+        69057.0,
+        69474.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "total_responses_c",
+      "original_field": "total_responses_c",
+      "label": "Total responses c",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-suburb-level",
+          "records": 4192
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-ancestry-by-country-of-birth-of-parents-g08-lga-level",
+          "records": 128
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        534.0,
+        6377.0,
+        381.0,
+        50.0
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "total_trips",
+      "original_field": "total_trips",
+      "label": "Total trips",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        32057,
+        11961,
+        22996,
+        35361
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "total_value_of_private_sector_dwelling_units_m",
+      "original_field": "total_value_of_private_sector_dwelling_units_m",
+      "label": "Total value of private sector dwelling units m",
+      "semantic_class": "CATEGORY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        67.0,
+        75.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": true
+    },
+    {
+      "column": "transport_postal_and_warehousing",
+      "original_field": "transport_postal_and_warehousing",
+      "label": "Transport postal and warehousing",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        5.2,
+        4.4,
+        4.2
+      ],
+      "null_rate": 0.625,
+      "needs_review": true
+    },
+    {
+      "column": "transport_postal_and_warehousing_no",
+      "original_field": "transport_postal_and_warehousing_no",
+      "label": "Transport postal and warehousing count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        822.0,
+        496.0,
+        761.0,
+        622.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": true
+    },
+    {
+      "column": "type",
+      "original_field": "type",
+      "label": "Type",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:total-economy",
+          "records": 204
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        "Core",
+        "Non-Core",
+        "Supply",
+        "LOCALITY"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "ufi",
+      "original_field": "ufi",
+      "label": "Ufi",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:tree-canopy-cover",
+          "records": 42
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        391,
+        412,
+        411,
+        248
+      ],
+      "null_rate": 0.0,
+      "needs_review": true
+    },
+    {
+      "column": "value_of_non_residential_building_m",
+      "original_field": "value_of_non_residential_building_m",
+      "label": "Value of non residential building m",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        378.0,
+        204.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": true
+    },
+    {
+      "column": "value_of_private_sector_dwellings_excluding_houses_m",
+      "original_field": "value_of_private_sector_dwellings_excluding_houses_m",
+      "label": "Value of private sector dwellings excluding houses m",
+      "semantic_class": "CATEGORY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        3.0,
+        1.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": true
+    },
+    {
+      "column": "value_of_private_sector_houses_m",
+      "original_field": "value_of_private_sector_houses_m",
+      "label": "Value of private sector houses m",
+      "semantic_class": "CATEGORY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        64.0,
+        74.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": true
+    },
+    {
+      "column": "value_of_residential_building_m",
+      "original_field": "value_of_residential_building_m",
+      "label": "Value of residential building m",
+      "semantic_class": "IDENTITY",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        80.0,
+        88.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": true
+    },
+    {
+      "column": "value_of_total_building_m",
+      "original_field": "value_of_total_building_m",
+      "label": "Value of total building m",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        458.0,
+        291.0
+      ],
+      "null_rate": 0.75,
+      "needs_review": true
+    },
+    {
+      "column": "vegetables_total_area_ha",
+      "original_field": "vegetables_total_area_ha",
+      "label": "Vegetables total area hectares",
+      "semantic_class": "PLACE",
+      "data_type": "null",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [],
+      "null_rate": 1.0,
+      "needs_review": false
+    },
+    {
+      "column": "vehicle_type",
+      "original_field": "vehicle_type",
+      "label": "Vehicle type",
+      "semantic_class": "CATEGORY",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:micromobility-data-neuron-beam",
+          "records": 133
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "E-Scooter",
+        "E-Bike"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "very_well_or_well",
+      "original_field": "very_well_or_well",
+      "label": "Very well or well",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-language-used-at-home-g13-by-suburb-level",
+          "records": 2877
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g13-by-lga-level",
+          "records": 81
+        }
+      ],
+      "dataset_count": 2,
+      "examples": [
+        125.0,
+        32.0,
+        332.0,
+        271.0
+      ],
+      "null_rate": 0.025,
+      "needs_review": true
+    },
+    {
+      "column": "ward",
+      "original_field": "ward",
+      "label": "Ward",
+      "semantic_class": "PLACE",
+      "data_type": "text",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:councillor-expenses",
+          "records": 245
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        "Chan Ward",
+        "Lord Mayor",
+        "Lyons Ward",
+        "Richardson Ward"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "wholesale_trade",
+      "original_field": "wholesale_trade",
+      "label": "Wholesale trade",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        2.4,
+        1.8,
+        1.4
+      ],
+      "null_rate": 0.625,
+      "needs_review": false
+    },
+    {
+      "column": "wholesale_trade_no",
+      "original_field": "wholesale_trade_no",
+      "label": "Wholesale trade count",
+      "semantic_class": "MEASURE",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 1,
+      "examples": [
+        139.0,
+        133.0,
+        137.0,
+        145.0
+      ],
+      "null_rate": 0.375,
+      "needs_review": false
+    },
+    {
+      "column": "year",
+      "original_field": "year",
+      "label": "Year",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:aussie-bird-count-year",
+          "records": 964
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:population-by-lga-nt-abs-data-from-2001",
+          "records": 436
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:total-economy",
+          "records": 204
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:economy-and-industry-by-lga-abs",
+          "records": 8
+        }
+      ],
+      "dataset_count": 4,
+      "examples": [
+        "2019",
+        "2020",
+        "2021",
+        "2022"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    },
+    {
+      "column": "year",
+      "original_field": "year_text",
+      "label": "Year text",
+      "semantic_class": "TIME",
+      "data_type": "number",
+      "appears_in": [
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-2021-census-of-population-and-housing-selected-person-characteristics-by-sex",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-census-of-population-and-housing-selected-person-characteristics-by-sex-subu",
+          "records": 4488
+        },
+        {
+          "dataset_id": "smart.darwin.nt.gov.au:abs-g01-selected-person-characteristics-by-sex-lga",
+          "records": 132
+        }
+      ],
+      "dataset_count": 3,
+      "examples": [
+        "2011",
+        "2006",
+        "2016",
+        "2021"
+      ],
+      "null_rate": 0.0,
+      "needs_review": false
+    }
+  ]
+}

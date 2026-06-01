@@ -230,6 +230,39 @@ class Repository:
                              "value": r["metric_value"],
                              "detail": json.loads(r["payload"])} for r in rows]}
 
+    # ---- column catalog (the semantic dictionary the LLM picks columns from) ----
+
+    _catalog_cache = None
+
+    def find_columns(self, query: str = "", semantic_class: str = "", limit: int = 20) -> dict:
+        """Search the unified column catalog so the model can pick which column
+        (and dataset) answers a question, then fetch just that."""
+        if Repository._catalog_cache is None:
+            path = Path("data/column_catalog.json")
+            if not path.exists():
+                return {"error": "Column catalog not built. Run: python -m ingestion.columns"}
+            Repository._catalog_cache = json.loads(path.read_text(encoding="utf-8"))
+        cat = Repository._catalog_cache
+        q = (query or "").lower()
+        cls = (semantic_class or "").upper()
+        hits = []
+        for col in cat["columns"]:
+            if cls and col["semantic_class"] != cls:
+                continue
+            hay = f"{col['column']} {col['original_field']} {col['label']} {col['examples']}".lower()
+            # word-boundary match so "rain" doesn't hit "training"
+            if q and not any(re.search(r"\b" + re.escape(w), hay) for w in q.split()):
+                continue
+            hits.append({
+                "column": col["column"], "label": col["label"],
+                "semantic_class": col["semantic_class"], "data_type": col["data_type"],
+                "datasets": [d["dataset_id"] for d in col["appears_in"]],
+                "examples": col["examples"][:3],
+            })
+            if len(hits) >= limit:
+                break
+        return {"query": query, "matches": len(hits), "columns": hits}
+
     def close(self) -> None:
         self.store.close()
         if self.uni is not None:
