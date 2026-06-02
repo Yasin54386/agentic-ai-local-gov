@@ -142,17 +142,28 @@ jobs:
             echo "==> Deploy complete on $(hostname) at $(date)"
           REMOTE
 
-      - name: Smoke test public endpoint
-        env:
-          DOMAIN: ${{ secrets.ORACLE_HOST }}
+      - name: Smoke test public endpoints
         run: |
-          # Hit the health API directly on the server's IP (bypasses Cloudflare cache)
-          HTTP=$(curl -s -o /dev/null -w "%{http_code}" \
-            "http://${{ secrets.ORACLE_HOST }}/api/health" \
-            -H "Host: ${{ secrets.ORACLE_HOST }}" 2>/dev/null || echo "000")
-          echo "Health endpoint HTTP status: $HTTP"
-          if [ "$HTTP" != "200" ]; then
-            echo "WARNING: health endpoint returned $HTTP — check docker logs on the VM"
-            # Don't fail the job — Cloudflare proxy may block direct IP access
+          BASE="http://${{ secrets.ORACLE_HOST }}"
+
+          # Health check
+          HTTP=$(curl -sf -o /dev/null -w "%{http_code}" "$BASE/api/health" 2>/dev/null || echo "000")
+          echo "Health: $HTTP"
+
+          # Forms search must return at least one result for 'dog'
+          FORMS=$(curl -sf "$BASE/api/forms/search?q=dog" 2>/dev/null || echo '{}')
+          COUNT=$(echo "$FORMS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d.get('results',[])))" 2>/dev/null || echo "0")
+          echo "Forms search 'dog': $COUNT results"
+          if [ "$COUNT" -lt 1 ]; then
+            echo "WARNING: forms search returned 0 results for 'dog'"
           fi
+
+          # Howto search must return at least one result for 'licence'
+          HOWTO=$(curl -sf "$BASE/api/howto/search?q=licence" 2>/dev/null || echo '{}')
+          COUNT=$(echo "$HOWTO" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d.get('results',[])))" 2>/dev/null || echo "0")
+          echo "Howto search 'licence': $COUNT results"
+          if [ "$COUNT" -lt 1 ]; then
+            echo "WARNING: howto search returned 0 results for 'licence'"
+          fi
+
           echo "Deployment pipeline finished successfully."

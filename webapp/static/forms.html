@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#e8a020">
 <title>Form Finder — Ask Territory</title>
 <style>
   :root {
@@ -116,7 +118,33 @@
   /* toast */
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 1px solid #f59e0b; color: #fcd34d; padding: 10px 20px; border-radius: 8px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; }
   .toast.show { opacity: 1; }
-
+  /* fee + requirements panel */
+  .card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
+  .fee-tag { background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.2); color: #86efac; font-size: 11px; padding: 2px 9px; border-radius: 99px; }
+  .req-list { margin-top: 8px; padding-left: 16px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+  /* indigenous / info note */
+  .info-note { background: rgba(139,92,246,.07); border: 1px solid rgba(139,92,246,.2); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #c4b5fd; margin-top: 8px; }
+  /* report button */
+  .report-btn { background: transparent; border: none; color: var(--muted); font-size: 11px; cursor: pointer; padding: 0; margin-left: auto; }
+  .report-btn:hover { color: #ef4444; }
+  /* report modal */
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; max-width: 440px; width: 100%; }
+  .modal h3 { font-size: 15px; margin-bottom: 12px; }
+  .modal textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 10px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 80px; margin-bottom: 10px; }
+  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+  /* did you mean */
+  .dym { max-width: 700px; margin: 0 auto 8px; padding: 0 16px; }
+  .dym-inner { background: rgba(232,160,32,.07); border: 1px solid rgba(232,160,32,.2); border-radius: var(--radius); padding: 9px 14px; font-size: 13px; color: var(--muted); }
+  .dym-inner a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+  /* print */
+  @media print {
+    header, .search-wrap, .stats-bar, #expandedBanner, .admin-strip, .dym, .btn, .sug-chip, .chip { display: none !important; }
+    body { background: #fff; color: #000; }
+    .card { border: 1px solid #ccc; page-break-inside: avoid; }
+    .card-title a { color: #000; }
+    .tag, .tag.dept { background: #f0f0f0; color: #333; border-color: #ccc; }
+  }
   @media (max-width: 480px) {
     .search-row { flex-direction: column; }
     .btn { width: 100%; }
@@ -165,6 +193,23 @@
     <strong>AI expanded your search with:</strong> <span id="expandedTerms"></span>
   </div>
 </div>
+<div class="dym" id="dymBanner" style="display:none">
+  <div class="dym-inner">Did you mean: <a id="dymLink" onclick=""></a>?</div>
+</div>
+<!-- Report modal -->
+<div class="modal-bg" id="reportModal" style="display:none" onclick="if(event.target===this)closeReport()">
+  <div class="modal">
+    <h3>Report a problem</h3>
+    <div id="reportTitle" style="font-size:13px;color:var(--muted);margin-bottom:8px"></div>
+    <textarea id="reportIssue" placeholder="Describe the problem — broken link, wrong info, outdated form…"></textarea>
+    <div class="modal-btns">
+      <button class="btn" style="background:var(--surface);border:1px solid var(--border);color:var(--muted)" onclick="closeReport()">Cancel</button>
+      <button class="btn btn-primary" onclick="submitReport()">Submit</button>
+    </div>
+  </div>
+</div>
+<!-- Google Translate -->
+<div id="google_translate_element" style="max-width:700px;margin:0 auto 4px;padding:0 16px;font-size:12px"></div>
 
 <div class="admin-strip">
   <span id="scrapeStatus"></span>
@@ -187,6 +232,36 @@ const expandedTermsEl = document.getElementById('expandedTerms');
 const statsBar = document.getElementById('statsBar');
 const statsPills = document.getElementById('statsPills');
 const scrapeStatus = document.getElementById('scrapeStatus');
+const dymBanner = document.getElementById('dymBanner');
+const dymLink   = document.getElementById('dymLink');
+
+// PWA service worker
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(()=>{});
+}
+// Google Translate
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage:'en',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');
+}
+
+// Report modal state
+let _reportUrl = '', _reportTitle2 = '';
+function openReport(url, title) {
+  _reportUrl = url; _reportTitle2 = title;
+  document.getElementById('reportTitle').textContent = title;
+  document.getElementById('reportIssue').value = '';
+  document.getElementById('reportModal').style.display = 'flex';
+}
+function closeReport() { document.getElementById('reportModal').style.display = 'none'; }
+async function submitReport() {
+  const issue = document.getElementById('reportIssue').value.trim();
+  if (!issue) return;
+  try {
+    await fetch('/api/feedback', {method:'POST',headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({url:_reportUrl, title:_reportTitle2, source:'forms', issue})});
+    closeReport(); showToast('Thank you — your report has been submitted.');
+  } catch(e) { showToast('Could not submit report: ' + e.message); }
+}
 
 // load stats on page load
 loadStats();
@@ -205,6 +280,7 @@ async function doSearch(mode) {
   if (!q) return;
   resultsEl.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
   expandedBanner.style.display = 'none';
+  dymBanner.style.display = 'none';
   try {
     const res = await fetch(`/api/forms/search?q=${encodeURIComponent(q)}&mode=${mode}`);
     const data = await res.json();
@@ -212,6 +288,12 @@ async function doSearch(mode) {
     if (mode === 'ai' && (!data.expanded_terms || !data.expanded_terms.length)) {
       showToast('AI model offline — showing keyword results instead.');
     }
+    if (data.did_you_mean && !data.results.length) {
+      dymLink.textContent = data.did_you_mean;
+      dymLink.onclick = () => { input.value = data.did_you_mean; doSearch('keyword'); };
+      dymBanner.style.display = 'block';
+    }
+    if (data.fuzzy) showToast('No exact matches — showing closest results.');
     renderResults(data, q, mode);
   } catch(e) {
     resultsEl.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${e.message}</p></div>`;
@@ -236,19 +318,28 @@ function renderResults(data, q, mode) {
     return;
   }
 
-  const countText = `<div class="result-meta"><strong>${results.length}</strong> form${results.length !== 1 ? 's' : ''} found for "<strong>${escHtml(q)}</strong>"${mode === 'ai' ? ' <span style="color:var(--accent2)">(AI-expanded)</span>' : ''}</div>`;
+  const fuzzyNote = data.fuzzy ? ' <span style="color:var(--muted);font-size:11px">(fuzzy match)</span>' : '';
+  const countText = `<div class="result-meta" style="display:flex;justify-content:space-between;align-items:center"><span><strong>${results.length}</strong> form${results.length !== 1 ? 's' : ''} found for "<strong>${escHtml(q)}</strong>"${mode === 'ai' ? ' <span style="color:var(--accent2)">(AI-expanded)</span>' : ''}${fuzzyNote}</span><button class="btn btn-sm" onclick="window.print()" style="font-size:11px">🖨 Print</button></div>`;
   const cards = results.map(r => {
     const isPdf = r.url.toLowerCase().endsWith('.pdf');
     const desc = r.description ? `<div class="card-desc">${escHtml(r.description.slice(0, 160))}${r.description.length > 160 ? '…' : ''}</div>` : '';
+    const feeHtml = r.fee ? `<span class="fee-tag">💰 ${escHtml(r.fee)}</span>` : '';
+    const reqs = (r.requirements || []);
+    const reqsHtml = reqs.length ? `<ul class="req-list">${reqs.map(x=>`<li>${escHtml(x)}</li>`).join('')}</ul>` : '';
     return `
       <div class="card">
         <div class="card-title"><a href="${escAttr(r.url)}" target="_blank" rel="noopener">${escHtml(r.title)}</a></div>
         ${desc}
-        <div class="card-footer">
+        <div class="card-meta">
           ${r.department ? `<span class="tag dept">${escHtml(r.department)}</span>` : ''}
           ${r.category ? `<span class="tag">${escHtml(r.category)}</span>` : ''}
           ${isPdf ? '<span class="pdf-badge">PDF</span>' : ''}
-          <span class="url-text">${escHtml(r.source_domain || new URL(r.url).hostname)}</span>
+          ${feeHtml}
+        </div>
+        ${reqsHtml}
+        <div class="card-footer" style="margin-top:8px">
+          <span class="url-text">${escHtml(r.source_domain || '')}</span>
+          <button class="report-btn" onclick="openReport('${escAttr(r.url)}','${escAttr(r.title)}')">⚑ Report problem</button>
         </div>
       </div>`;
   }).join('');
@@ -296,5 +387,6 @@ function escAttr(s) {
   return String(s).replace(/"/g,'&quot;');
 }
 </script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>

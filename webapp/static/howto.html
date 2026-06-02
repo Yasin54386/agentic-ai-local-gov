@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="manifest" href="/manifest.json">
+<meta name="theme-color" content="#e8a020">
 <title>How-To Hub — Ask Territory</title>
 <style>
   :root {
@@ -135,6 +137,39 @@
   /* toast */
   .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 1px solid #f59e0b; color: #fcd34d; padding: 10px 20px; border-radius: 8px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; }
   .toast.show { opacity: 1; }
+  /* fee / time info */
+  .info-pills { display: flex; gap: 6px; flex-wrap: wrap; margin: 8px 0 4px; }
+  .fee-pill { background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.2); color: #86efac; font-size: 11px; padding: 2px 9px; border-radius: 99px; }
+  .time-pill { background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.2); color: #93c5fd; font-size: 11px; padding: 2px 9px; border-radius: 99px; }
+  /* indigenous note */
+  .indigenous-note { background: rgba(234,179,8,.06); border: 1px solid rgba(234,179,8,.2); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #fde68a; margin-top: 8px; }
+  /* related forms */
+  .related-section { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
+  .related-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 6px; }
+  .related-link { display: inline-flex; align-items: center; gap: 6px; background: rgba(232,160,32,.08); border: 1px solid rgba(232,160,32,.2); color: var(--accent); text-decoration: none; padding: 5px 12px; border-radius: 8px; font-size: 12px; margin-right: 6px; margin-bottom: 4px; }
+  .related-link:hover { background: rgba(232,160,32,.15); }
+  /* report */
+  .report-btn { background: transparent; border: none; color: var(--muted); font-size: 11px; cursor: pointer; padding: 4px 0 0; }
+  .report-btn:hover { color: #ef4444; }
+  /* report modal */
+  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; max-width: 440px; width: 100%; }
+  .modal h3 { font-size: 15px; margin-bottom: 12px; }
+  .modal textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 10px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 80px; margin-bottom: 10px; }
+  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
+  /* did you mean */
+  .dym { max-width: 720px; margin: 0 auto 6px; padding: 0 16px; }
+  .dym-inner { background: rgba(16,185,129,.06); border: 1px solid rgba(16,185,129,.2); border-radius: var(--radius); padding: 9px 14px; font-size: 13px; color: var(--muted); }
+  .dym-inner a { color: var(--accent); cursor: pointer; text-decoration: underline; }
+  /* print */
+  @media print {
+    header, .search-wrap, .stats-bar, #expandedBanner, .admin-strip, .filter-row, .dym, .btn, .chip, .chips { display: none !important; }
+    body { background: #fff; color: #000; }
+    .card { border: 1px solid #ccc; page-break-inside: avoid; }
+    .card-title { color: #000; }
+    .card-body { display: block !important; }
+    .tag { background: #f0f0f0; color: #333; border-color: #ccc; }
+  }
 
   /* admin strip */
   .admin-strip { max-width: 720px; margin: 0 auto; padding: 0 16px 10px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
@@ -153,8 +188,30 @@
   <nav class="nav-links">
     <a href="/">Ask Territory</a>
     <a href="/forms">Form Finder</a>
+    <a href="/guide">Guide</a>
   </nav>
 </header>
+
+<!-- Report modal -->
+<div id="reportModal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeReport()">
+  <div class="modal">
+    <h3>Report a problem</h3>
+    <div id="reportTarget" style="font-size:12px;color:var(--muted);margin-bottom:10px"></div>
+    <textarea id="reportIssue" placeholder="Describe the problem — broken link, outdated steps, wrong information…"></textarea>
+    <div class="modal-btns">
+      <button class="btn btn-sm" onclick="closeReport()">Cancel</button>
+      <button class="btn btn-primary" style="padding:7px 16px;font-size:13px" onclick="submitReport()">Send Report</button>
+    </div>
+  </div>
+</div>
+
+<!-- Did you mean -->
+<div id="dymBanner" class="dym" style="display:none">
+  <div class="dym-inner">Did you mean: <a id="dymLink" onclick="useDym()"></a>?</div>
+</div>
+
+<!-- Google Translate -->
+<div id="google_translate_element" style="max-width:720px;margin:0 auto;padding:0 16px 4px"></div>
 
 <div class="hero">
   <h1>Your <span>NT Government</span> How-To Guide</h1>
@@ -217,6 +274,11 @@
 </div>
 
 <script>
+// PWA service worker registration
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').catch(() => {});
+}
+
 const input = document.getElementById('searchInput');
 const resultsEl = document.getElementById('results');
 const expandedBanner = document.getElementById('expandedBanner');
@@ -228,6 +290,7 @@ const scrapeStatus = document.getElementById('scrapeStatus');
 
 let currentResults = [];
 let activeCategory = null;
+let _reportUrl = '', _reportTitle = '';
 
 loadStats();
 
@@ -238,18 +301,36 @@ function q(term) {
   doSearch('keyword');
 }
 
+function useDym() {
+  const dym = document.getElementById('dymLink').textContent;
+  input.value = dym;
+  document.getElementById('dymBanner').style.display = 'none';
+  doSearch('keyword');
+}
+
 async function doSearch(mode) {
   const query = input.value.trim();
   if (!query) return;
   resultsEl.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
   expandedBanner.style.display = 'none';
   filterRow.style.display = 'none';
+  document.getElementById('dymBanner').style.display = 'none';
   activeCategory = null;
   try {
     const res = await fetch(`/api/howto/search?q=${encodeURIComponent(query)}&mode=${mode}`);
     const data = await res.json();
     currentResults = data.results || [];
     if (data.error) showToast('Search error: ' + data.error);
+
+    // Did you mean
+    if (data.did_you_mean) {
+      document.getElementById('dymLink').textContent = data.did_you_mean;
+      document.getElementById('dymBanner').style.display = 'block';
+    }
+
+    // Fuzzy fallback toast
+    if (data.fuzzy) showToast('Fuzzy match — showing closest results for "' + query + '"');
+
     if (mode === 'ai' && (!data.expanded_terms || !data.expanded_terms.length)) {
       showToast('AI model offline — showing keyword results instead.');
     } else if ((data.expanded_terms || []).length && mode === 'ai') {
@@ -305,7 +386,9 @@ function renderResults(results, query, mode, expanded) {
   }
 
   const modeTag = mode === 'ai' ? ' <span style="color:var(--accent2)">(AI-expanded)</span>' : '';
-  const meta = `<div class="result-meta"><strong>${results.length}</strong> guide${results.length!==1?'s':''} found for "<strong>${esc(query)}</strong>"${modeTag}</div>`;
+  const meta = `<div class="result-meta"><strong>${results.length}</strong> guide${results.length!==1?'s':''} found for "<strong>${esc(query)}</strong>"${modeTag}
+    <button class="btn-sm" onclick="window.print()" style="margin-left:10px">🖨 Print</button>
+  </div>`;
 
   const cards = results.map((r, i) => {
     const steps = (r.steps || []).length
@@ -331,14 +414,40 @@ function renderResults(results, query, mode, expanded) {
       ? `<div class="card-summary">${esc(r.summary.slice(0, 200))}${r.summary.length>200?'…':''}</div>`
       : '';
 
+    const infoPills = (r.fee || r.processing_time)
+      ? `<div class="info-pills">
+          ${r.fee ? `<span class="fee-pill">💰 ${esc(r.fee)}</span>` : ''}
+          ${r.processing_time ? `<span class="time-pill">⏱ ${esc(r.processing_time)}</span>` : ''}
+        </div>`
+      : '';
+
+    const indigenousNote = r.indigenous_note
+      ? `<div class="indigenous-note">🌏 <strong>Remote/Indigenous communities:</strong> ${esc(r.indigenous_note)}</div>`
+      : '';
+
+    const relatedForms = (r.related_forms || []).length
+      ? `<div class="related-section">
+           <div class="related-label">Related Forms</div>
+           ${r.related_forms.map(f =>
+             `<a class="related-link" href="${escA(f.url)}" target="_blank" rel="noopener">
+               📄 ${esc(f.title)}
+             </a>`
+           ).join('')}
+         </div>`
+      : '';
+
+    const firstLink = (r.links && r.links[0]) ? r.links[0].url : '';
+
     return `
       <div class="card" id="card-${i}">
         <div class="card-header" onclick="toggleCard(${i})">
           <div class="card-left">
             <div class="card-title">${esc(r.title)}</div>
             ${summary}
+            ${infoPills}
             <div class="card-tags">
               ${r.category ? `<span class="tag">${esc(r.category)}</span>` : ''}
+              ${r.department ? `<span class="tag dept">${esc(r.department)}</span>` : ''}
             </div>
           </div>
           <span class="chevron">▾</span>
@@ -346,6 +455,9 @@ function renderResults(results, query, mode, expanded) {
         <div class="card-body">
           ${steps}
           ${links}
+          ${indigenousNote}
+          ${relatedForms}
+          <button class="report-btn" onclick="openReport('${escA(firstLink)}','${escA(r.title)}')">⚑ Report a problem with this guide</button>
         </div>
       </div>`;
   }).join('');
@@ -383,8 +495,43 @@ async function triggerScrape() {
   }
 }
 
-function esc(s)  { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-function escA(s) { return String(s).replace(/"/g,'&quot;'); }
+function esc(s)  { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escA(s) { return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+// Report modal
+function openReport(url, title) {
+  _reportUrl = url; _reportTitle = title;
+  document.getElementById('reportTarget').textContent = title || url;
+  document.getElementById('reportIssue').value = '';
+  document.getElementById('reportModal').style.display = 'flex';
+}
+function closeReport() {
+  document.getElementById('reportModal').style.display = 'none';
+}
+async function submitReport() {
+  const issue = document.getElementById('reportIssue').value.trim();
+  if (!issue) { showToast('Please describe the problem first.'); return; }
+  try {
+    await fetch('/api/feedback', {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({url: _reportUrl, title: _reportTitle, source: 'howto', issue})
+    });
+    closeReport();
+    showToast('Thanks — report submitted!');
+  } catch(e) {
+    showToast('Failed to send: ' + e.message);
+  }
+}
+
+// Google Translate
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    {pageLanguage:'en', layout: google.translate.TranslateElement.InlineLayout.SIMPLE},
+    'google_translate_element'
+  );
+}
 </script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 </body>
 </html>
