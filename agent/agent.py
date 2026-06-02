@@ -44,14 +44,12 @@ for a suburb), say so plainly in one sentence, then offer what IS available for 
 (e.g. its neighbourhood_profile). Do NOT substitute unrelated data.
 - Prefer aggregated numbers (sum/count) over raw rows. Be concise and factual, and \
 name the table or dataset you used.
+- When a question spans more than one source (e.g. a suburb AND the weather, or \
+spending AND population), consult each relevant tool and SYNTHESISE one combined \
+answer rather than answering from a single source.
 """
 
 MAX_STEPS = 8  # safety cap on tool-use rounds
-
-
-def _tool_results_message(name: str, result: Any) -> dict:
-    """Ollama expects tool outputs as role:'tool' messages."""
-    return {"role": "tool", "content": json.dumps(result, default=str)[:12000]}
 
 
 def run(question: str, *, repo: Repository | None = None, model: str | None = None,
@@ -67,27 +65,17 @@ def run(question: str, *, repo: Repository | None = None, model: str | None = No
     try:
         for step in range(MAX_STEPS):
             msg = llm.chat(messages, tools=TOOLS, **kw)
-            tool_calls = msg.get("tool_calls") or []
-            messages.append({"role": "assistant",
-                             "content": msg.get("content", ""),
-                             "tool_calls": tool_calls})
-            if not tool_calls:
-                return msg.get("content", "").strip() or "(no answer produced)"
+            calls = llm.extract_tool_calls(msg)
+            messages.append(llm.assistant_message(msg))
+            if not calls:
+                return (msg.get("content") or "").strip() or "(no answer produced)"
 
-            for call in tool_calls:
-                fn = call.get("function", {})
-                name = fn.get("name", "")
-                args = fn.get("arguments", {})
-                if isinstance(args, str):
-                    try:
-                        args = json.loads(args)
-                    except json.JSONDecodeError:
-                        args = {}
+            for call in calls:
                 if verbose:
-                    print(f"  [tool] {name}({json.dumps(args)})", flush=True)
+                    print(f"  [tool] {call['name']}({json.dumps(call['args'])})", flush=True)
                 # READ-ONLY tools — a high-stakes human gate (docs/05) would sit here.
-                result = dispatch(repo, name, args)
-                messages.append(_tool_results_message(name, result))
+                result = dispatch(repo, call["name"], call["args"])
+                messages.append(llm.tool_result(call["id"], call["name"], result))
         return "(reached step limit without a final answer)"
     finally:
         if own_repo:
