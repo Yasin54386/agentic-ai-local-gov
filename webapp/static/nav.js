@@ -39,7 +39,7 @@
       min-height: 52px;
     }
     #ask-nav .an-logo {
-      font-size: 17px;
+      font-size: 15px;
       font-weight: 800;
       color: #e8a020;
       white-space: nowrap;
@@ -49,7 +49,7 @@
       text-decoration: none;
       letter-spacing: -0.3px;
     }
-    #ask-nav .an-logo span { color: #e2e8f0; }
+    #ask-nav .an-logo span { color: #8892a0; font-weight: 500; font-size: 13px; }
     #ask-nav .an-links {
       display: flex;
       gap: 0;
@@ -102,7 +102,7 @@
 
     return `
       <nav id="ask-nav">
-        <a class="an-logo" href="/">${pageInfo.title}<span>${pageInfo.sub}</span></a>
+        <a class="an-logo" href="/">AskTerritory<span>.com</span></a>
         <div class="an-links">${linksHtml}</div>
       </nav>`;
   }
