@@ -29,7 +29,9 @@ services:
     depends_on:
       - ollama
 
-  # Feeds the unified table through MCP every 6 hours.
+  # OPTIONAL — the web app now self-refreshes on access (live every 10 min,
+  # datasets every 24h), so this scheduled job is only a belt-and-braces backup
+  # for periods of zero traffic. Safe to remove if the app gets regular visits.
   refresh:
     build: .
     restart: unless-stopped

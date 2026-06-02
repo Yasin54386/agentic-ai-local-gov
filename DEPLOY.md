@@ -75,9 +75,7 @@ curl -s localhost:8000/api/health      # {"ok": true, ...}
 
 ---
 
-## Step 5 — Public access + HTTPS (nginx + certbot)
-
-```bash
+## Step 5 — Public access + HTTPS (nginx + certbot)```bash
 sudo apt install -y nginx certbot python3-certbot-nginx
 
 # install the site config (edit the domain inside first)

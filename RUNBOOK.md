@@ -129,6 +129,11 @@ To connect from an MCP client, register this command:
 
 ## 5. Keep data fresh — refresh every 6 hours (through MCP)
 
+> **Usually not needed.** The web app **self-refreshes on access** — the live
+> feed every ~10 min and the datasets every ~24h (throttled, in the background).
+> Run a scheduled job only as a backup for periods of **zero traffic**, or if
+> other consumers read the DB directly without going through the web app.
+
 Each cycle pulls live weather/flood **through the MCP server** and appends a
 snapshot to the unified table (building a time series). Add `--datasets` to also
 re-harvest the City of Darwin datasets each cycle.
