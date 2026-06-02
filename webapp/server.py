@@ -37,38 +37,50 @@ _lock = threading.Lock()  # serialise access to the shared sqlite connection
 # every request (not recommended — hammers the source). --datasets stays on the
 # scheduled 6h job; on-access refresh is the light, live feed only.
 AUTOREFRESH = os.environ.get("AUTOREFRESH", "1") != "0"
-REFRESH_TTL = int(os.environ.get("REFRESH_TTL", "600"))   # 10 minutes default
-_refresh_at = 0.0          # monotonic time of last refresh start
-_refreshing = threading.Lock()
-_last_result = {"ran_at": None, "live": None}
+LIVE_TTL = int(os.environ.get("REFRESH_TTL", "600"))            # live feed: 10 min
+DATASETS_TTL = int(os.environ.get("DATASETS_TTL", "86400"))     # datasets: 24h (0 disables)
+_last_result = {"live": None, "datasets": None}
+
+# Each tier: a monotonic timestamp + a single-flight lock.
+_tiers = {
+    "live": {"at": 0.0, "lock": threading.Lock(), "ttl": LIVE_TTL},
+    "datasets": {"at": 0.0, "lock": threading.Lock(), "ttl": DATASETS_TTL},
+}
 
 
-def _do_refresh():
-    """Background: sync the live feed into the DB via the existing refresh logic."""
+def _run_tier(name: str):
     from db.connection import Database
-    from ingestion.refresh import refresh_live
+    from ingestion.refresh import refresh_live, refresh_datasets
     db = Database().connect()
     try:
-        res = refresh_live(db)
-        _last_result.update(ran_at=time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()), live=res)
+        if name == "live":
+            _last_result["live"] = refresh_live(db)
+        else:
+            res = refresh_datasets(db)
+            _last_result["datasets"] = {"datasets": len(res),
+                                        "changed": sum(1 for r in res if r.get("added") or r.get("removed"))}
+        _last_result[name + "_at"] = time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
     except Exception as exc:
-        _last_result.update(error=str(exc))
+        _last_result[name + "_error"] = str(exc)
     finally:
         db.close()
-        _refreshing.release()
+        _tiers[name]["lock"].release()
 
 
 def maybe_refresh():
-    """Non-blocking, throttled, single-flight trigger."""
-    global _refresh_at
+    """Non-blocking, throttled, single-flight — live (10 min) + datasets (24h)."""
     if not AUTOREFRESH:
         return
-    if time.monotonic() - _refresh_at < REFRESH_TTL:
-        return
-    if not _refreshing.acquire(blocking=False):   # one refresh at a time
-        return
-    _refresh_at = time.monotonic()
-    threading.Thread(target=_do_refresh, daemon=True).start()
+    now = time.monotonic()
+    for name, t in _tiers.items():
+        if t["ttl"] <= 0:
+            continue
+        if now - t["at"] < t["ttl"]:
+            continue
+        if not t["lock"].acquire(blocking=False):
+            continue
+        t["at"] = now
+        threading.Thread(target=_run_tier, args=(name,), daemon=True).start()
 
 
 def tool(name, args=None):
@@ -145,11 +157,12 @@ class Handler(BaseHTTPRequestHandler):
         if u.path == "/api/columns":
             return self._json(tool("find_columns", {"query": q.get("q", [""])[0]}))
         if u.path == "/api/health":
-            age = None if not _refresh_at else round(time.monotonic() - _refresh_at)
+            now = time.monotonic()
+            ages = {n: (None if not t["at"] else round(now - t["at"])) for n, t in _tiers.items()}
             return self._json({"ok": True, "model_server": llm.server_up(),
-                               "model": llm.DEFAULT_MODEL,
-                               "autorefresh": AUTOREFRESH, "refresh_ttl_s": REFRESH_TTL,
-                               "last_refresh_age_s": age, "last_refresh": _last_result})
+                               "model": llm.DEFAULT_MODEL, "autorefresh": AUTOREFRESH,
+                               "ttl_s": {n: t["ttl"] for n, t in _tiers.items()},
+                               "age_s": ages, "last_refresh": _last_result})
         return self._json({"error": "not found"}, 404)
 
     def do_POST(self):
