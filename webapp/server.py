@@ -250,6 +250,7 @@ class Handler(BaseHTTPRequestHandler):
             "/forms":   "forms.html",   "/forms.html":   "forms.html",
             "/howto":   "howto.html",   "/howto.html":   "howto.html",
             "/guide":   "guide.html",   "/guide.html":   "guide.html",
+            "/tour":    "tour.html",    "/tour.html":    "tour.html",
         }
         if u.path in pages:
             self._file(STATIC / pages[u.path], "text/html; charset=utf-8"); return 200
@@ -378,6 +379,59 @@ class Handler(BaseHTTPRequestHandler):
             db = _fdb()
             try:
                 self._json(related_forms(db, category, gid))
+            finally:
+                db.close()
+            return 200
+
+        # ── Tour Guide ──
+        if u.path == "/api/tour/search":
+            from ingestion.tour_search import search as tsearch
+            q_str    = (q.get("q",        [""])[0]).strip()
+            category = (q.get("category", [""])[0]).strip()
+            page     = max(1, int(q.get("page",  ["1"])[0]))
+            limit    = min(24, max(1, int(q.get("limit", ["12"])[0])))
+            db = _fdb()
+            try:
+                self._json(tsearch(db, q_str, category, page, limit))
+            finally:
+                db.close()
+            return 200
+
+        if u.path == "/api/tour/stats":
+            from ingestion.tour_search import stats as tstats
+            db = _fdb()
+            try:
+                self._json(tstats(db))
+            finally:
+                db.close()
+            return 200
+
+        if u.path.startswith("/api/tour/destination/"):
+            from ingestion.tour_search import destination_detail
+            try:
+                dest_id = int(u.path.split("/")[-1])
+            except ValueError:
+                self._json({"error": "invalid id"}, 400); return 400
+            db = _fdb()
+            try:
+                d = destination_detail(db, dest_id)
+            finally:
+                db.close()
+            if d is None:
+                self._json({"error": "not found"}, 404); return 404
+            self._json(d); return 200
+
+        if u.path.startswith("/api/tour/reviews/"):
+            from ingestion.tour_search import reviews as treviews
+            try:
+                dest_id = int(u.path.split("/")[-1])
+            except ValueError:
+                self._json({"error": "invalid id"}, 400); return 400
+            page  = max(1, int(q.get("page",  ["1"])[0]))
+            limit = min(20, max(1, int(q.get("limit", ["3"])[0])))
+            db = _fdb()
+            try:
+                self._json(treviews(db, dest_id, page, limit))
             finally:
                 db.close()
             return 200
@@ -542,6 +596,28 @@ class Handler(BaseHTTPRequestHandler):
             db = _fdb_rw()
             try:
                 result = howto_run_scrape(db)
+            except Exception as exc:
+                self._json({"error": str(exc)}, 500); return 500
+            finally:
+                db.close()
+            self._json(result); return 200
+
+        # ── Tour Guide POST ──
+        if u.path == "/api/tour/review":
+            from ingestion.tour_search import add_review
+            try:
+                dest_id = int(body.get("destination_id", 0))
+                name    = str(body.get("name", "")).strip()[:80] or "Anonymous"
+                rating  = int(body.get("rating", 0))
+                text    = str(body.get("text", "")).strip()[:2000]
+            except (ValueError, TypeError):
+                self._json({"error": "invalid fields"}, 400); return 400
+            if not dest_id or not (1 <= rating <= 5) or not text:
+                self._json({"error": "destination_id, rating (1-5) and text are required"}, 400)
+                return 400
+            db = _fdb_rw()
+            try:
+                result = add_review(db, dest_id, name, rating, text)
             except Exception as exc:
                 self._json({"error": str(exc)}, 500); return 500
             finally:
