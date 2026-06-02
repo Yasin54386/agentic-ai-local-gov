@@ -113,6 +113,10 @@
   .admin-strip { max-width: 700px; margin: 0 auto; padding: 0 16px 12px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
   .admin-strip span { font-size: 12px; color: var(--muted); }
 
+  /* toast */
+  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 1px solid #f59e0b; color: #fcd34d; padding: 10px 20px; border-radius: 8px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; }
+  .toast.show { opacity: 1; }
+
   @media (max-width: 480px) {
     .search-row { flex-direction: column; }
     .btn { width: 100%; }
@@ -167,6 +171,7 @@
   <button class="btn btn-sm" style="background:var(--surface);border:1px solid var(--border);color:var(--muted)" onclick="triggerScrape()">Refresh form database</button>
 </div>
 
+<div id="toast" class="toast"></div>
 <div id="results">
   <div class="empty-state">
     <h3>Search government forms</h3>
@@ -203,6 +208,10 @@ async function doSearch(mode) {
   try {
     const res = await fetch(`/api/forms/search?q=${encodeURIComponent(q)}&mode=${mode}`);
     const data = await res.json();
+    if (data.error) showToast('Search error: ' + data.error);
+    if (mode === 'ai' && (!data.expanded_terms || !data.expanded_terms.length)) {
+      showToast('AI model offline — showing keyword results instead.');
+    }
     renderResults(data, q, mode);
   } catch(e) {
     resultsEl.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${e.message}</p></div>`;
@@ -270,6 +279,14 @@ async function triggerScrape() {
   } catch(e) {
     scrapeStatus.textContent = 'Scrape failed: ' + e.message;
   }
+}
+
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
 }
 
 function escHtml(s) {

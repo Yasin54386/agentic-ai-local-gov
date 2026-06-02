@@ -293,7 +293,7 @@ python3 scripts/scrape_forms.py && python3 scripts/scrape_howto.py
 # Reattach later with: tmux attach -t scrape
 ```
 
-### Schedule weekly re-scrapes (cron)
+### Schedule weekly re-scrapes, link checks, and backups (cron)
 
 ```bash
 crontab -e
@@ -305,6 +305,20 @@ Add at the bottom:
 # Re-scrape NT government forms and how-to guides every Sunday at 2am
 0 2 * * 0 cd /opt/ask-territory && python3 scripts/scrape_forms.py >> /var/log/scrape.log 2>&1
 30 2 * * 0 cd /opt/ask-territory && python3 scripts/scrape_howto.py >> /var/log/scrape.log 2>&1
+
+# Check for dead links and remove them — Monday at 3am (after scrape completes)
+0 3 * * 1 cd /opt/ask-territory && python3 scripts/check_links.py >> /var/log/linkcheck.log 2>&1
+
+# Weekly database backup — Sunday at 1am (before scrape, so we keep a clean copy)
+0 1 * * 0 cd /opt/ask-territory && bash scripts/backup_db.sh >> /var/log/backup.log 2>&1
+```
+
+The backup script keeps 30 days of backups and auto-deletes older ones.
+Backups go to `/opt/ask-territory/backups/` — consider copying them off-server too:
+
+```bash
+# Optional: copy latest backup to another machine after each backup
+# Add to the cron line: && scp backups/askterritory_*.sql.gz user@backup-server:/backups/
 ```
 
 ---

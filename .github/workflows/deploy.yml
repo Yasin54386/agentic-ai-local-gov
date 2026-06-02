@@ -51,17 +51,33 @@ jobs:
           python -m db.migrate
           echo "Migrations applied cleanly."
 
-      - name: Verify forms table exists
+      - name: Verify tables and seed data
         run: |
           python -c "
-          import sqlite3
+          import sqlite3, sys
           db = sqlite3.connect('data/askterritory.db')
           tables = [r[0] for r in db.execute(\"SELECT name FROM sqlite_master WHERE type='table'\")]
-          assert 'forms' in tables, 'forms table missing'
-          assert 'howto_guides' in tables, 'howto_guides table missing'
-          assert 'forms_fts' in tables, 'forms_fts missing'
-          assert 'howto_fts' in tables, 'howto_fts missing'
-          print('All expected tables present:', tables)
+          for t in ['forms','howto_guides','forms_fts','howto_fts']:
+              assert t in tables, f'Missing table: {t}'
+          forms_count = db.execute('SELECT COUNT(*) FROM forms').fetchone()[0]
+          howto_count = db.execute('SELECT COUNT(*) FROM howto_guides').fetchone()[0]
+          assert forms_count >= 20, f'Expected >=20 seed forms, got {forms_count}'
+          assert howto_count >= 5,  f'Expected >=5 seed guides, got {howto_count}'
+          print(f'OK: {forms_count} forms, {howto_count} how-to guides seeded')
+          "
+
+      - name: Verify search does not crash on edge-case queries
+        run: |
+          python -c "
+          import sys; sys.path.insert(0,'.')
+          from db.connection import Database
+          from ingestion.forms_search import keyword_search as fkw
+          from ingestion.howto_search import keyword_search as hkw
+          db = Database().connect()
+          for q in ['AND','OR','NOT','dog','ochre card','building permit','','   ']:
+              fkw(db, q); hkw(db, q)
+          db.close()
+          print('All edge-case queries passed without exception')
           "
 
       - name: Verify API routes registered

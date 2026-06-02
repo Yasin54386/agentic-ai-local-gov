@@ -13,6 +13,7 @@ lock around the shared repository connection (ThreadingHTTPServer).
 """
 from __future__ import annotations
 
+import collections
 import json
 import os
 import threading
@@ -29,12 +30,38 @@ STATIC = Path(__file__).parent / "static"
 PORT = int(os.environ.get("PORT", "8000"))
 
 # Optional shared secret to protect the scrape-trigger endpoints.
-# Set SCRAPE_KEY=<something> in .env; leave empty to allow without auth
-# (fine on a localhost-only or firewalled setup).
 SCRAPE_KEY = os.environ.get("SCRAPE_KEY", "")
 
 repo = Repository()
 _lock = threading.Lock()  # serialise access to the shared sqlite connection
+
+# --- simple per-IP rate limiter -----------------------------------------------
+# Limits search API calls to RATE_LIMIT requests per RATE_WINDOW seconds per IP.
+# Protects against bots and runaway clients. Cloudflare does this too in
+# production, but this layer works even on localhost / direct access.
+RATE_LIMIT  = int(os.environ.get("RATE_LIMIT",  "60"))   # requests per window
+RATE_WINDOW = int(os.environ.get("RATE_WINDOW", "60"))   # seconds
+
+_rate_lock    = threading.Lock()
+_rate_buckets: dict[str, collections.deque] = collections.defaultdict(collections.deque)
+
+RATE_LIMITED_PATHS = {"/api/forms/search", "/api/howto/search", "/api/ask"}
+
+
+def _check_rate(ip: str, path: str) -> bool:
+    """Return True if the request is allowed, False if rate-limited."""
+    if path not in RATE_LIMITED_PATHS:
+        return True
+    now = time.monotonic()
+    with _rate_lock:
+        dq = _rate_buckets[ip]
+        # drop timestamps outside the window
+        while dq and now - dq[0] > RATE_WINDOW:
+            dq.popleft()
+        if len(dq) >= RATE_LIMIT:
+            return False
+        dq.append(now)
+    return True
 
 # --- refresh-on-access: keep live data fresh without blocking requests --------
 AUTOREFRESH = os.environ.get("AUTOREFRESH", "1") != "0"
@@ -137,11 +164,18 @@ class Handler(BaseHTTPRequestHandler):
         finally:
             db.close()
 
+    def _client_ip(self) -> str:
+        # Respect X-Forwarded-For set by Cloudflare/nginx; fall back to direct IP
+        xff = self.headers.get("X-Forwarded-For", "")
+        return xff.split(",")[0].strip() or self.client_address[0]
+
     def do_GET(self):
         u = urlparse(self.path)
         q = parse_qs(u.query)
         if u.path.startswith("/api/") and u.path != "/api/health":
             maybe_refresh()
+            if not _check_rate(self._client_ip(), u.path):
+                return self._json({"error": "rate limit exceeded — please slow down"}, 429)
 
         # --- static pages ---
         if u.path in ("/", "/index.html"):
@@ -229,6 +263,8 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         u = urlparse(self.path)
+        if not _check_rate(self._client_ip(), u.path):
+            return self._json({"error": "rate limit exceeded — please slow down"}, 429)
         length = int(self.headers.get("Content-Length", "0"))
         try:
             body = json.loads(self.rfile.read(length) or "{}")
