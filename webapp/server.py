@@ -163,6 +163,36 @@ class Handler(BaseHTTPRequestHandler):
                                "model": llm.DEFAULT_MODEL, "autorefresh": AUTOREFRESH,
                                "ttl_s": {n: t["ttl"] for n, t in _tiers.items()},
                                "age_s": ages, "last_refresh": _last_result})
+        # --- Form Finder ---
+        if u.path == "/forms" or u.path == "/forms.html":
+            return self._file(STATIC / "forms.html", "text/html; charset=utf-8")
+        if u.path == "/api/forms/search":
+            from ingestion.forms_search import keyword_search, ai_search
+            q_str = (q.get("q", [""])[0]).strip()
+            mode  = (q.get("mode", ["keyword"])[0]).strip().lower()
+            if not q_str:
+                return self._json({"results": [], "expanded_terms": []})
+            with _lock:
+                from db.connection import Database
+                fdb = Database().connect()
+                try:
+                    if mode == "ai" and llm.server_up():
+                        result = ai_search(fdb, q_str, llm)
+                    else:
+                        result = {"results": keyword_search(fdb, q_str), "expanded_terms": []}
+                finally:
+                    fdb.close()
+            return self._json(result)
+        if u.path == "/api/forms/stats":
+            from ingestion.forms_search import stats as forms_stats
+            with _lock:
+                from db.connection import Database
+                fdb = Database().connect()
+                try:
+                    result = forms_stats(fdb)
+                finally:
+                    fdb.close()
+            return self._json(result)
         return self._json({"error": "not found"}, 404)
 
     def do_POST(self):
@@ -184,6 +214,16 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"answer": answer})
             except Exception as exc:
                 return self._json({"error": str(exc)}, 500)
+        if u.path == "/api/forms/scrape":
+            from ingestion.forms_scraper import run_scrape
+            with _lock:
+                from db.connection import Database
+                fdb = Database().connect()
+                try:
+                    result = run_scrape(fdb)
+                finally:
+                    fdb.close()
+            return self._json(result)
         return self._json({"error": "not found"}, 404)
 
 
