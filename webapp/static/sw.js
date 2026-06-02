@@ -3,7 +3,7 @@
 // Allows the app to work offline for previously visited guides.
 
 const CACHE  = 'ask-territory-v1';
-const STATIC = ['/', '/forms', '/howto', '/guide', '/tour', '/manifest.json'];
+const STATIC = ['/', '/forms', '/howto', '/guide', '/tour', '/manifest.json', '/nav.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(
