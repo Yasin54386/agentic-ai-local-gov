@@ -28,20 +28,20 @@ from agent.tools import dispatch
 STATIC = Path(__file__).parent / "static"
 PORT = int(os.environ.get("PORT", "8000"))
 
+# Optional shared secret to protect the scrape-trigger endpoints.
+# Set SCRAPE_KEY=<something> in .env; leave empty to allow without auth
+# (fine on a localhost-only or firewalled setup).
+SCRAPE_KEY = os.environ.get("SCRAPE_KEY", "")
+
 repo = Repository()
 _lock = threading.Lock()  # serialise access to the shared sqlite connection
 
 # --- refresh-on-access: keep live data fresh without blocking requests --------
-# When a data API is hit and the data is older than REFRESH_TTL seconds, kick off
-# a single background sync. Set AUTOREFRESH=0 to disable; REFRESH_TTL=0 forces
-# every request (not recommended — hammers the source). --datasets stays on the
-# scheduled 6h job; on-access refresh is the light, live feed only.
 AUTOREFRESH = os.environ.get("AUTOREFRESH", "1") != "0"
-LIVE_TTL = int(os.environ.get("REFRESH_TTL", "600"))            # live feed: 10 min
-DATASETS_TTL = int(os.environ.get("DATASETS_TTL", "86400"))     # datasets: 24h (0 disables)
+LIVE_TTL = int(os.environ.get("REFRESH_TTL", "600"))
+DATASETS_TTL = int(os.environ.get("DATASETS_TTL", "86400"))
 _last_result = {"live": None, "datasets": None}
 
-# Each tier: a monotonic timestamp + a single-flight lock.
 _tiers = {
     "live": {"at": 0.0, "lock": threading.Lock(), "ttl": LIVE_TTL},
     "datasets": {"at": 0.0, "lock": threading.Lock(), "ttl": DATASETS_TTL},
@@ -89,13 +89,18 @@ def tool(name, args=None):
 
 
 def _call(fn):
-    """Run a repository method under the lock (for panel views not exposed as tools)."""
     with _lock:
         return fn(repo)
 
 
+def _fdb():
+    """Open a fresh DB connection for forms/howto queries (not the shared repo conn)."""
+    from db.connection import Database
+    return Database().connect()
+
+
 class Handler(BaseHTTPRequestHandler):
-    def log_message(self, *args):  # quieter console
+    def log_message(self, *args):
         return
 
     def _json(self, obj, status=200):
@@ -107,6 +112,8 @@ class Handler(BaseHTTPRequestHandler):
         self.wfile.write(body)
 
     def _file(self, path: Path, ctype: str):
+        if not path.exists():
+            return self._json({"error": "file not found"}, 404)
         data = path.read_bytes()
         self.send_response(200)
         self.send_header("Content-Type", ctype)
@@ -114,23 +121,45 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
+    def _search(self, module_path: str, q_str: str, mode: str) -> dict:
+        """Shared search helper for forms and howto — handles errors gracefully."""
+        if module_path == "forms":
+            from ingestion.forms_search import keyword_search, ai_search
+        else:
+            from ingestion.howto_search import keyword_search, ai_search
+        db = _fdb()
+        try:
+            if mode == "ai" and llm.server_up():
+                return ai_search(db, q_str, llm)
+            return {"results": keyword_search(db, q_str), "expanded_terms": []}
+        except Exception as exc:
+            return {"results": [], "expanded_terms": [], "error": str(exc)}
+        finally:
+            db.close()
+
     def do_GET(self):
         u = urlparse(self.path)
         q = parse_qs(u.query)
-        # data loads opportunistically keep the live data fresh (throttled, async)
         if u.path.startswith("/api/") and u.path != "/api/health":
             maybe_refresh()
+
+        # --- static pages ---
         if u.path in ("/", "/index.html"):
             return self._file(STATIC / "index.html", "text/html; charset=utf-8")
         if u.path in ("/concept", "/concept.html"):
             return self._file(STATIC / "concept.html", "text/html; charset=utf-8")
+        if u.path in ("/forms", "/forms.html"):
+            return self._file(STATIC / "forms.html", "text/html; charset=utf-8")
+        if u.path in ("/howto", "/howto.html"):
+            return self._file(STATIC / "howto.html", "text/html; charset=utf-8")
         if u.path == "/favicon.ico":
             self.send_response(204); self.end_headers(); return
+
+        # --- data APIs ---
         if u.path == "/api/stats":
             return self._json(tool("repository_stats"))
         if u.path == "/api/live":
-            return self._json({"weather": tool("live_weather"),
-                               "flood": tool("flood_risk")})
+            return self._json({"weather": tool("live_weather"), "flood": tool("flood_risk")})
         if u.path == "/api/suburbs":
             return self._json(tool("list_suburbs", {"limit": 60}))
         if u.path == "/api/profile":
@@ -163,42 +192,50 @@ class Handler(BaseHTTPRequestHandler):
                                "model": llm.DEFAULT_MODEL, "autorefresh": AUTOREFRESH,
                                "ttl_s": {n: t["ttl"] for n, t in _tiers.items()},
                                "age_s": ages, "last_refresh": _last_result})
+
         # --- Form Finder ---
-        if u.path == "/forms" or u.path == "/forms.html":
-            return self._file(STATIC / "forms.html", "text/html; charset=utf-8")
         if u.path == "/api/forms/search":
-            from ingestion.forms_search import keyword_search, ai_search
             q_str = (q.get("q", [""])[0]).strip()
             mode  = (q.get("mode", ["keyword"])[0]).strip().lower()
             if not q_str:
                 return self._json({"results": [], "expanded_terms": []})
-            with _lock:
-                from db.connection import Database
-                fdb = Database().connect()
-                try:
-                    if mode == "ai" and llm.server_up():
-                        result = ai_search(fdb, q_str, llm)
-                    else:
-                        result = {"results": keyword_search(fdb, q_str), "expanded_terms": []}
-                finally:
-                    fdb.close()
-            return self._json(result)
+            return self._json(self._search("forms", q_str, mode))
+
         if u.path == "/api/forms/stats":
             from ingestion.forms_search import stats as forms_stats
-            with _lock:
-                from db.connection import Database
-                fdb = Database().connect()
-                try:
-                    result = forms_stats(fdb)
-                finally:
-                    fdb.close()
-            return self._json(result)
+            db = _fdb()
+            try:
+                return self._json(forms_stats(db))
+            finally:
+                db.close()
+
+        # --- How-To Hub ---
+        if u.path == "/api/howto/search":
+            q_str = (q.get("q", [""])[0]).strip()
+            mode  = (q.get("mode", ["keyword"])[0]).strip().lower()
+            if not q_str:
+                return self._json({"results": [], "expanded_terms": []})
+            return self._json(self._search("howto", q_str, mode))
+
+        if u.path == "/api/howto/stats":
+            from ingestion.howto_search import stats as howto_stats
+            db = _fdb()
+            try:
+                return self._json(howto_stats(db))
+            finally:
+                db.close()
+
         return self._json({"error": "not found"}, 404)
 
     def do_POST(self):
         u = urlparse(self.path)
         length = int(self.headers.get("Content-Length", "0"))
-        body = json.loads(self.rfile.read(length) or "{}")
+        try:
+            body = json.loads(self.rfile.read(length) or "{}")
+        except (json.JSONDecodeError, ValueError):
+            return self._json({"error": "invalid JSON body"}, 400)
+
+        # --- AI chat ---
         if u.path == "/api/ask":
             question = (body.get("question") or "").strip()
             if not question:
@@ -214,53 +251,34 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"answer": answer})
             except Exception as exc:
                 return self._json({"error": str(exc)}, 500)
-        if u.path == "/api/howto/scrape":
-            from ingestion.howto_scraper import run_scrape as howto_run_scrape
-            from db.connection import Database
-            hdb = Database().connect()
-            try:
-                result = howto_run_scrape(hdb)
-            finally:
-                hdb.close()
-            return self._json(result)
+
+        # --- Scrape triggers (optional key protection) ---
+        if u.path in ("/api/forms/scrape", "/api/howto/scrape"):
+            if SCRAPE_KEY and body.get("key") != SCRAPE_KEY:
+                return self._json({"error": "forbidden — set key in request body"}, 403)
+
         if u.path == "/api/forms/scrape":
             from ingestion.forms_scraper import run_scrape
-            with _lock:
-                from db.connection import Database
-                fdb = Database().connect()
-                try:
-                    result = run_scrape(fdb)
-                finally:
-                    fdb.close()
-            return self._json(result)
-        # --- How-To Hub ---
-        if u.path == "/howto" or u.path == "/howto.html":
-            return self._file(STATIC / "howto.html", "text/html; charset=utf-8")
-        if u.path == "/api/howto/search":
-            from ingestion.howto_search import keyword_search, ai_search
-            q_str = (q.get("q", [""])[0]).strip()
-            mode  = (q.get("mode", ["keyword"])[0]).strip().lower()
-            if not q_str:
-                return self._json({"results": [], "expanded_terms": []})
-            from db.connection import Database
-            hdb = Database().connect()
+            db = _fdb()
             try:
-                if mode == "ai" and llm.server_up():
-                    result = ai_search(hdb, q_str, llm)
-                else:
-                    result = {"results": keyword_search(hdb, q_str), "expanded_terms": []}
+                result = run_scrape(db)
+            except Exception as exc:
+                return self._json({"error": str(exc)}, 500)
             finally:
-                hdb.close()
+                db.close()
             return self._json(result)
-        if u.path == "/api/howto/stats":
-            from ingestion.howto_search import stats as howto_stats
-            from db.connection import Database
-            hdb = Database().connect()
+
+        if u.path == "/api/howto/scrape":
+            from ingestion.howto_scraper import run_scrape as howto_run_scrape
+            db = _fdb()
             try:
-                result = howto_stats(hdb)
+                result = howto_run_scrape(db)
+            except Exception as exc:
+                return self._json({"error": str(exc)}, 500)
             finally:
-                hdb.close()
+                db.close()
             return self._json(result)
+
         return self._json({"error": "not found"}, 404)
 
 

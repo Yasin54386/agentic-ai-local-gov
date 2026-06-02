@@ -17,12 +17,21 @@ Example: ["ochre card", "working with children check", "WWCC NT", "child protect
 """
 
 
+def _safe_fts_query(query: str) -> str | None:
+    words = re.findall(r"\w+", query)
+    words = [w.lower() for w in words if w]  # lowercase neutralises FTS5 AND/OR/NOT operators
+    if not words:
+        return None
+    return " OR ".join(f"{w}*" for w in words)
+
+
 def keyword_search(db, query: str, limit: int = MAX_RESULTS) -> list[dict]:
     query = query.strip()
     if not query:
         return []
-    words = re.findall(r"\w+", query)
-    fts_query = " OR ".join(f"{w}*" for w in words)
+    fts_query = _safe_fts_query(query)
+    if not fts_query:
+        return []
     rows = db.fetchall(
         """SELECT g.id, g.title, g.summary, g.steps_json, g.links_json,
                   g.category, g.updated_at,

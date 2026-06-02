@@ -15,15 +15,28 @@ MAX_RESULTS = 50
 
 # --- keyword search (FTS5) ----------------------------------------------------
 
+def _safe_fts_query(query: str) -> str | None:
+    """Convert a raw user query into a safe FTS5 MATCH expression.
+    Returns None if there are no usable terms (empty after stripping noise)."""
+    # extract only word characters — drops quotes, operators, punctuation
+    words = re.findall(r"\w+", query)
+    # FTS5 treats AND/OR/NOT (uppercase) as boolean operators — quote them
+    # by lowercasing, which neutralises them as plain terms.
+    words = [w.lower() for w in words if w]
+    if not words:
+        return None
+    return " OR ".join(f"{w}*" for w in words)
+
+
 def keyword_search(db, query: str, limit: int = MAX_RESULTS) -> list[dict]:
     """Pure FTS5 search — no LLM required."""
     query = query.strip()
     if not query:
         return []
 
-    # Build FTS5 match expression: each word becomes a prefix term
-    words = re.findall(r"\w+", query)
-    fts_query = " OR ".join(f"{w}*" for w in words)
+    fts_query = _safe_fts_query(query)
+    if not fts_query:
+        return []
 
     rows = db.fetchall(
         """SELECT f.id, f.title, f.description, f.url, f.department, f.category,
