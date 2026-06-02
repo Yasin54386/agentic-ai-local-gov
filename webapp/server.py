@@ -214,6 +214,15 @@ class Handler(BaseHTTPRequestHandler):
                 return self._json({"answer": answer})
             except Exception as exc:
                 return self._json({"error": str(exc)}, 500)
+        if u.path == "/api/howto/scrape":
+            from ingestion.howto_scraper import run_scrape as howto_run_scrape
+            from db.connection import Database
+            hdb = Database().connect()
+            try:
+                result = howto_run_scrape(hdb)
+            finally:
+                hdb.close()
+            return self._json(result)
         if u.path == "/api/forms/scrape":
             from ingestion.forms_scraper import run_scrape
             with _lock:
@@ -223,6 +232,34 @@ class Handler(BaseHTTPRequestHandler):
                     result = run_scrape(fdb)
                 finally:
                     fdb.close()
+            return self._json(result)
+        # --- How-To Hub ---
+        if u.path == "/howto" or u.path == "/howto.html":
+            return self._file(STATIC / "howto.html", "text/html; charset=utf-8")
+        if u.path == "/api/howto/search":
+            from ingestion.howto_search import keyword_search, ai_search
+            q_str = (q.get("q", [""])[0]).strip()
+            mode  = (q.get("mode", ["keyword"])[0]).strip().lower()
+            if not q_str:
+                return self._json({"results": [], "expanded_terms": []})
+            from db.connection import Database
+            hdb = Database().connect()
+            try:
+                if mode == "ai" and llm.server_up():
+                    result = ai_search(hdb, q_str, llm)
+                else:
+                    result = {"results": keyword_search(hdb, q_str), "expanded_terms": []}
+            finally:
+                hdb.close()
+            return self._json(result)
+        if u.path == "/api/howto/stats":
+            from ingestion.howto_search import stats as howto_stats
+            from db.connection import Database
+            hdb = Database().connect()
+            try:
+                result = howto_stats(hdb)
+            finally:
+                hdb.close()
             return self._json(result)
         return self._json({"error": "not found"}, 404)
 
