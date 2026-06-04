@@ -1,67 +1,116 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#e8a020">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#f5f0e8"/>
 <title>Guide Assistant — AskTerritory.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root { --bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--accent:#e8a020;--accent2:#3b82f6;--text:#e2e8f0;--muted:#8892a0;--radius:10px; }
-  *{box-sizing:border-box;margin:0;padding:0}
-  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh;display:flex;flex-direction:column}
-  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-  .logo{font-size:18px;font-weight:700;color:var(--accent)}
-  .logo span{color:var(--text)}
-  .nav{display:flex;gap:16px;margin-left:auto}
-  .nav a{color:var(--muted);text-decoration:none;font-size:13px}
-  .nav a:hover{color:var(--text)}
-  .hero{text-align:center;padding:36px 24px 20px}
-  .hero h1{font-size:clamp(20px,3.5vw,30px);font-weight:800;margin-bottom:8px}
-  .hero h1 span{color:var(--accent)}
-  .hero p{color:var(--muted);font-size:14px;max-width:520px;margin:0 auto;line-height:1.6}
-  .examples{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:0 16px 16px;max-width:720px;margin:0 auto}
-  .ex{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:99px;font-size:12px;cursor:pointer;transition:all .12s}
-  .ex:hover{border-color:var(--accent);color:var(--accent)}
-  .chat-wrap{flex:1;display:flex;flex-direction:column;max-width:720px;width:100%;margin:0 auto;padding:0 16px 24px}
-  #messages{flex:1;overflow-y:auto;padding:8px 0;display:flex;flex-direction:column;gap:12px;min-height:200px}
-  .msg{max-width:88%;padding:12px 16px;border-radius:var(--radius);font-size:14px;line-height:1.6}
-  .msg.user{background:rgba(232,160,32,.12);border:1px solid rgba(232,160,32,.2);align-self:flex-end;color:var(--text)}
-  .msg.assistant{background:var(--surface);border:1px solid var(--border);align-self:flex-start;color:var(--text)}
-  .msg.system{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);align-self:center;color:var(--muted);font-size:13px;text-align:center;max-width:100%}
-  .typing{display:flex;gap:5px;padding:14px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);align-self:flex-start}
-  .dot{width:7px;height:7px;border-radius:50%;background:var(--muted);animation:blink 1.2s infinite}
-  .dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
-  @keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
-  .input-row{display:flex;gap:8px;margin-top:12px}
-  #msgInput{flex:1;background:var(--surface);border:1.5px solid var(--border);color:var(--text);font-size:15px;padding:12px 16px;border-radius:var(--radius);outline:none;resize:none;min-height:48px;max-height:120px;transition:border-color .15s;font-family:inherit}
-  #msgInput:focus{border-color:var(--accent)}
-  #msgInput::placeholder{color:var(--muted)}
-  .send-btn{background:var(--accent);color:#000;border:none;border-radius:var(--radius);padding:12px 20px;font-size:15px;font-weight:700;cursor:pointer;transition:opacity .15s;white-space:nowrap}
-  .send-btn:hover{opacity:.85}
-  .send-btn:disabled{opacity:.4;cursor:default}
-  .offline-note{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);color:#fca5a5;border-radius:var(--radius);padding:12px 16px;font-size:13px;text-align:center}
-  .links-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;padding:0 0 12px;font-size:12px;color:var(--muted)}
-  .links-row a{color:var(--muted);text-decoration:none}
-  .links-row a:hover{color:var(--text)}
-  @media(max-width:520px){.input-row{flex-direction:column}.send-btn{width:100%}}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f5f0e8;--cream2:#ede8dc;--cream3:#e4ddd0;
+  --ink:#1a1208;--ink2:#3a2e1e;--ink3:#6b5c44;
+  --terra:#c8441a;--terra2:#e05c30;--sun:#f0b429;
+  --sage:#3d6b4f;--sky:#1e4a7a;
+  --rule:rgba(26,18,8,0.15);--rule2:rgba(26,18,8,0.08);
+  --field:#ffffff;--tex:.6;--texblend:multiply;
+}
+html[data-theme="dark"]{
+  --cream:#15110c;--cream2:#1d1812;--cream3:#2a2219;
+  --ink:#f1e9db;--ink2:#d9cebb;--ink3:#9d8d75;
+  --terra:#e8623a;--terra2:#f0764e;--sun:#f3c156;
+  --sage:#6db389;--sky:#6aa6de;
+  --rule:rgba(241,233,219,0.16);--rule2:rgba(241,233,219,0.07);
+  --field:#241d15;--tex:.25;--texblend:screen;
+}
+html{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden;transition:background .2s;display:flex;flex-direction:column}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:var(--tex);mix-blend-mode:var(--texblend)}
+
+.masthead{background:var(--cream);border-bottom:3px solid var(--ink);padding:0 40px;position:sticky;top:0;z-index:100}
+.masthead-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 10px;border-bottom:1px solid var(--rule)}
+.masthead-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:30px;letter-spacing:-.02em;line-height:1;color:var(--ink);text-decoration:none;white-space:nowrap}
+.masthead-title span{color:var(--terra);font-style:normal}
+.masthead-right{display:flex;align-items:center;gap:10px}
+.page-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);border:1px solid var(--terra);padding:3px 9px}
+.theme-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{background:var(--ink);color:var(--cream)}
+
+/* Hero */
+.hero{text-align:center;padding:32px 24px 16px;border-bottom:1px solid var(--rule)}
+.hero-kicker{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:8px}
+.hero h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(24px,4vw,36px);line-height:1;letter-spacing:-.02em;color:var(--ink);margin-bottom:8px}
+.hero h1 em{font-style:italic;color:var(--terra)}
+.hero p{color:var(--ink3);font-size:14px;max-width:520px;margin:0 auto;line-height:1.6;font-weight:300}
+
+/* Quick examples */
+.examples{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;padding:14px 16px 0;max-width:720px;margin:0 auto}
+.ex{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:var(--cream2);border:1px solid var(--rule);color:var(--ink3);padding:5px 12px;cursor:pointer;transition:all .12s}
+.ex:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+
+/* Chat */
+.chat-wrap{flex:1;display:flex;flex-direction:column;max-width:720px;width:100%;margin:0 auto;padding:16px 24px 24px}
+#messages{flex:1;overflow-y:auto;padding:8px 0;display:flex;flex-direction:column;gap:10px;min-height:200px}
+.msg{max-width:88%;padding:12px 16px;font-size:14px;line-height:1.6;font-weight:300;border:1px solid var(--rule)}
+.msg.user{background:var(--cream2);border-color:var(--rule);align-self:flex-end;color:var(--ink)}
+.msg.assistant{background:var(--cream);border-left:3px solid var(--terra);align-self:flex-start;color:var(--ink2)}
+.msg.system{background:var(--cream2);border:1px solid var(--rule);align-self:center;color:var(--ink3);font-size:13px;text-align:center;max-width:100%;font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em}
+
+/* Typing dots */
+.typing{display:flex;gap:5px;padding:14px 16px;background:var(--cream);border:1px solid var(--rule);border-left:3px solid var(--terra);align-self:flex-start}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:blink 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
+/* Input */
+.input-row{display:flex;gap:0;margin-top:12px;border:2px solid var(--ink);overflow:hidden}
+#msgInput{flex:1;background:var(--field);border:none;color:var(--ink);font-size:15px;padding:12px 16px;outline:none;resize:none;min-height:48px;max-height:120px;transition:none;font-family:inherit;font-weight:300}
+#msgInput::placeholder{color:var(--ink3)}
+.send-btn{background:var(--terra);color:#fff;border:none;border-left:2px solid var(--ink);padding:12px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:opacity .15s;white-space:nowrap}
+.send-btn:hover{opacity:.85}
+.send-btn:disabled{opacity:.4;cursor:default}
+
+.offline-note{background:var(--cream2);border:1px solid var(--rule);border-left:3px solid var(--terra);color:var(--ink3);padding:12px 16px;font-size:13px;font-weight:300}
+.offline-note a{color:var(--terra)}
+.links-row{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;padding:10px 0 0;font-size:11px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.05em;text-transform:uppercase}
+.links-row a{color:var(--ink3);text-decoration:none}
+.links-row a:hover{color:var(--terra)}
+
+@media(max-width:900px){.masthead{padding:0 16px}.masthead-title{font-size:22px}.chat-wrap{padding:12px 16px 20px}}
+@media(max-width:520px){.input-row{flex-direction:column}.send-btn{border-left:none;border-top:2px solid var(--ink)}}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
 </style>
 </head>
 <body>
-<div id="nav-root"></div>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <a class="masthead-title" href="/">AskTerritory<span>.com</span></a>
+    <div class="masthead-right">
+      <span class="page-badge">AI Guide</span>
+      <button class="theme-btn" id="themeBtn">☀︎ Light</button>
+    </div>
+  </div>
+  <div id="nav-root"></div>
+</header>
 <script src="/nav.js"></script>
 
 <div class="hero">
-  <h1>Your <span>NT Government</span> Guide</h1>
-  <p>Ask me anything about NT and Darwin government services — what you need, how to apply, where to go, how long it takes. Powered by a local AI model that knows the NT.</p>
+  <div class="hero-kicker">Powered by a local AI</div>
+  <h1>Your <em>NT Government</em> Guide</h1>
+  <p>Ask me anything about NT and Darwin government services — what you need, how to apply, where to go, how long it takes. No data leaves your server.</p>
 </div>
 
-<div style="max-width:720px;margin:0 auto;padding:0 16px 8px">
+<div style="max-width:720px;margin:0 auto">
   <div class="examples">
     <span class="ex" onclick="ask('I just moved from Queensland — what do I need to do?')">I just moved from QLD</span>
     <span class="ex" onclick="ask('What do I need to work with children in the NT?')">Work with children</span>
-    <span class="ex" onclick="ask('How do I start a small business in Darwin?')">Start a business in Darwin</span>
-    <span class="ex" onclick="ask('I need a police check for a job — what steps?')">Police check for a job</span>
+    <span class="ex" onclick="ask('How do I start a small business in Darwin?')">Start a business</span>
+    <span class="ex" onclick="ask('I need a police check for a job — what steps?')">Police check</span>
     <span class="ex" onclick="ask('My dog got out — how do I register it and avoid fines?')">Register my dog</span>
     <span class="ex" onclick="ask('I want to build a deck at my house — what approvals do I need?')">Build a deck</span>
     <span class="ex" onclick="ask('Can I get a rates rebate as a pensioner in Darwin?')">Pensioner rates rebate</span>
@@ -71,13 +120,11 @@
 
 <div class="chat-wrap">
   <div id="messages">
-    <div class="msg system">
-      AI model loading… if it's offline, guides and forms search still work via the nav above.
-    </div>
+    <div class="msg system">AI model loading… if offline, How-To Hub and Form Finder still work via the nav above.</div>
   </div>
   <div id="offlineNote" style="display:none">
     <div class="offline-note">
-      AI model is offline. Try <a href="/forms" style="color:#fca5a5">Form Finder</a> or <a href="/howto" style="color:#fca5a5">How-To Hub</a> instead.
+      AI model is offline. Try <a href="/forms">Form Finder</a> or <a href="/howto">How-To Hub</a> instead.
     </div>
   </div>
   <div class="input-row">
@@ -85,102 +132,96 @@
     <button class="send-btn" id="sendBtn" onclick="sendMsg()">Send</button>
   </div>
   <div class="links-row">
-    <span>Powered by a local AI — no data leaves your server</span>·
+    <span>No data leaves your server</span>·
     <a href="/forms">Form Finder</a>·
     <a href="/howto">How-To Hub</a>
   </div>
 </div>
 
 <script>
-const msgs   = document.getElementById('messages');
-const input  = document.getElementById('msgInput');
-const sendBtn= document.getElementById('sendBtn');
-const offline= document.getElementById('offlineNote');
-let thinking = false;
+// Theme toggle
+const _root = document.documentElement;
+const _tBtn = document.getElementById('themeBtn');
+function _paintTheme(){
+  const d = _root.dataset.theme==='dark';
+  _tBtn.textContent = d ? '☽ Dark' : '☀︎ Light';
+  document.querySelector('meta[name=theme-color]').setAttribute('content', d?'#15110c':'#f5f0e8');
+}
+const _saved = localStorage.getItem('at-theme');
+if (_saved) _root.dataset.theme = _saved;
+_paintTheme();
+_tBtn.onclick = () => { _root.dataset.theme = _root.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('at-theme',_root.dataset.theme); _paintTheme(); };
 
-// Check model status on load
+const msgs    = document.getElementById('messages');
+const input   = document.getElementById('msgInput');
+const sendBtn = document.getElementById('sendBtn');
+const offline = document.getElementById('offlineNote');
+let thinking  = false;
+
 fetch('/api/health').then(r=>r.json()).then(d=>{
   if (!d.model_server) {
-    offline.style.display = 'block';
-    addMsg('system', 'AI model is currently offline. Use <a href="/forms">Form Finder</a> or <a href="/howto">How-To Hub</a> to search without AI.');
+    offline.style.display='block';
+    addMsg('system','AI model is currently offline. Use <a href="/forms">Form Finder</a> or <a href="/howto">How-To Hub</a> to search without AI.');
   } else {
     const first = msgs.querySelector('.msg.system');
     if (first) first.remove();
-    addMsg('assistant', 'Hi! I\'m your NT Government guide. Ask me about any service — licences, permits, registrations, forms — and I\'ll explain what you need and how to apply.');
+    addMsg('assistant',"Hi! I'm your NT Government guide. Ask me about any service — licences, permits, registrations, forms — and I'll explain what you need and how to apply.");
   }
 }).catch(()=>{});
 
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); }
-});
-input.addEventListener('input', () => {
-  input.style.height = 'auto';
-  input.style.height = Math.min(input.scrollHeight, 120) + 'px';
-});
+input.addEventListener('keydown', e => { if (e.key==='Enter' && !e.shiftKey) { e.preventDefault(); sendMsg(); } });
+input.addEventListener('input', () => { input.style.height='auto'; input.style.height=Math.min(input.scrollHeight,120)+'px'; });
 
-function ask(q) { input.value = q; sendMsg(); }
+function ask(q) { input.value=q; sendMsg(); }
 
 async function sendMsg() {
   const q = input.value.trim();
   if (!q || thinking) return;
-  input.value = ''; input.style.height = '48px';
+  input.value=''; input.style.height='48px';
   addMsg('user', esc(q));
   const typingEl = addTyping();
-  thinking = true; sendBtn.disabled = true;
+  thinking=true; sendBtn.disabled=true;
   try {
-    const res  = await fetch('/api/guide', {
-      method: 'POST',
-      headers: {'Content-Type':'application/json'},
-      body: JSON.stringify({question: q}),
-    });
-    const data = await res.json();
+    const res   = await fetch('/api/guide',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})});
+    const data  = await res.json();
     typingEl.remove();
     if (data.model_offline) {
-      offline.style.display = 'block';
-      addMsg('system', 'AI model went offline. Try searching <a href="/forms">forms</a> or <a href="/howto">how-to guides</a>.');
+      offline.style.display='block';
+      addMsg('system','AI model went offline. Try searching <a href="/forms">forms</a> or <a href="/howto">how-to guides</a>.');
     } else if (data.error) {
-      addMsg('system', 'Error: ' + esc(data.error));
+      addMsg('system','Error: '+esc(data.error));
     } else {
-      addMsg('assistant', formatAnswer(data.answer || ''));
+      addMsg('assistant', formatAnswer(data.answer||''));
     }
   } catch(e) {
     typingEl.remove();
-    addMsg('system', 'Network error: ' + esc(e.message));
+    addMsg('system','Network error: '+esc(e.message));
   } finally {
-    thinking = false; sendBtn.disabled = false; input.focus();
+    thinking=false; sendBtn.disabled=false; input.focus();
   }
 }
 
 function addMsg(role, html) {
   const d = document.createElement('div');
-  d.className = 'msg ' + role;
-  d.innerHTML = html;
-  msgs.appendChild(d);
-  msgs.scrollTop = msgs.scrollHeight;
+  d.className='msg '+role; d.innerHTML=html;
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
   return d;
 }
-
 function addTyping() {
   const d = document.createElement('div');
-  d.className = 'typing';
-  d.innerHTML = '<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
-  msgs.appendChild(d);
-  msgs.scrollTop = msgs.scrollHeight;
+  d.className='typing';
+  d.innerHTML='<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  msgs.appendChild(d); msgs.scrollTop=msgs.scrollHeight;
   return d;
 }
-
 function formatAnswer(text) {
-  // Convert markdown-ish formatting to HTML
   return esc(text)
-    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-    .replace(/\n\n/g, '</p><p>')
-    .replace(/\n/g, '<br>')
-    .replace(/^/, '<p>').replace(/$/, '</p>');
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/\n/g,'<br>')
+    .replace(/^/,'<p>').replace(/$/,'</p>');
 }
-
-function esc(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-}
+function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 </script>
 </body>
 </html>

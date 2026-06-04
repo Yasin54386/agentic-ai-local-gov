@@ -1,184 +1,202 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en" data-theme="light">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="manifest" href="/manifest.json">
-<meta name="theme-color" content="#e8a020">
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#f5f0e8"/>
 <title>Form Finder — AskTerritory.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
-  :root {
-    --bg: #0f1117;
-    --surface: #1a1d27;
-    --border: #2a2d3a;
-    --accent: #e8a020;
-    --accent2: #3b82f6;
-    --text: #e2e8f0;
-    --muted: #8892a0;
-    --success: #22c55e;
-    --danger: #ef4444;
-    --radius: 10px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; min-height: 100vh; }
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f5f0e8;--cream2:#ede8dc;--cream3:#e4ddd0;
+  --ink:#1a1208;--ink2:#3a2e1e;--ink3:#6b5c44;
+  --terra:#c8441a;--terra2:#e05c30;--sun:#f0b429;
+  --sage:#3d6b4f;--sky:#1e4a7a;
+  --rule:rgba(26,18,8,0.15);--rule2:rgba(26,18,8,0.08);
+  --field:#ffffff;--tex:.6;--texblend:multiply;
+}
+html[data-theme="dark"]{
+  --cream:#15110c;--cream2:#1d1812;--cream3:#2a2219;
+  --ink:#f1e9db;--ink2:#d9cebb;--ink3:#9d8d75;
+  --terra:#e8623a;--terra2:#f0764e;--sun:#f3c156;
+  --sage:#6db389;--sky:#6aa6de;
+  --rule:rgba(241,233,219,0.16);--rule2:rgba(241,233,219,0.07);
+  --field:#241d15;--tex:.25;--texblend:screen;
+}
+html{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden;transition:background .2s}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:var(--tex);mix-blend-mode:var(--texblend)}
 
-  /* ── header ── */
-  header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 14px 24px; display: flex; align-items: center; gap: 16px; }
-  header a.home { color: var(--muted); text-decoration: none; font-size: 13px; }
-  header a.home:hover { color: var(--text); }
-  .logo { font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: -0.5px; }
-  .logo span { color: var(--text); }
-  .badge { background: var(--accent); color: #000; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 99px; margin-left: 8px; }
+/* Masthead */
+.masthead{background:var(--cream);border-bottom:3px solid var(--ink);padding:0 40px;position:sticky;top:0;z-index:100}
+.masthead-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 10px;border-bottom:1px solid var(--rule)}
+.masthead-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:30px;letter-spacing:-.02em;line-height:1;color:var(--ink);text-decoration:none;white-space:nowrap}
+.masthead-title span{color:var(--terra);font-style:normal}
+.masthead-right{display:flex;align-items:center;gap:10px}
+.page-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);border:1px solid var(--terra);padding:3px 9px}
+.theme-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{background:var(--ink);color:var(--cream)}
 
-  /* ── hero ── */
-  .hero { text-align: center; padding: 48px 24px 32px; }
-  .hero h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 800; margin-bottom: 10px; }
-  .hero h1 span { color: var(--accent); }
-  .hero p { color: var(--muted); font-size: 15px; max-width: 540px; margin: 0 auto; }
+/* Hero */
+.hero{text-align:center;padding:40px 24px 28px;border-bottom:1px solid var(--rule)}
+.hero-kicker{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px}
+.hero h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(28px,5vw,44px);line-height:1;letter-spacing:-.02em;color:var(--ink);margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--terra)}
+.hero p{color:var(--ink3);font-size:15px;max-width:540px;margin:0 auto;line-height:1.6;font-weight:300}
 
-  /* ── search bar ── */
-  .search-wrap { max-width: 700px; margin: 0 auto; padding: 0 16px 24px; }
-  .search-row { display: flex; gap: 8px; margin-bottom: 10px; }
-  #searchInput {
-    flex: 1; background: var(--surface); border: 1.5px solid var(--border);
-    color: var(--text); font-size: 16px; padding: 13px 18px; border-radius: var(--radius);
-    outline: none; transition: border-color .15s;
-  }
-  #searchInput:focus { border-color: var(--accent); }
-  #searchInput::placeholder { color: var(--muted); }
-  .btn {
-    padding: 13px 22px; border-radius: var(--radius); border: none; font-size: 15px;
-    font-weight: 600; cursor: pointer; transition: opacity .15s;
-  }
-  .btn:hover { opacity: .85; }
-  .btn-primary { background: var(--accent); color: #000; }
-  .btn-ai     { background: var(--accent2); color: #fff; }
-  .btn-sm     { padding: 7px 14px; font-size: 13px; }
+/* Search */
+.search-wrap{max-width:700px;margin:0 auto;padding:28px 24px 20px}
+.search-bar{display:flex;gap:0;border:2px solid var(--ink);overflow:hidden;margin-bottom:12px}
+.search-bar input{flex:1;padding:13px 18px;font:16px/1 'Barlow',sans-serif;background:var(--field);border:none;outline:none;color:var(--ink);min-width:0}
+.search-bar input::placeholder{color:var(--ink3)}
+.search-bar button{background:var(--terra);color:#fff;border:none;padding:0 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;border-left:2px solid var(--ink)}
+.search-bar button:hover{background:var(--terra2)}
+.search-bar .btn-ai{background:var(--ink);color:var(--cream)}
+.search-bar .btn-ai:hover{background:var(--terra)}
 
-  .mode-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .mode-label { font-size: 13px; color: var(--muted); }
-  .chip {
-    padding: 5px 14px; border-radius: 99px; font-size: 12px; font-weight: 600;
-    border: 1.5px solid var(--border); background: transparent; color: var(--muted);
-    cursor: pointer; transition: all .15s;
-  }
-  .chip.active { border-color: var(--accent2); color: var(--accent2); background: rgba(59,130,246,.1); }
+.chips-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.05em;background:var(--cream2);border:1px solid var(--rule);padding:5px 13px;cursor:pointer;color:var(--ink3);transition:all .12s}
+.chip:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
 
-  /* ── suggestions ── */
-  .suggestions { display: flex; gap: 6px; flex-wrap: wrap; margin: 6px 0 0; }
-  .sug-chip {
-    background: var(--surface); border: 1px solid var(--border); color: var(--muted);
-    padding: 4px 12px; border-radius: 99px; font-size: 12px; cursor: pointer;
-    transition: all .12s;
-  }
-  .sug-chip:hover { border-color: var(--accent); color: var(--accent); }
+/* Stats bar */
+.stats-bar{max-width:700px;margin:0 auto 4px;padding:0 24px}
+.stats-pills{display:flex;gap:8px;flex-wrap:wrap}
+.stat-pill{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.05em;border:1px solid var(--rule);padding:3px 12px;color:var(--ink3)}
+.stat-pill strong{color:var(--terra)}
 
-  /* ── stats bar ── */
-  .stats-bar { max-width: 700px; margin: 0 auto 8px; padding: 0 16px; }
-  .stats-pills { display: flex; gap: 8px; flex-wrap: wrap; }
-  .stat-pill { background: var(--surface); border: 1px solid var(--border); border-radius: 99px; padding: 4px 12px; font-size: 12px; color: var(--muted); }
-  .stat-pill strong { color: var(--accent); }
+/* Banners */
+#expandedBanner{max-width:700px;margin:0 auto 6px;padding:0 24px;display:none}
+.expanded-inner{background:rgba(30,74,122,.06);border:1px solid rgba(30,74,122,.2);padding:9px 14px;font-size:13px;color:var(--ink3)}
+.expanded-inner strong{color:var(--sky)}
+.dym{max-width:700px;margin:0 auto 6px;padding:0 24px}
+.dym-inner{background:rgba(200,68,26,.06);border:1px solid rgba(200,68,26,.2);padding:9px 14px;font-size:13px;color:var(--ink3)}
+.dym-inner a{color:var(--terra);cursor:pointer;text-decoration:underline}
 
-  /* ── expanded terms banner ── */
-  #expandedBanner { max-width: 700px; margin: 0 auto 8px; padding: 0 16px; display: none; }
-  .expanded-inner { background: rgba(59,130,246,.08); border: 1px solid rgba(59,130,246,.25); border-radius: var(--radius); padding: 10px 14px; font-size: 13px; color: var(--muted); }
-  .expanded-inner strong { color: var(--accent2); }
+/* Results */
+#results{max-width:700px;margin:0 auto;padding:0 24px 60px}
+.result-meta{font-size:13px;color:var(--ink3);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.result-meta strong{color:var(--ink)}
 
-  /* ── results ── */
-  #results { max-width: 700px; margin: 0 auto; padding: 0 16px 60px; }
-  .result-meta { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
-  .result-meta strong { color: var(--text); }
+/* Cards */
+.card{background:var(--cream);border:1px solid var(--rule);border-left:3px solid transparent;padding:16px 18px;margin-bottom:8px;transition:border-color .15s,background .15s}
+.card:hover{border-left-color:var(--terra);background:var(--cream2)}
+.card-title{font-family:'Playfair Display',serif;font-weight:900;font-size:17px;margin-bottom:4px}
+.card-title a{color:var(--ink);text-decoration:none}
+.card-title a:hover{color:var(--terra)}
+.card-desc{color:var(--ink3);font-size:13px;margin-bottom:8px;line-height:1.55;font-weight:300}
+.card-footer{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.tag{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px solid;padding:2px 9px}
+.tag-terra{color:var(--terra);border-color:rgba(200,68,26,.35)}
+.tag-sky{color:var(--sky);border-color:rgba(30,74,122,.3)}
+.tag-sage{color:var(--sage);border-color:rgba(61,107,79,.3)}
+.pdf-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(200,68,26,.5);color:var(--terra);padding:2px 8px}
+.url-text{color:var(--ink3);font-size:11px;word-break:break-all;font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em}
+.fee-tag{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px solid rgba(61,107,79,.35);color:var(--sage);padding:2px 9px}
+.req-list{margin-top:8px;padding-left:16px;font-size:12px;color:var(--ink3);line-height:1.6;font-weight:300}
+.card-meta{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.report-btn{background:transparent;border:none;color:var(--ink3);font-size:11px;cursor:pointer;padding:0;margin-left:auto;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+.report-btn:hover{color:var(--terra)}
 
-  .card {
-    background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 16px 18px; margin-bottom: 10px; transition: border-color .15s;
-  }
-  .card:hover { border-color: var(--accent); }
-  .card-title { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
-  .card-title a { color: var(--text); text-decoration: none; }
-  .card-title a:hover { color: var(--accent); }
-  .card-desc { color: var(--muted); font-size: 13px; margin-bottom: 8px; line-height: 1.5; }
-  .card-footer { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .tag { background: rgba(232,160,32,.1); border: 1px solid rgba(232,160,32,.2); color: var(--accent); font-size: 11px; padding: 2px 9px; border-radius: 99px; }
-  .tag.dept { background: rgba(59,130,246,.08); border-color: rgba(59,130,246,.2); color: var(--accent2); }
-  .url-text { color: var(--muted); font-size: 11px; word-break: break-all; }
-  .pdf-badge { background: rgba(239,68,68,.1); border: 1px solid rgba(239,68,68,.25); color: #f87171; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 99px; }
+/* Empty / loading */
+.empty-state{text-align:center;padding:60px 0;color:var(--ink3)}
+.empty-state h3{font-family:'Playfair Display',serif;font-weight:900;font-size:22px;margin-bottom:8px;color:var(--ink)}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--rule);border-top-color:var(--terra);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-wrap{text-align:center;padding:40px}
 
-  /* ── state indicators ── */
-  .empty-state { text-align: center; padding: 60px 0; color: var(--muted); }
-  .empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--text); }
-  .spinner { display: inline-block; width: 24px; height: 24px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .7s linear infinite; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .loading-wrap { text-align: center; padding: 40px; }
+/* Admin */
+.admin-strip{max-width:700px;margin:0 auto;padding:0 24px 12px;display:flex;justify-content:flex-end;gap:8px;align-items:center}
+.admin-strip span{font-size:12px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif}
+.btn-sm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:none;border:1.5px solid var(--rule);color:var(--ink3);padding:5px 12px;cursor:pointer;transition:all .12s}
+.btn-sm:hover{border-color:var(--terra);color:var(--terra)}
 
-  /* ── admin strip ── */
-  .admin-strip { max-width: 700px; margin: 0 auto; padding: 0 16px 12px; display: flex; justify-content: flex-end; gap: 8px; align-items: center; }
-  .admin-strip span { font-size: 12px; color: var(--muted); }
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(26,18,8,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--cream);border:2px solid var(--ink);padding:24px;max-width:440px;width:100%}
+.modal h3{font-family:'Playfair Display',serif;font-weight:900;font-size:18px;margin-bottom:12px}
+.modal textarea{width:100%;background:var(--field);border:2px solid var(--ink);color:var(--ink);padding:10px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px;margin-bottom:12px;outline:none}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
 
-  /* toast */
-  .toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%); background: #1e293b; border: 1px solid #f59e0b; color: #fcd34d; padding: 10px 20px; border-radius: 8px; font-size: 13px; z-index: 999; opacity: 0; transition: opacity .3s; pointer-events: none; }
-  .toast.show { opacity: 1; }
-  /* fee + requirements panel */
-  .card-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px; }
-  .fee-tag { background: rgba(34,197,94,.08); border: 1px solid rgba(34,197,94,.2); color: #86efac; font-size: 11px; padding: 2px 9px; border-radius: 99px; }
-  .req-list { margin-top: 8px; padding-left: 16px; font-size: 12px; color: var(--muted); line-height: 1.6; }
-  /* indigenous / info note */
-  .info-note { background: rgba(139,92,246,.07); border: 1px solid rgba(139,92,246,.2); border-radius: 8px; padding: 8px 12px; font-size: 12px; color: #c4b5fd; margin-top: 8px; }
-  /* report button */
-  .report-btn { background: transparent; border: none; color: var(--muted); font-size: 11px; cursor: pointer; padding: 0; margin-left: auto; }
-  .report-btn:hover { color: #ef4444; }
-  /* report modal */
-  .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 100; display: flex; align-items: center; justify-content: center; padding: 16px; }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; max-width: 440px; width: 100%; }
-  .modal h3 { font-size: 15px; margin-bottom: 12px; }
-  .modal textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 10px; font-size: 13px; font-family: inherit; resize: vertical; min-height: 80px; margin-bottom: 10px; }
-  .modal-btns { display: flex; gap: 8px; justify-content: flex-end; }
-  /* did you mean */
-  .dym { max-width: 700px; margin: 0 auto 8px; padding: 0 16px; }
-  .dym-inner { background: rgba(232,160,32,.07); border: 1px solid rgba(232,160,32,.2); border-radius: var(--radius); padding: 9px 14px; font-size: 13px; color: var(--muted); }
-  .dym-inner a { color: var(--accent); cursor: pointer; text-decoration: underline; }
-  /* print */
-  @media print {
-    header, .search-wrap, .stats-bar, #expandedBanner, .admin-strip, .dym, .btn, .sug-chip, .chip { display: none !important; }
-    body { background: #fff; color: #000; }
-    .card { border: 1px solid #ccc; page-break-inside: avoid; }
-    .card-title a { color: #000; }
-    .tag, .tag.dept { background: #f0f0f0; color: #333; border-color: #ccc; }
-  }
-  @media (max-width: 480px) {
-    .search-row { flex-direction: column; }
-    .btn { width: 100%; }
-  }
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:10px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+/* Google Translate placement */
+#google_translate_element{max-width:700px;margin:0 auto 4px;padding:0 24px;font-size:12px}
+
+@media print{
+  .masthead,.search-wrap,.stats-bar,#expandedBanner,.admin-strip,.dym,.btn-sm,.chip{display:none!important}
+  .card{border:1px solid #ccc;page-break-inside:avoid}
+}
+@media(max-width:900px){
+  .masthead{padding:0 16px}
+  .masthead-title{font-size:22px}
+  .search-wrap,#results,.stats-bar,.dym,#expandedBanner,.admin-strip{padding-left:16px;padding-right:16px}
+}
+@media(max-width:480px){
+  .search-bar{flex-direction:column}
+  .search-bar button{border-left:none;border-top:2px solid var(--ink)}
+}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
 </style>
 </head>
 <body>
 
-<div id="nav-root"></div>
+<header class="masthead">
+  <div class="masthead-top">
+    <a class="masthead-title" href="/">AskTerritory<span>.com</span></a>
+    <div class="masthead-right">
+      <span class="page-badge">Form Finder</span>
+      <button class="theme-btn" id="themeBtn">☀︎ Light</button>
+    </div>
+  </div>
+  <div id="nav-root"></div>
+</header>
 <script src="/nav.js"></script>
 
+<!-- Report modal -->
+<div class="modal-bg" id="reportModal" style="display:none" onclick="if(event.target===this)closeReport()">
+  <div class="modal">
+    <h3>Report a problem</h3>
+    <div id="reportTitle" style="font-size:13px;color:var(--ink3);margin-bottom:8px"></div>
+    <textarea id="reportIssue" placeholder="Describe the problem — broken link, wrong info, outdated form…"></textarea>
+    <div class="modal-btns">
+      <button class="btn-sm" onclick="closeReport()">Cancel</button>
+      <button class="btn-sm" style="background:var(--terra);border-color:var(--terra);color:#fff" onclick="submitReport()">Submit</button>
+    </div>
+  </div>
+</div>
+
 <div class="hero">
-  <h1>Find any <span>NT Government Form</span></h1>
+  <div class="hero-kicker">Northern Territory Government</div>
+  <h1>Find any <em>NT Government</em> Form</h1>
   <p>Search 1,000+ forms from Darwin City Council, NT Government agencies, and all Northern Territory councils. Click any result to go directly to the form.</p>
 </div>
 
 <div class="search-wrap">
-  <div class="search-row">
+  <div class="search-bar">
     <input id="searchInput" type="search" placeholder="e.g. dog registration, building permit, rates…" autocomplete="off" autofocus>
-    <button class="btn btn-primary" onclick="doSearch('keyword')">Search</button>
-    <button class="btn btn-ai" onclick="doSearch('ai')" title="Uses AI to expand your search with synonyms and related terms">AI Search</button>
+    <button onclick="doSearch('keyword')">Search</button>
+    <button class="btn-ai" onclick="doSearch('ai')" title="AI expands your search with synonyms and related terms">AI Search</button>
   </div>
-  <div class="mode-row">
-    <span class="mode-label">Quick searches:</span>
-    <span class="sug-chip" onclick="quickSearch('dog registration')">Dog registration</span>
-    <span class="sug-chip" onclick="quickSearch('building permit')">Building permit</span>
-    <span class="sug-chip" onclick="quickSearch('rates rebate')">Rates rebate</span>
-    <span class="sug-chip" onclick="quickSearch('parking fine')">Parking fine</span>
-    <span class="sug-chip" onclick="quickSearch('development application')">Development application</span>
-    <span class="sug-chip" onclick="quickSearch('rubbish collection')">Rubbish / waste</span>
-    <span class="sug-chip" onclick="quickSearch('drivers licence')">Driver licence</span>
-    <span class="sug-chip" onclick="quickSearch('birth certificate')">Birth certificate</span>
-    <span class="sug-chip" onclick="quickSearch('business licence')">Business licence</span>
-    <span class="sug-chip" onclick="quickSearch('land title')">Land title</span>
+  <div class="chips-label">Quick searches:</div>
+  <div class="chips">
+    <span class="chip" onclick="quickSearch('dog registration')">Dog registration</span>
+    <span class="chip" onclick="quickSearch('building permit')">Building permit</span>
+    <span class="chip" onclick="quickSearch('rates rebate')">Rates rebate</span>
+    <span class="chip" onclick="quickSearch('parking fine')">Parking fine</span>
+    <span class="chip" onclick="quickSearch('development application')">Development application</span>
+    <span class="chip" onclick="quickSearch('rubbish collection')">Rubbish / waste</span>
+    <span class="chip" onclick="quickSearch('drivers licence')">Driver licence</span>
+    <span class="chip" onclick="quickSearch('birth certificate')">Birth certificate</span>
+    <span class="chip" onclick="quickSearch('business licence')">Business licence</span>
+    <span class="chip" onclick="quickSearch('land title')">Land title</span>
   </div>
 </div>
 
@@ -192,26 +210,14 @@
   </div>
 </div>
 <div class="dym" id="dymBanner" style="display:none">
-  <div class="dym-inner">Did you mean: <a id="dymLink" onclick=""></a>?</div>
+  <div class="dym-inner">Did you mean: <a id="dymLink"></a>?</div>
 </div>
-<!-- Report modal -->
-<div class="modal-bg" id="reportModal" style="display:none" onclick="if(event.target===this)closeReport()">
-  <div class="modal">
-    <h3>Report a problem</h3>
-    <div id="reportTitle" style="font-size:13px;color:var(--muted);margin-bottom:8px"></div>
-    <textarea id="reportIssue" placeholder="Describe the problem — broken link, wrong info, outdated form…"></textarea>
-    <div class="modal-btns">
-      <button class="btn" style="background:var(--surface);border:1px solid var(--border);color:var(--muted)" onclick="closeReport()">Cancel</button>
-      <button class="btn btn-primary" onclick="submitReport()">Submit</button>
-    </div>
-  </div>
-</div>
-<!-- Google Translate -->
-<div id="google_translate_element" style="max-width:700px;margin:0 auto 4px;padding:0 16px;font-size:12px"></div>
+
+<div id="google_translate_element"></div>
 
 <div class="admin-strip">
   <span id="scrapeStatus"></span>
-  <button class="btn btn-sm" style="background:var(--surface);border:1px solid var(--border);color:var(--muted)" onclick="triggerScrape()">Refresh form database</button>
+  <button class="btn-sm" onclick="triggerScrape()">Refresh form database</button>
 </div>
 
 <div id="toast" class="toast"></div>
@@ -223,6 +229,27 @@
 </div>
 
 <script>
+// Theme toggle
+const _root = document.documentElement;
+const _tBtn = document.getElementById('themeBtn');
+function _paintTheme(){
+  const d = _root.dataset.theme==='dark';
+  _tBtn.textContent = d ? '☽ Dark' : '☀︎ Light';
+  document.querySelector('meta[name=theme-color]').setAttribute('content', d?'#15110c':'#f5f0e8');
+}
+const _saved = localStorage.getItem('at-theme');
+if (_saved) _root.dataset.theme = _saved;
+_paintTheme();
+_tBtn.onclick = () => { _root.dataset.theme = _root.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('at-theme',_root.dataset.theme); _paintTheme(); };
+
+// PWA
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+
+// Google Translate
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement({pageLanguage:'en',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');
+}
+
 const input = document.getElementById('searchInput');
 const resultsEl = document.getElementById('results');
 const expandedBanner = document.getElementById('expandedBanner');
@@ -233,16 +260,6 @@ const scrapeStatus = document.getElementById('scrapeStatus');
 const dymBanner = document.getElementById('dymBanner');
 const dymLink   = document.getElementById('dymLink');
 
-// PWA service worker
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js').catch(()=>{});
-}
-// Google Translate
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage:'en',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');
-}
-
-// Report modal state
 let _reportUrl = '', _reportTitle2 = '';
 function openReport(url, title) {
   _reportUrl = url; _reportTitle2 = title;
@@ -257,21 +274,14 @@ async function submitReport() {
   try {
     await fetch('/api/feedback', {method:'POST',headers:{'Content-Type':'application/json'},
       body: JSON.stringify({url:_reportUrl, title:_reportTitle2, source:'forms', issue})});
-    closeReport(); showToast('Thank you — your report has been submitted.');
-  } catch(e) { showToast('Could not submit report: ' + e.message); }
+    closeReport(); showToast('Report submitted — thank you.');
+  } catch(e) { showToast('Could not submit: ' + e.message); }
 }
 
-// load stats on page load
 loadStats();
+input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch('keyword'); });
 
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter') doSearch('keyword');
-});
-
-function quickSearch(term) {
-  input.value = term;
-  doSearch('keyword');
-}
+function quickSearch(term) { input.value = term; doSearch('keyword'); }
 
 async function doSearch(mode) {
   const q = input.value.trim();
@@ -283,9 +293,7 @@ async function doSearch(mode) {
     const res = await fetch(`/api/forms/search?q=${encodeURIComponent(q)}&mode=${mode}`);
     const data = await res.json();
     if (data.error) showToast('Search error: ' + data.error);
-    if (mode === 'ai' && (!data.expanded_terms || !data.expanded_terms.length)) {
-      showToast('AI model offline — showing keyword results instead.');
-    }
+    if (mode === 'ai' && (!data.expanded_terms || !data.expanded_terms.length)) showToast('AI model offline — showing keyword results.');
     if (data.did_you_mean && !data.results.length) {
       dymLink.textContent = data.did_you_mean;
       dymLink.onclick = () => { input.value = data.did_you_mean; doSearch('keyword'); };
@@ -301,48 +309,39 @@ async function doSearch(mode) {
 function renderResults(data, q, mode) {
   const results = data.results || [];
   const expanded = data.expanded_terms || [];
-
   if (expanded.length && mode === 'ai') {
     expandedTermsEl.textContent = expanded.join(', ');
     expandedBanner.style.display = 'block';
   }
-
   if (!results.length) {
-    resultsEl.innerHTML = `
-      <div class="empty-state">
-        <h3>No forms found for "${escHtml(q)}"</h3>
-        <p>Try different keywords, or use <strong>AI Search</strong> to expand your query.</p>
-      </div>`;
+    resultsEl.innerHTML = `<div class="empty-state"><h3>No forms found for "${escHtml(q)}"</h3><p>Try different keywords or use <strong>AI Search</strong>.</p></div>`;
     return;
   }
-
-  const fuzzyNote = data.fuzzy ? ' <span style="color:var(--muted);font-size:11px">(fuzzy match)</span>' : '';
-  const countText = `<div class="result-meta" style="display:flex;justify-content:space-between;align-items:center"><span><strong>${results.length}</strong> form${results.length !== 1 ? 's' : ''} found for "<strong>${escHtml(q)}</strong>"${mode === 'ai' ? ' <span style="color:var(--accent2)">(AI-expanded)</span>' : ''}${fuzzyNote}</span><button class="btn btn-sm" onclick="window.print()" style="font-size:11px">🖨 Print</button></div>`;
+  const fuzzyNote = data.fuzzy ? ' <span style="font-size:11px;color:var(--ink3)">(fuzzy match)</span>' : '';
+  const meta = `<div class="result-meta"><span><strong>${results.length}</strong> form${results.length!==1?'s':''} for "<strong>${escHtml(q)}</strong>"${mode==='ai'?' <span style="color:var(--sky)">(AI-expanded)</span>':''}${fuzzyNote}</span><button class="btn-sm" onclick="window.print()">Print</button></div>`;
   const cards = results.map(r => {
     const isPdf = r.url.toLowerCase().endsWith('.pdf');
-    const desc = r.description ? `<div class="card-desc">${escHtml(r.description.slice(0, 160))}${r.description.length > 160 ? '…' : ''}</div>` : '';
+    const desc = r.description ? `<div class="card-desc">${escHtml(r.description.slice(0,160))}${r.description.length>160?'…':''}</div>` : '';
     const feeHtml = r.fee ? `<span class="fee-tag">💰 ${escHtml(r.fee)}</span>` : '';
-    const reqs = (r.requirements || []);
+    const reqs = r.requirements || [];
     const reqsHtml = reqs.length ? `<ul class="req-list">${reqs.map(x=>`<li>${escHtml(x)}</li>`).join('')}</ul>` : '';
-    return `
-      <div class="card">
-        <div class="card-title"><a href="${escAttr(r.url)}" target="_blank" rel="noopener">${escHtml(r.title)}</a></div>
-        ${desc}
-        <div class="card-meta">
-          ${r.department ? `<span class="tag dept">${escHtml(r.department)}</span>` : ''}
-          ${r.category ? `<span class="tag">${escHtml(r.category)}</span>` : ''}
-          ${isPdf ? '<span class="pdf-badge">PDF</span>' : ''}
-          ${feeHtml}
-        </div>
-        ${reqsHtml}
-        <div class="card-footer" style="margin-top:8px">
-          <span class="url-text">${escHtml(r.source_domain || '')}</span>
-          <button class="report-btn" onclick="openReport('${escAttr(r.url)}','${escAttr(r.title)}')">⚑ Report problem</button>
-        </div>
-      </div>`;
+    return `<div class="card">
+      <div class="card-title"><a href="${escAttr(r.url)}" target="_blank" rel="noopener">${escHtml(r.title)}</a></div>
+      ${desc}
+      <div class="card-meta">
+        ${r.department?`<span class="tag tag-sky">${escHtml(r.department)}</span>`:''}
+        ${r.category?`<span class="tag tag-terra">${escHtml(r.category)}</span>`:''}
+        ${isPdf?'<span class="pdf-badge">PDF</span>':''}
+        ${feeHtml}
+      </div>
+      ${reqsHtml}
+      <div class="card-footer">
+        <span class="url-text">${escHtml(r.source_domain||'')}</span>
+        <button class="report-btn" onclick="openReport('${escAttr(r.url)}','${escAttr(r.title)}')">⚑ Report problem</button>
+      </div>
+    </div>`;
   }).join('');
-
-  resultsEl.innerHTML = countText + cards;
+  resultsEl.innerHTML = meta + cards;
 }
 
 async function loadStats() {
@@ -351,23 +350,20 @@ async function loadStats() {
     const data = await res.json();
     if (!data.total_forms) return;
     statsBar.style.display = 'block';
-    const topDepts = (data.by_department || []).slice(0, 5);
     statsPills.innerHTML = `<span class="stat-pill"><strong>${data.total_forms.toLocaleString()}</strong> forms indexed</span>`
-      + topDepts.map(d => `<span class="stat-pill">${escHtml(d.department)}: <strong>${d.count}</strong></span>`).join('');
+      + (data.by_department||[]).slice(0,5).map(d=>`<span class="stat-pill">${escHtml(d.department)}: <strong>${d.count}</strong></span>`).join('');
   } catch(e) {}
 }
 
 async function triggerScrape() {
-  if (!confirm('This will re-scrape all NT government websites for forms. It may take several minutes. Continue?')) return;
-  scrapeStatus.textContent = 'Scraping… (this may take a few minutes)';
+  if (!confirm('Re-scrape all NT government websites for forms? May take several minutes.')) return;
+  scrapeStatus.textContent = 'Scraping…';
   try {
     const res = await fetch('/api/forms/scrape', {method:'POST'});
     const data = await res.json();
     scrapeStatus.textContent = `Done: ${data.upserted} forms upserted.`;
     loadStats();
-  } catch(e) {
-    scrapeStatus.textContent = 'Scrape failed: ' + e.message;
-  }
+  } catch(e) { scrapeStatus.textContent = 'Failed: ' + e.message; }
 }
 
 let _toastTimer;
@@ -377,14 +373,9 @@ function showToast(msg) {
   clearTimeout(_toastTimer);
   _toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
 }
-
-function escHtml(s) {
-  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(s) {
-  return String(s).replace(/"/g,'&quot;');
-}
+function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(s) { return String(s).replace(/"/g,'&quot;'); }
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 </body>
 </html>
