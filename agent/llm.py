@@ -29,7 +29,7 @@ from typing import Any
 
 BACKEND = os.environ.get("LLM_BACKEND", "local").lower()
 DEFAULT_MODEL = os.environ.get(
-    "MODEL", "gpt-4o-mini" if BACKEND == "openai" else "qwen2.5:7b-instruct")
+    "MODEL", "gpt-4o-mini" if BACKEND == "openai" else "qwen2.5:14b")
 
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
