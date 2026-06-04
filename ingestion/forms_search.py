@@ -32,7 +32,7 @@ def _levenshtein(a: str, b: str) -> int:
 
 def _vocab(db) -> set[str]:
     """Return the set of all lowercase words present in form titles."""
-    rows = db.fetchall("SELECT title FROM forms")
+    rows = db.execute("SELECT title FROM forms").fetchall()
     words: set[str] = set()
     for r in rows:
         for w in re.findall(r"[a-z]{3,}", r["title"].lower()):
@@ -50,51 +50,55 @@ def keyword_search(db, query: str, limit: int = MAX_RESULTS) -> list[dict]:
     fts_query = _safe_fts_query(query)
     if not fts_query:
         return []
-    rows = db.fetchall(
-        """SELECT f.id, f.title, f.description, f.url, f.department, f.category,
-                  f.source_domain, f.last_scraped, f.status, f.fee,
-                  f.requirements_json, bm25(forms_fts) AS score
-           FROM forms_fts
-           JOIN forms f ON forms_fts.rowid = f.id
-           WHERE forms_fts MATCH ?
-           ORDER BY score
-           LIMIT ?""",
-        (fts_query, limit),
-    )
+    try:
+        rows = db.execute(
+            """SELECT f.id, f.title, f.description, f.url, f.department, f.category,
+                      f.source_domain, f.last_scraped, f.status, f.fee,
+                      f.requirements_json, bm25(forms_fts) AS score
+               FROM forms_fts
+               JOIN forms f ON forms_fts.rowid = f.id
+               WHERE forms_fts MATCH ?
+               ORDER BY score
+               LIMIT ?""",
+            (fts_query, limit),
+        ).fetchall()
+    except Exception:
+        rows = []
     return [_row(r) for r in rows]
 
 
 def fuzzy_search(db, query: str, limit: int = MAX_RESULTS) -> list[dict]:
-    """Typo-tolerant fallback: LIKE search, then Levenshtein ranking.
-    Called when keyword_search returns 0 results."""
+    """Typo-tolerant fallback: LIKE search, then Levenshtein ranking."""
     query = query.strip()
     if not query:
         return []
 
-    # 1. LIKE search — catches partial matches and common typos
     words = re.findall(r"\w{3,}", query.lower())
     if not words:
         return []
 
     conditions = " AND ".join(["LOWER(title) LIKE ?"] * len(words))
     params = tuple(f"%{w}%" for w in words) + (limit,)
-    rows = db.fetchall(
-        f"SELECT id, title, description, url, department, category, "
-        f"source_domain, last_scraped, status, fee, requirements_json "
-        f"FROM forms WHERE {conditions} LIMIT ?",
-        params,
-    )
+    try:
+        rows = db.execute(
+            f"SELECT id, title, description, url, department, category, "
+            f"source_domain, last_scraped, status, fee, requirements_json "
+            f"FROM forms WHERE {conditions} LIMIT ?",
+            params,
+        ).fetchall()
+    except Exception:
+        rows = []
     if rows:
         return [_row(r) for r in rows]
 
-    # 2. Levenshtein fallback — find closest title words
+    # Levenshtein fallback — find closest title words
     vocab = _vocab(db)
     query_words = re.findall(r"[a-z]{3,}", query.lower())
     scored: list[tuple[int, str]] = []
     for word in query_words:
         for v in vocab:
             d = _levenshtein(word, v)
-            if d <= max(1, len(word) // 4):    # allow 1 edit per 4 chars
+            if d <= max(1, len(word) // 4):
                 scored.append((d, v))
     if not scored:
         return []
@@ -104,7 +108,6 @@ def fuzzy_search(db, query: str, limit: int = MAX_RESULTS) -> list[dict]:
 
 
 def did_you_mean(db, query: str) -> str | None:
-    """Return a corrected query string when the original returned 0 results."""
     query = query.strip()
     if not query:
         return None
@@ -160,23 +163,25 @@ def ai_search(db, query: str, llm_module, limit: int = MAX_RESULTS) -> dict:
 
 
 def related_howto(db, category: str, form_id: int, limit: int = 3) -> list[dict]:
-    """Return how-to guides related to a form by category or keyword match."""
-    rows = db.fetchall(
-        "SELECT id, title, links_json FROM howto_guides "
-        "WHERE category = ? AND id != ? LIMIT ?",
-        (category, form_id, limit),
-    )
-    if not rows:
-        rows = db.fetchall(
-            "SELECT id, title, links_json FROM howto_guides LIMIT ?", (limit,)
-        )
+    """Return how-to guides related to a form by category."""
+    try:
+        rows = db.execute(
+            "SELECT id, title, links_json FROM howto_guides "
+            "WHERE category = ? AND id != ? LIMIT ?",
+            (category, form_id, limit),
+        ).fetchall()
+        if not rows:
+            rows = db.execute(
+                "SELECT id, title, links_json FROM howto_guides LIMIT ?", (limit,)
+            ).fetchall()
+    except Exception:
+        rows = []
     return [{"id": r["id"], "title": r["title"]} for r in rows]
 
 
 # ── Search logging (anonymous) ────────────────────────────────────────────────
 
 def log_search(db, query: str, result_count: int, mode: str = "keyword") -> None:
-    """Log a search query anonymously (query text + day only, no IP, no time)."""
     try:
         db.execute(
             "INSERT INTO search_logs (query, source, result_count, mode, day) "
@@ -189,18 +194,20 @@ def log_search(db, query: str, result_count: int, mode: str = "keyword") -> None
 
 
 def popular_searches(db, days: int = 7, limit: int = 10) -> list[dict]:
-    """Return top search queries for the last N days."""
     from datetime import timedelta
     since = (date.today() - timedelta(days=days)).isoformat()
-    rows = db.fetchall(
-        """SELECT query, COUNT(*) AS cnt, AVG(result_count) AS avg_results
-           FROM search_logs
-           WHERE source='forms' AND day >= ?
-           GROUP BY LOWER(query)
-           ORDER BY cnt DESC
-           LIMIT ?""",
-        (since, limit),
-    )
+    try:
+        rows = db.execute(
+            """SELECT query, COUNT(*) AS cnt, AVG(result_count) AS avg_results
+               FROM search_logs
+               WHERE source='forms' AND day >= ?
+               GROUP BY LOWER(query)
+               ORDER BY cnt DESC
+               LIMIT ?""",
+            (since, limit),
+        ).fetchall()
+    except Exception:
+        rows = []
     return [{"query": r["query"], "count": r["cnt"],
              "avg_results": round(r["avg_results"] or 0)} for r in rows]
 
@@ -208,16 +215,18 @@ def popular_searches(db, days: int = 7, limit: int = 10) -> list[dict]:
 # ── Stats ─────────────────────────────────────────────────────────────────────
 
 def stats(db) -> dict:
-    row = db.fetchone("SELECT COUNT(*) AS total FROM forms")
-    total = row["total"] if row else 0
-    dept_rows = db.fetchall(
-        "SELECT department, COUNT(*) AS cnt FROM forms "
-        "GROUP BY department ORDER BY cnt DESC LIMIT 20"
-    )
-    cats = db.fetchall(
-        "SELECT category, COUNT(*) AS cnt FROM forms "
-        "GROUP BY category ORDER BY cnt DESC LIMIT 20"
-    )
+    try:
+        total = db.execute("SELECT COUNT(*) FROM forms").fetchone()[0]
+        dept_rows = db.execute(
+            "SELECT department, COUNT(*) AS cnt FROM forms "
+            "GROUP BY department ORDER BY cnt DESC LIMIT 20"
+        ).fetchall()
+        cats = db.execute(
+            "SELECT category, COUNT(*) AS cnt FROM forms "
+            "GROUP BY category ORDER BY cnt DESC LIMIT 20"
+        ).fetchall()
+    except Exception:
+        return {"total_forms": 0, "by_department": [], "by_category": []}
     return {
         "total_forms": total,
         "by_department": [{"department": r["department"], "count": r["cnt"]} for r in dept_rows],
@@ -233,6 +242,7 @@ def _row(r) -> dict:
         reqs = json.loads(r["requirements_json"] or "[]")
     except Exception:
         reqs = []
+    keys = r.keys() if hasattr(r, "keys") else []
     return {
         "id":           r["id"],
         "title":        r["title"],
@@ -242,7 +252,7 @@ def _row(r) -> dict:
         "category":     r["category"] or "",
         "source_domain":r["source_domain"] or "",
         "last_scraped": r["last_scraped"] or "",
-        "status":       r["status"] if "status" in r.keys() else "active",
-        "fee":          r["fee"] if "fee" in r.keys() else "",
+        "status":       r["status"] if "status" in keys else "active",
+        "fee":          r["fee"] if "fee" in keys else "",
         "requirements": reqs,
     }
