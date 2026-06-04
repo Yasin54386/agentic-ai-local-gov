@@ -47,6 +47,13 @@ name the table or dataset you used.
 - When a question spans more than one source (e.g. a suburb AND the weather, or \
 spending AND population), consult each relevant tool and SYNTHESISE one combined \
 answer rather than answering from a single source.
+
+Response style:
+- Keep answers short and conversational — 3 to 6 sentences max for simple questions.
+- NEVER use markdown tables. Use plain sentences or a short bullet list (3-5 items).
+- For step-by-step questions, use a numbered list with one line per step, no sub-bullets.
+- Do not add unnecessary headers, footers, or "good luck" sign-offs.
+- Link to official pages by name only (e.g. "nt.gov.au/driving"), not full URLs.
 """
 
 MAX_STEPS = 8  # safety cap on tool-use rounds
