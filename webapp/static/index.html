@@ -349,7 +349,9 @@ document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{
   b.classList.add('active'); el(b.dataset.p).classList.add('active'); window.scrollTo(0,0);
   if(loaders[b.dataset.p]) loaders[b.dataset.p]();
 });
-function go(p){document.querySelector(`.nav-btn[data-p="${p}"]`).click();}
+function go(p){const btn=document.querySelector(`.nav-btn[data-p="${p}"]`);if(btn)btn.click();}
+// Honour /?p= links arriving from sub-pages
+(()=>{const _p=new URLSearchParams(location.search).get('p');if(_p)go(_p);})();
 
 /* TICKER + HOME STATS */
 async function loadVitals(){
