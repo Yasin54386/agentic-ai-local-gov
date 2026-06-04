@@ -495,6 +495,19 @@ def _score_page(url: str, link_text: str) -> int:
     return score
 
 
+def _category_for_url(url: str, default_category: str, default_department: str) -> tuple[str, str]:
+    """Return (category, department) for a URL by longest-prefix match against SEEDS."""
+    best_len = 0
+    best_cat = default_category
+    best_dept = default_department
+    for seed_url, dept, cat in SEEDS:
+        if url.startswith(seed_url) and len(seed_url) > best_len:
+            best_len = len(seed_url)
+            best_cat = cat
+            best_dept = dept
+    return best_cat, best_dept
+
+
 def _crawl_seed(start_url: str, department: str, category: str) -> Iterator[dict]:
     """BFS from one seed URL, yielding how-to guide dicts."""
     seed_domain = urllib.parse.urlparse(start_url).netloc
@@ -531,12 +544,13 @@ def _crawl_seed(start_url: str, department: str, category: str) -> Iterator[dict
         # yield this page if it looks like a how-to guide
         if _is_howto_url(url) or _is_howto_text(link_text) or _is_howto_text(title):
             if title and title != "Untitled Guide":
+                page_cat, page_dept = _category_for_url(url, category, department)
                 yield {
                     "title": title,
                     "summary": summary[:400],
                     "url": url,
-                    "department": department,
-                    "category": category,
+                    "department": page_dept,
+                    "category": page_cat,
                     "source_domain": seed_domain,
                 }
 
