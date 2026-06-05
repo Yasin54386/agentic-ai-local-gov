@@ -20,10 +20,10 @@ import urllib.request
 from html.parser import HTMLParser
 from typing import Iterator
 
-DELAY = 0.8
-TIMEOUT = 12
-MAX_DEPTH = 4
-MAX_PAGES_PER_SEED = 300
+DELAY = 0.3
+TIMEOUT = 10
+MAX_DEPTH = 3
+MAX_PAGES_PER_SEED = 50
 
 HEADERS = {
     "User-Agent": (
