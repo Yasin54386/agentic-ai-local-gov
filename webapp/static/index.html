@@ -41,6 +41,41 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
 .theme-btn:hover{background:var(--ink);color:var(--cream)}
 
+/* language switcher (custom UI over Google Translate) */
+.lang{position:relative}
+.lang-btn{display:inline-flex;align-items:center;gap:7px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 11px;cursor:pointer;white-space:nowrap;line-height:1}
+.lang-btn:hover{background:var(--ink);color:var(--cream)}
+.lang-globe{font-size:13px;line-height:1}.lang-caret{font-size:9px;opacity:.7}
+.lang-menu{position:absolute;top:calc(100% + 7px);right:0;min-width:200px;max-height:62vh;overflow-y:auto;
+  background:var(--cream);border:1.5px solid var(--ink);box-shadow:5px 5px 0 var(--rule);z-index:300;display:none}
+.lang-menu.open{display:block}
+.lang-item{display:block;width:100%;text-align:left;font-family:'Barlow',sans-serif;font-size:14px;color:var(--ink2);
+  background:none;border:none;border-bottom:1px solid var(--rule2);padding:9px 15px;cursor:pointer}
+.lang-item:last-child{border-bottom:none}
+.lang-item:hover{background:var(--terra);color:#fff}
+.lang-item.active{color:var(--terra);font-weight:600}.lang-item.active:hover{color:#fff}
+/* suppress Google's own injected chrome — we drive it from the custom menu */
+.goog-te-banner-frame,.goog-te-gadget,.skiptranslate{display:none!important}
+#google_translate_element{display:none!important}
+body{top:0!important}
+#goog-gt-tt,.goog-te-balloon-frame{display:none!important}
+.goog-text-highlight{background:none!important;box-shadow:none!important;color:inherit!important}
+
+/* site footer */
+.site-footer{border-top:3px solid var(--ink);background:var(--cream2);margin-top:48px}
+.footer-inner{max-width:1300px;margin:0 auto;padding:36px 40px;display:grid;grid-template-columns:60fr 40fr;gap:40px}
+.footer-logo{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:26px;color:var(--ink);margin-bottom:12px}
+.footer-logo span{color:var(--terra);font-style:normal}
+.footer-note{font-size:13px;line-height:1.6;color:var(--ink3);font-weight:300;max-width:62ch}
+.footer-note strong{color:var(--ink2);font-weight:600}
+.footer-meta{text-align:right}
+.footer-credit{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:.05em;color:var(--ink3);text-transform:uppercase;line-height:1.5}
+.footer-credit a{display:inline-block;margin-top:4px;font-weight:700;font-size:17px;color:var(--terra);text-decoration:none;letter-spacing:.01em}
+.footer-credit a:hover{text-decoration:underline}
+.footer-copy{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-top:16px}
+.footer-fine{font-size:11px;color:var(--ink3);opacity:.85;margin-top:10px;font-weight:300;line-height:1.5}
+
 .nav-strip{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .nav-strip::-webkit-scrollbar{display:none}
 .nav-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.1em;
@@ -145,7 +180,10 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   .border-r{border-right:none}
   .bigstat{padding:18px 18px}
   .answer-panel,.pull,.p{padding:18px}
+  .footer-inner{grid-template-columns:1fr;padding:26px 16px;gap:22px}
+  .footer-meta{text-align:left}
 }
+@media(max-width:560px){#langLabel{display:none}.lang-btn{padding:6px 9px}}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
 </style>
 </head>
@@ -155,7 +193,13 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
     <div class="masthead-date" id="mdate">Darwin, NT</div>
     <div class="masthead-title">Ask <span>Territory</span></div>
     <div class="masthead-right">
-      <span class="masthead-tagline">Self-hosted · NT Open Data<br>No data leaves the Territory</span>
+      <span class="masthead-tagline">NT &amp; Darwin open data,<br>in plain language</span>
+      <div class="lang" id="langWrap">
+        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" title="Translate this page">
+          <span class="lang-globe">🌐</span><span id="langLabel">English</span><span class="lang-caret">▾</span>
+        </button>
+        <div class="lang-menu" id="langMenu" role="menu"></div>
+      </div>
       <button class="theme-btn" id="themeBtn">☀︎ Light</button>
     </div>
   </div>
@@ -320,6 +364,23 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   </div></div>
 </main>
 
+<footer class="site-footer">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <div class="footer-logo">Ask <span>Territory</span></div>
+      <p class="footer-note">An independent, non-commercial project that makes Northern Territory &amp; City of Darwin <strong>public open data</strong> easy to ask questions of, in plain language. It is <strong>not affiliated with, endorsed by, or an official service of any government agency.</strong> Figures are drawn from public open-data portals and may be incomplete or out of date — always confirm anything important with the relevant authority.</p>
+    </div>
+    <div class="footer-meta">
+      <p class="footer-credit">Designed, developed &amp; maintained by
+        <a href="https://www.linkedin.com/in/mohammad-yasin-arafat-083425174/" target="_blank" rel="noopener noreferrer">Mohammad Yasin Arafat ↗</a></p>
+      <p class="footer-copy">© <span id="footYear">2026</span> Mohammad Yasin Arafat · All rights reserved.</p>
+      <p class="footer-fine">Page translations are provided by Google Translate — machine translation may be imperfect, and translated text is processed by Google.</p>
+    </div>
+  </div>
+</footer>
+
+<div id="google_translate_element"></div>
+
 <script>
 const $=s=>document.querySelector(s), el=id=>document.getElementById(id);
 const fmt=n=>n==null?'—':Number(n).toLocaleString();
@@ -335,6 +396,43 @@ const paintTheme=()=>{tBtn.textContent = root.dataset.theme==='dark'?'☾ Dark':
   document.querySelector('meta[name=theme-color]').setAttribute('content', root.dataset.theme==='dark'?'#15110c':'#f5f0e8');};
 paintTheme();
 tBtn.onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';localStorage.setItem('at-theme',root.dataset.theme);paintTheme();};
+
+/* LANGUAGE — custom dropdown driving a hidden Google Translate widget */
+const LANGS=[
+  {c:'en',n:'English'},{c:'zh-CN',n:'中文（简体）'},{c:'zh-TW',n:'中文（繁體）'},
+  {c:'el',n:'Ελληνικά'},{c:'id',n:'Bahasa Indonesia'},{c:'tl',n:'Filipino'},
+  {c:'vi',n:'Tiếng Việt'},{c:'ar',n:'العربية'},{c:'ne',n:'नेपाली'},{c:'hi',n:'हिन्दी'},
+  {c:'pa',n:'ਪੰਜਾਬੀ'},{c:'th',n:'ไทย'},{c:'km',n:'ខ្មែរ'},{c:'ko',n:'한국어'},
+  {c:'ja',n:'日本語'},{c:'pt',n:'Português'},{c:'es',n:'Español'},{c:'fr',n:'Français'},
+  {c:'de',n:'Deutsch'},{c:'sw',n:'Kiswahili'}
+];
+function googleTranslateElementInit(){
+  new google.translate.TranslateElement({pageLanguage:'en',autoDisplay:false,includedLanguages:LANGS.map(l=>l.c).join(',')},'google_translate_element');
+}
+(function initLang(){
+  const wrap=el('langWrap'),btn=el('langBtn'),menu=el('langMenu'),label=el('langLabel');
+  const current=()=>{const m=document.cookie.match(/googtrans=\/[^/]*\/([^;]+)/);return m?decodeURIComponent(m[1]):'en';};
+  function paint(){const cur=current(),f=LANGS.find(l=>l.c===cur);label.textContent=f?f.n:'English';
+    [...menu.children].forEach(it=>it.classList.toggle('active',it.dataset.c===cur));}
+  menu.innerHTML=LANGS.map(l=>`<button class="lang-item" role="menuitem" data-c="${l.c}">${l.n}</button>`).join('');
+  paint();
+  const waitCombo=(cb,t=0)=>{const c=document.querySelector('.goog-te-combo');if(c)return cb(c);if(t>40)return;setTimeout(()=>waitCombo(cb,t+1),150);};
+  function setLang(code){
+    if(code==='en'){ // back to source language: clear Google's cookie and reload
+      const exp='=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
+      document.cookie='googtrans'+exp;
+      document.cookie='googtrans'+exp+';domain=.'+location.hostname;
+      location.reload();return;
+    }
+    waitCombo(c=>{c.value=code;c.dispatchEvent(new Event('change'));setTimeout(paint,500);});
+  }
+  menu.querySelectorAll('.lang-item').forEach(it=>it.onclick=()=>{
+    menu.classList.remove('open');btn.setAttribute('aria-expanded','false');setLang(it.dataset.c);});
+  btn.onclick=e=>{e.stopPropagation();const open=menu.classList.toggle('open');btn.setAttribute('aria-expanded',open);};
+  document.addEventListener('click',e=>{if(!wrap.contains(e.target)){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}});
+  setTimeout(paint,1200); // reflect any language restored from a prior visit
+})();
+el('footYear')&&(el('footYear').textContent=new Date().getFullYear());
 
 /* NAV (lazy-load each panel) */
 const loaders={};
@@ -537,5 +635,6 @@ el('homeAsk')&&el('homeAsk').addEventListener('keydown',e=>{if(e.key==='Enter')g
 el('askInput').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
 loadVitals(); initSuburbs();
 </script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 </body>
 </html>
