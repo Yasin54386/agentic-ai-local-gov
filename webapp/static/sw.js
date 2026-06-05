@@ -2,8 +2,8 @@
 // Strategy: cache-first for static assets; network-first for API calls.
 // Allows the app to work offline for previously visited guides.
 
-const CACHE  = 'ask-territory-v1';
-const STATIC = ['/', '/forms', '/howto', '/guide', '/tour', '/manifest.json', '/nav.js'];
+const CACHE  = 'ask-territory-v2';
+const STATIC = ['/', '/forms', '/howto', '/tour', '/manifest.json', '/nav.js', '/site-chrome.js'];
 
 self.addEventListener('install', e => {
   e.waitUntil(

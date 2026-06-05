@@ -138,6 +138,23 @@ def _fdb_rw():
     return Database().connect()
 
 
+def _clean_history(raw) -> list[dict]:
+    """Sanitise chat history from the client: keep the last few well-formed
+    {role, content} turns, with roles limited to user/assistant and content
+    length-capped. Returns [] for anything malformed."""
+    if not isinstance(raw, list):
+        return []
+    out = []
+    for turn in raw[-12:]:
+        if not isinstance(turn, dict):
+            continue
+        role = turn.get("role")
+        content = turn.get("content")
+        if role in ("user", "assistant") and isinstance(content, str) and content.strip():
+            out.append({"role": role, "content": content.strip()[:4000]})
+    return out[-6:]
+
+
 class Handler(BaseHTTPRequestHandler):
     def log_message(self, fmt, *args):
         pass   # silence default stderr output; we do structured JSON logging
@@ -249,11 +266,14 @@ class Handler(BaseHTTPRequestHandler):
             "/concept": "concept.html", "/concept.html": "concept.html",
             "/forms":   "forms.html",   "/forms.html":   "forms.html",
             "/howto":   "howto.html",   "/howto.html":   "howto.html",
-            "/guide":   "guide.html",   "/guide.html":   "guide.html",
             "/tour":    "tour.html",    "/tour.html":    "tour.html",
         }
         if u.path in pages:
             self._file(STATIC / pages[u.path], "text/html; charset=utf-8"); return 200
+        # Guide has merged into the home Ask experience — redirect old links.
+        if u.path in ("/guide", "/guide.html"):
+            self.send_response(301); self.send_header("Location", "/"); self.end_headers()
+            return 301
         if u.path == "/manifest.json":
             self._file(STATIC / "manifest.json", "application/manifest+json"); return 200
         if u.path == "/sw.js":
@@ -515,45 +535,23 @@ class Handler(BaseHTTPRequestHandler):
             self._log_req(status, t0)
 
     def _handle_post(self, u, body) -> int:
-        # ── AI chat ──
-        if u.path == "/api/ask":
+        # ── AI chat (unified data + services assistant) ──
+        # /api/guide is kept as an alias of /api/ask — the agent's system prompt
+        # already covers both open-data and NT-services questions.
+        if u.path in ("/api/ask", "/api/guide"):
             question = (body.get("question") or "").strip()
             if not question:
                 self._json({"error": "empty question"}, 400); return 400
             if not llm.server_up():
                 self._json({"answer": None, "model_offline": True,
-                    "hint": "Start your local model: `bash scripts/setup_local_model.sh`"})
+                    "hint": "AI is offline — start your local model "
+                            "(`bash scripts/setup_local_model.sh`), or use Form Finder / How-To Hub."})
                 return 200
+            history = _clean_history(body.get("history"))
             from agent.agent import run
             try:
                 with _lock:
-                    answer = run(question, repo=repo, verbose=False)
-                self._json({"answer": answer}); return 200
-            except Exception as exc:
-                self._json({"error": str(exc)}, 500); return 500
-
-        # ── Guide assistant (citizen-facing, NT-context prompt) ──
-        if u.path == "/api/guide":
-            question = (body.get("question") or "").strip()
-            if not question:
-                self._json({"error": "empty question"}, 400); return 400
-            if not llm.server_up():
-                self._json({"answer": None, "model_offline": True,
-                    "hint": "AI guide offline — try searching Forms or How-To guides instead."})
-                return 200
-            ctx_prompt = (
-                "You are a helpful Northern Territory (NT) local government services "
-                "guide for citizens of Darwin and the NT. You help citizens understand "
-                "what government services they need, what steps to take, and where to go. "
-                "Be concise, friendly, and practical. Focus on NT-specific information. "
-                "If you don't know the exact current fee or processing time, say so and "
-                "direct them to the official NT Government website (nt.gov.au).\n\n"
-                f"Citizen's question: {question}"
-            )
-            from agent.agent import run
-            try:
-                with _lock:
-                    answer = run(ctx_prompt, repo=repo, verbose=False)
+                    answer = run(question, repo=repo, history=history, verbose=False)
                 self._json({"answer": answer}); return 200
             except Exception as exc:
                 self._json({"error": str(exc)}, 500); return 500

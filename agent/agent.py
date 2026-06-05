@@ -96,14 +96,22 @@ def _rag_answer(question: str, repo: Repository, model: str | None) -> str:
 
 
 def run(question: str, *, repo: Repository | None = None, model: str | None = None,
-        verbose: bool = True) -> str:
-    """Answer a question by letting the local model reason over the data tools."""
+        history: list[dict] | None = None, verbose: bool = True) -> str:
+    """Answer a question by letting the local model reason over the data tools.
+
+    `history` is an optional list of prior turns ({"role": "user"|"assistant",
+    "content": str}) so follow-up questions keep context. Only the most recent
+    few turns are kept, and each is length-capped, to keep the prompt lean.
+    """
     own_repo = repo is None
     repo = repo or Repository()
-    messages: list[dict] = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": question},
-    ]
+    messages: list[dict] = [{"role": "system", "content": SYSTEM_PROMPT}]
+    for turn in (history or [])[-6:]:
+        role = turn.get("role")
+        content = turn.get("content")
+        if role in ("user", "assistant") and content:
+            messages.append({"role": role, "content": str(content)[:4000]})
+    messages.append({"role": "user", "content": question})
     kw = {"model": model} if model else {}
     try:
         for step in range(MAX_STEPS):

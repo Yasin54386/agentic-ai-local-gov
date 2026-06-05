@@ -24,8 +24,8 @@
     }
   ],
   "shortcuts": [
-    { "name": "Find a Form",  "url": "/forms",  "description": "Search NT Government forms" },
-    { "name": "How-To Guides","url": "/howto",  "description": "Step-by-step NT government guides" },
-    { "name": "Guide Assistant","url": "/guide","description": "AI-powered NT services guide" }
+    { "name": "Ask AI",       "url": "/",      "description": "Ask about NT data and services" },
+    { "name": "Find a Form",  "url": "/forms", "description": "Search NT Government forms" },
+    { "name": "How-To Guides","url": "/howto", "description": "Step-by-step guides to NT services" }
   ]
 }

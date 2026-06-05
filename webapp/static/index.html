@@ -81,6 +81,28 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
 .search-bar button{background:var(--terra);color:#fff;border:none;padding:0 24px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
 .search-bar button:hover{background:var(--terra2)}
 
+/* ── unified Ask chat ── */
+.chat-composer{display:flex;gap:0;border:2px solid var(--ink);overflow:hidden;margin:0 0 12px;max-width:620px}
+.chat-composer textarea{flex:1;padding:13px 18px;font:16px/1.45 'Barlow',sans-serif;background:var(--field);border:none;outline:none;color:var(--ink);resize:none;min-height:50px;max-height:160px;min-width:0}
+.chat-composer textarea::placeholder{color:var(--ink3)}
+.chat-composer button{background:var(--terra);color:#fff;border:none;padding:0 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.chat-composer button:hover{background:var(--terra2)}
+.chat-composer button:disabled{opacity:.45;cursor:default}
+.ask-reset{display:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);background:none;border:none;cursor:pointer;padding:4px 0;margin-bottom:10px}
+.ask-reset:hover{color:var(--terra)}
+#askCol.chatting #askIntro,#askCol.chatting #askChips{display:none}
+#askCol.chatting .ask-reset{display:inline-block}
+#thread{display:flex;flex-direction:column;gap:12px;max-width:620px}
+.msg{max-width:92%;padding:13px 17px;font-size:14px;line-height:1.6;animation:fadeUp .3s ease both;word-wrap:break-word}
+.msg.user{align-self:flex-end;background:var(--ink);color:var(--cream);font-weight:300}
+.msg.ai{align-self:flex-start;background:var(--cream2);border:1px solid var(--rule);color:var(--ink2)}
+.msg.ai strong{color:var(--terra);font-weight:600}
+.msg.sys{align-self:center;background:none;color:var(--ink3);font-style:italic;font-size:13px;text-align:center;max-width:100%;padding:6px 0}
+.typing{align-self:flex-start;display:flex;gap:6px;padding:15px 17px;background:var(--cream2);border:1px solid var(--rule)}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:tblink 1.2s infinite both}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes tblink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+
 .bigstat{padding:24px 28px;position:relative;overflow:hidden}
 .bigstat-n{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(34px,5vw,52px);line-height:1;color:var(--ink);letter-spacing:-.02em}
 .bigstat-n.terra{color:var(--terra)}.bigstat-n.sun{color:var(--sun)}.bigstat-n.sage{color:var(--sage)}.bigstat-n.sky{color:var(--sky)}
@@ -173,8 +195,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   <div class="nav-wrap">
     <button class="nav-hamburger" id="navToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
     <nav class="nav-strip" id="navStrip">
-      <button class="nav-btn active" data-p="home">Overview</button>
-      <button class="nav-btn" data-p="ask">Ask AI</button>
+      <button class="nav-btn active" data-p="home">Ask AI</button>
       <button class="nav-btn" data-p="suburb">My Suburb</button>
       <button class="nav-btn" data-p="canopy">Canopy</button>
       <button class="nav-btn" data-p="motion">City Motion</button>
@@ -185,7 +206,6 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
       <a href="/forms"  class="nav-btn">📋 Forms</a>
       <a href="/howto"  class="nav-btn">📖 How-To</a>
       <a href="/tour"   class="nav-btn">🏖 Tour</a>
-      <a href="/guide"  class="nav-btn">🤖 Guide</a>
     </nav>
   </div>
 </header>
@@ -197,19 +217,25 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   <div class="page active" id="home">
     <div class="content">
       <div class="cols cols-7030" style="border-bottom:2px solid var(--ink)">
-        <div class="border-r" style="padding:30px 36px 30px 0">
-          <div class="hero-kicker anim">Northern Territory · City of Darwin</div>
-          <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
-          <p class="hero-sub anim anim-d2">Ask in plain English. Know your suburb, watch the canopy, explore NT services — real public data, on local servers.</p>
-          <div class="search-bar anim anim-d3" style="max-width:560px">
-            <input id="homeAsk" placeholder="Try: how do I get a police check in NT?"/>
-            <button onclick="goAsk()">Ask AI →</button>
+        <div class="border-r" id="askCol" style="padding:30px 36px 30px 0">
+          <div id="askIntro">
+            <div class="hero-kicker anim">Ask the Territory · data &amp; services</div>
+            <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
+            <p class="hero-sub anim anim-d2">One assistant for everything public — your suburb, the canopy, council spending, and how to get a licence, permit or form. Ask in plain English; answers cite their source.</p>
           </div>
-          <div class="chip-row anim anim-d4">
-            <div class="chip" onclick="goAsk('dogs in Malak')">dogs in Malak</div>
-            <div class="chip" onclick="goAsk('flood risk now')">flood risk now</div>
-            <div class="chip" onclick="goAsk('register a business NT')">register a business</div>
+          <button class="ask-reset" onclick="resetChat()">↺ New conversation</button>
+          <div class="chat-composer anim anim-d3">
+            <textarea id="askInput" rows="1" placeholder="Ask anything — e.g. how do I get a police check in NT?"></textarea>
+            <button id="askSend" onclick="send()">Ask →</button>
           </div>
+          <div class="chip-row anim anim-d4" id="askChips">
+            <div class="chip" onclick="chip(this)">how do I get a police check?</div>
+            <div class="chip" onclick="chip(this)">dogs in Malak</div>
+            <div class="chip" onclick="chip(this)">register a business in NT</div>
+            <div class="chip" onclick="chip(this)">Waters Ward spending</div>
+            <div class="chip" onclick="chip(this)">flood risk now</div>
+          </div>
+          <div id="thread"></div>
         </div>
         <div>
           <div class="p ruled-b"><div class="sec-head">Live vitals</div></div>
@@ -244,21 +270,6 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
       <div class="mt32 ruled2"><blockquote class="pull">"Public data, in plain language — for every resident of the Territory."</blockquote></div>
     </div>
   </div>
-
-  <!-- ASK -->
-  <div class="page" id="ask"><div class="content">
-    <div class="hero-kicker">AI Assistant · self-hosted model</div>
-    <h2 class="page-h">Ask <em>anything.</em></h2>
-    <div class="search-bar"><input id="askInput" value="What does Karama look like, and which ward is it in?"/><button onclick="doAsk()">Ask →</button></div>
-    <div class="chip-row">
-      <div class="chip" onclick="setQ(this)">how do I register a dog in Darwin?</div>
-      <div class="chip" onclick="setQ(this)">dogs registered in Malak</div>
-      <div class="chip" onclick="setQ(this)">flood risk right now</div>
-    </div>
-    <div class="sec-head mb8 mt16">Answer</div>
-    <div id="answerBox" class="answer-panel"><p class="muted" style="color:var(--cream)">Ask a question to see a grounded answer.</p></div>
-    <div class="muted mt16">Needs the local model running. Other tabs work without it.</div>
-  </div></div>
 
   <!-- SUBURB -->
   <div class="page" id="suburb"><div class="content">
@@ -346,8 +357,8 @@ document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{
   if(loaders[b.dataset.p]) loaders[b.dataset.p]();
 });
 function go(p){const btn=document.querySelector(`.nav-btn[data-p="${p}"]`);if(btn)btn.click();}
-// Honour /?p= links arriving from sub-pages
-(()=>{const _p=new URLSearchParams(location.search).get('p');if(_p)go(_p);})();
+// Honour /?p= links arriving from sub-pages ('ask' folded into home)
+(()=>{let _p=new URLSearchParams(location.search).get('p');if(_p==='ask')_p='home';if(_p)go(_p);})();
 // Hamburger toggle
 (()=>{
   const tog=document.getElementById('navToggle'), strip=document.getElementById('navStrip');
@@ -376,18 +387,34 @@ async function loadVitals(){
   }catch(e){ el('ticker').innerHTML='<span class="ticker-item">Build the database to see live vitals</span>'; }
 }
 
-/* ASK */
-function setQ(c){el('askInput').value=c.textContent;doAsk();}
-function goAsk(q){go('ask');if(q)el('askInput').value=q;doAsk();}
-async function doAsk(){
-  const q=el('askInput').value.trim(); if(!q)return;
-  const box=el('answerBox'); box.innerHTML='<p class="muted" style="color:var(--cream)">Thinking… the model is reasoning over the data.</p>';
+/* ASK — unified chat (data + services) with short multi-turn memory */
+const thread=el('thread'), askInput=el('askInput'), askCol=el('askCol'), askSend=el('askSend');
+let chatHistory=[]; let chatBusy=false;
+const escH=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmtAns=s=>escH(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+function addMsg(role,html){const d=document.createElement('div');d.className='msg '+role;d.innerHTML=html;thread.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'nearest'});return d;}
+function chip(c){send(typeof c==='string'?c:c.textContent);}
+function resetChat(){chatHistory=[];thread.innerHTML='';askCol.classList.remove('chatting');askInput.value='';askInput.style.height='';askInput.focus();}
+async function send(q){
+  q=(q!=null?q:askInput.value).trim(); if(!q||chatBusy)return;
+  chatBusy=true; askSend.disabled=true; askCol.classList.add('chatting');
+  askInput.value=''; askInput.style.height='';
+  addMsg('user',escH(q).replace(/\n/g,'<br>'));
+  const prior=chatHistory.slice(-6);
+  chatHistory.push({role:'user',content:q});
+  const typing=document.createElement('div');typing.className='typing';
+  typing.innerHTML='<span></span><span></span><span></span>';thread.appendChild(typing);typing.scrollIntoView({block:'nearest'});
   try{
-    const r=await (await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})})).json();
-    if(r.model_offline){box.innerHTML=`<p>⚠ ${r.hint}</p>`;return;}
-    box.innerHTML=`<p>${(r.answer||r.error||'No answer').replace(/\n/g,'<br>')}</p>`;
-  }catch(e){box.innerHTML=`<p>Error: ${e}</p>`;}
+    const r=await (await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q,history:prior})})).json();
+    typing.remove();
+    if(r.model_offline){addMsg('sys','⚠ '+(r.hint||'AI is offline.'));}
+    else{const a=r.answer||r.error||'No answer produced.';addMsg('ai',fmtAns(a));chatHistory.push({role:'assistant',content:a});}
+  }catch(e){typing.remove();addMsg('sys','Something went wrong: '+e);}
+  chatBusy=false; askSend.disabled=false; askInput.focus();
 }
+// backward-compat for any external caller / ?p=ask deep links
+function goAsk(q){go('home');if(q)send(q);}
 
 /* SUBURB */
 async function initSuburbs(){
@@ -551,8 +578,9 @@ function animateBars(){document.querySelectorAll('.fill[data-w]').forEach(f=>{f.
 
 /* init */
 el('mdate').textContent=new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · Darwin, NT';
-el('homeAsk')&&el('homeAsk').addEventListener('keydown',e=>{if(e.key==='Enter')goAsk();});
-el('askInput').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
+// composer: auto-grow + Enter-to-send (Shift+Enter inserts a newline)
+askInput.addEventListener('input',()=>{askInput.style.height='auto';askInput.style.height=Math.min(askInput.scrollHeight,160)+'px';});
+askInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
 loadVitals(); initSuburbs();
 </script>
 <script src="/site-chrome.js" defer></script>
