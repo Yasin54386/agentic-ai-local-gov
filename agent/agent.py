@@ -34,6 +34,10 @@ co-occur. If it returns 0, say so honestly and read its "note".
 locate the column, its table and dataset; then fetch from there.
 - Exploring what exists? -> list_tables() and search_datasets(query).
 - Weather, rain, flood, wet season? -> live_weather() / flood_risk().
+- HOW to do something, step-by-step, apply for / register / pay / get a licence? \
+-> search_howto(query) — searches NT government how-to guides with steps and links.
+- Need a FORM, application, or document? -> search_forms(query) — finds official NT \
+government forms and downloadable documents.
 
 Hard rules:
 - Filter by what the question names (suburb, ward, year, category). NEVER answer a \
@@ -70,6 +74,14 @@ def _rag_answer(question: str, repo: Repository, model: str | None) -> str:
         pass
     try:
         context_parts.append(dispatch(repo, "find_records", {"keyword": question}))
+    except Exception:
+        pass
+    try:
+        context_parts.append(dispatch(repo, "search_howto", {"query": question}))
+    except Exception:
+        pass
+    try:
+        context_parts.append(dispatch(repo, "search_forms", {"query": question}))
     except Exception:
         pass
 

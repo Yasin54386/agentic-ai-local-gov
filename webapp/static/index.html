@@ -164,11 +164,8 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
     <button class="nav-btn" data-p="ask">Ask AI</button>
     <button class="nav-btn" data-p="suburb">My Suburb</button>
     <button class="nav-btn" data-p="canopy">Canopy</button>
-    <button class="nav-btn" data-p="equity">Ward Spend</button>
     <button class="nav-btn" data-p="motion">City Motion</button>
-    <button class="nav-btn" data-p="money">The Money</button>
     <button class="nav-btn" data-p="decisions">Decisions</button>
-    <button class="nav-btn" data-p="grants">Grants</button>
     <button class="nav-btn" data-p="weather">Weather</button>
     <button class="nav-btn" data-p="data">Data</button>
     <span style="width:1px;background:#2a2d3a;margin:8px 4px;flex-shrink:0"></span>
@@ -189,15 +186,15 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
         <div class="border-r" style="padding:30px 36px 30px 0">
           <div class="hero-kicker anim">Northern Territory · City of Darwin</div>
           <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
-          <p class="hero-sub anim anim-d2">Ask in plain English. Know your suburb, follow the money, watch the canopy — real NT public data, on local servers.</p>
+          <p class="hero-sub anim anim-d2">Ask in plain English. Know your suburb, watch the canopy, explore NT services — real public data, on local servers.</p>
           <div class="search-bar anim anim-d3" style="max-width:560px">
-            <input id="homeAsk" placeholder="Try: how much did Waters Ward spend?"/>
+            <input id="homeAsk" placeholder="Try: how do I get a police check in NT?"/>
             <button onclick="goAsk()">Ask AI →</button>
           </div>
           <div class="chip-row anim anim-d4">
             <div class="chip" onclick="goAsk('dogs in Malak')">dogs in Malak</div>
             <div class="chip" onclick="goAsk('flood risk now')">flood risk now</div>
-            <div class="chip" onclick="goAsk('grants for festivals')">grants for festivals</div>
+            <div class="chip" onclick="goAsk('register a business NT')">register a business</div>
           </div>
         </div>
         <div>
@@ -225,9 +222,9 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
           <div class="feat-block"><div class="feat-num">04</div><div class="feat-title">Canopy &amp; climate</div><div class="feat-body">Suburb-by-suburb tree-cover change since 2011.</div></div>
         </div>
         <div>
-          <div class="p"><div class="sec-head mb8">Accountability</div></div>
-          <div class="feat-block"><div class="feat-num">05</div><div class="feat-title">Follow the money</div><div class="feat-body">Capital spend by category, ward and year.</div></div>
-          <div class="feat-block"><div class="feat-num">06</div><div class="feat-title">Ward spend</div><div class="feat-body">Council spend compared across wards.</div></div>
+          <div class="p"><div class="sec-head mb8">Services</div></div>
+          <div class="feat-block"><div class="feat-num">05</div><div class="feat-title">Forms finder</div><div class="feat-body">Find any NT government form fast.</div></div>
+          <div class="feat-block"><div class="feat-num">06</div><div class="feat-title">How-To Hub</div><div class="feat-body">Step-by-step guides for NT services.</div></div>
         </div>
       </div>
       <div class="mt32 ruled2"><blockquote class="pull">"Public data, in plain language — for every resident of the Territory."</blockquote></div>
@@ -240,7 +237,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
     <h2 class="page-h">Ask <em>anything.</em></h2>
     <div class="search-bar"><input id="askInput" value="What does Karama look like, and which ward is it in?"/><button onclick="doAsk()">Ask →</button></div>
     <div class="chip-row">
-      <div class="chip" onclick="setQ(this)">councillor expenses by ward</div>
+      <div class="chip" onclick="setQ(this)">how do I register a dog in Darwin?</div>
       <div class="chip" onclick="setQ(this)">dogs registered in Malak</div>
       <div class="chip" onclick="setQ(this)">flood risk right now</div>
     </div>
@@ -268,11 +265,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   </div></div>
 
   <!-- EQUITY / WARD SPEND -->
-  <div class="page" id="equity"><div class="content">
-    <div class="hero-kicker">Accountability · councillor expenses by ward</div>
-    <h2 class="page-h">Spending across <em>wards.</em></h2>
-    <div id="equityBody"><div class="loading">Loading ward spend…</div></div>
-  </div></div>
+  <div class="page" id="equity" style="display:none"></div>
 
   <!-- MOTION -->
   <div class="page" id="motion"><div class="content">
@@ -281,12 +274,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
     <div id="motionBody"><div class="loading">Loading mobility data…</div></div>
   </div></div>
 
-  <!-- MONEY -->
-  <div class="page" id="money"><div class="content">
-    <div class="hero-kicker">Finance · capital expenditure</div>
-    <h2 class="page-h">Every dollar, <em>accounted for.</em></h2>
-    <div id="moneyBody"><div class="loading">Loading capital spend…</div></div>
-  </div></div>
+  <div class="page" id="money" style="display:none"></div>
 
   <!-- DECISIONS -->
   <div class="page" id="decisions"><div class="content">
@@ -296,13 +284,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
     <div id="decisionsBody"><div class="loading">Loading decisions…</div></div>
   </div></div>
 
-  <!-- GRANTS -->
-  <div class="page" id="grants"><div class="content">
-    <div class="hero-kicker">Finance · grants &amp; sponsorships</div>
-    <h2 class="page-h">Find <em>the funding.</em></h2>
-    <div class="search-bar" style="max-width:520px"><input id="grantQ" placeholder="search organisation or event…"/><button onclick="loadGrants()">Search →</button></div>
-    <div id="grantsBody"><div class="loading">Loading grants…</div></div>
-  </div></div>
+  <div class="page" id="grants" style="display:none"></div>
 
   <!-- WEATHER -->
   <div class="page" id="weather"><div class="content">
