@@ -9,11 +9,8 @@
     { p: 'ask',       label: 'Ask AI'      },
     { p: 'suburb',    label: 'My Suburb'   },
     { p: 'canopy',    label: 'Canopy'      },
-    { p: 'equity',    label: 'Ward Spend'  },
     { p: 'motion',    label: 'City Motion' },
-    { p: 'money',     label: 'The Money'   },
     { p: 'decisions', label: 'Decisions'   },
-    { p: 'grants',    label: 'Grants'      },
     { p: 'weather',   label: 'Weather'     },
     { p: 'data',      label: 'Data'        },
   ];
