@@ -59,6 +59,30 @@ Response style:
 MAX_STEPS = 8  # safety cap on tool-use rounds
 
 
+def _rag_answer(question: str, repo: Repository, model: str | None) -> str:
+    """Fallback: search DB directly, inject context, ask model without tools."""
+    from .tools import dispatch
+    # Pull relevant context using the most useful tools directly
+    context_parts = []
+    try:
+        context_parts.append(dispatch(repo, "search_datasets", {"query": question}))
+    except Exception:
+        pass
+    try:
+        context_parts.append(dispatch(repo, "find_records", {"keyword": question}))
+    except Exception:
+        pass
+
+    context = "\n\n".join(str(c) for c in context_parts if c)
+    messages = [
+        {"role": "system", "content": SYSTEM_PROMPT},
+        {"role": "user", "content": f"Context from NT government database:\n{context}\n\nQuestion: {question}"},
+    ]
+    kw = {"model": model} if model else {}
+    msg = llm.chat(messages, tools=None, **kw)
+    return (msg.get("content") or "").strip() or "(no answer produced)"
+
+
 def run(question: str, *, repo: Repository | None = None, model: str | None = None,
         verbose: bool = True) -> str:
     """Answer a question by letting the local model reason over the data tools."""
@@ -71,7 +95,15 @@ def run(question: str, *, repo: Repository | None = None, model: str | None = No
     kw = {"model": model} if model else {}
     try:
         for step in range(MAX_STEPS):
-            msg = llm.chat(messages, tools=TOOLS, **kw)
+            try:
+                msg = llm.chat(messages, tools=TOOLS, **kw)
+            except llm.LocalModelError as exc:
+                if "tool" in str(exc).lower() or "404" in str(exc):
+                    # Model doesn't support tool use — fall back to RAG
+                    if verbose:
+                        print("  [fallback] tool use unsupported, switching to RAG mode", flush=True)
+                    return _rag_answer(question, repo, model)
+                raise
             calls = llm.extract_tool_calls(msg)
             messages.append(llm.assistant_message(msg))
             if not calls:
@@ -80,7 +112,6 @@ def run(question: str, *, repo: Repository | None = None, model: str | None = No
             for call in calls:
                 if verbose:
                     print(f"  [tool] {call['name']}({json.dumps(call['args'])})", flush=True)
-                # READ-ONLY tools — a high-stakes human gate (docs/05) would sit here.
                 result = dispatch(repo, call["name"], call["args"])
                 messages.append(llm.tool_result(call["id"], call["name"], result))
         return "(reached step limit without a final answer)"
