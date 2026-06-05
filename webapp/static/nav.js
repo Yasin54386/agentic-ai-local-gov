@@ -6,8 +6,7 @@
  */
 (function () {
   const TABS = [
-    { p: 'home',      label: 'Overview'    },
-    { p: 'ask',       label: 'Ask AI'      },
+    { p: 'home',      label: 'Ask AI'      },
     { p: 'suburb',    label: 'My Suburb'   },
     { p: 'canopy',    label: 'Canopy'      },
     { p: 'motion',    label: 'City Motion' },
@@ -20,7 +19,6 @@
     { href: '/forms', label: 'Form Finder' },
     { href: '/howto', label: 'How-To Hub'  },
     { href: '/tour',  label: 'Tour Guide'  },
-    { href: '/guide', label: 'Guide'       },
   ];
 
   const path = location.pathname.replace(/\.html$/, '') || '/';

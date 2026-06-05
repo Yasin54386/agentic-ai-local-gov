@@ -157,6 +157,35 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   .bigstat{padding:18px 18px}
   .answer-panel,.pull,.p{padding:18px}
 }
+/* ── Ask AI chat (merged Overview + Ask + Guide) ── */
+.ask-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:36px;padding-top:24px;border-top:2px solid var(--ink)}
+#home.chatting .ask-head{margin-top:0;border-top:none;padding-top:0}
+.examples{display:flex;gap:6px;flex-wrap:wrap;padding:14px 0 0}
+.ex{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:var(--cream2);border:1px solid var(--rule);color:var(--ink3);padding:5px 13px;cursor:pointer;transition:all .12s}
+.ex:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+#messages{display:flex;flex-direction:column;gap:10px;padding:16px 0;min-height:80px;overflow-y:auto}
+.msg{max-width:88%;padding:12px 16px;font-size:14px;line-height:1.6;font-weight:300;border:1px solid var(--rule)}
+.msg p+p{margin-top:10px}
+.msg.user{background:var(--cream2);align-self:flex-end;color:var(--ink)}
+.msg.assistant{background:var(--cream);border-left:3px solid var(--terra);align-self:flex-start;color:var(--ink2)}
+.msg.assistant strong{color:var(--terra);font-weight:600}
+.msg.system{background:var(--cream2);align-self:center;color:var(--ink3);font-size:13px;text-align:center;max-width:100%;font-family:'Barlow Condensed',sans-serif;letter-spacing:.03em}
+.msg.system a{color:var(--terra)}
+.typing{display:flex;gap:5px;padding:14px 16px;background:var(--cream);border:1px solid var(--rule);border-left:3px solid var(--terra);align-self:flex-start}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:blink 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}.dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.25}40%{opacity:1}}
+.input-row{display:flex;gap:0;border:2px solid var(--ink);overflow:hidden;max-width:720px;margin-top:12px}
+#msgInput{flex:1;background:var(--field);border:none;color:var(--ink);font-size:15px;padding:14px 18px;outline:none;resize:none;min-height:50px;max-height:140px;font-family:inherit;font-weight:300}
+#msgInput::placeholder{color:var(--ink3)}
+.send-btn{background:var(--terra);color:#fff;border:none;border-left:2px solid var(--ink);padding:0 24px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.send-btn:hover{background:var(--terra2)}
+.send-btn:disabled{opacity:.4;cursor:default}
+#home.chatting #askIntro{display:none}
+#home.chatting #askExamples{display:none}
+#home.chatting #messages{min-height:52vh}
+#home.chatting #newChatBtn{display:inline-block}
+@media(max-width:520px){.input-row{flex-direction:column}.send-btn{border-left:none;border-top:2px solid var(--ink);padding:12px}}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
 </style>
 </head>
@@ -173,8 +202,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   <div class="nav-wrap">
     <button class="nav-hamburger" id="navToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
     <nav class="nav-strip" id="navStrip">
-      <button class="nav-btn active" data-p="home">Overview</button>
-      <button class="nav-btn" data-p="ask">Ask AI</button>
+      <button class="nav-btn active" data-p="home">🤖 Ask AI</button>
       <button class="nav-btn" data-p="suburb">My Suburb</button>
       <button class="nav-btn" data-p="canopy">Canopy</button>
       <button class="nav-btn" data-p="motion">City Motion</button>
@@ -185,7 +213,6 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
       <a href="/forms"  class="nav-btn">📋 Forms</a>
       <a href="/howto"  class="nav-btn">📖 How-To</a>
       <a href="/tour"   class="nav-btn">🏖 Tour</a>
-      <a href="/guide"  class="nav-btn">🤖 Guide</a>
     </nav>
   </div>
 </header>
@@ -193,72 +220,78 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
 <div class="ticker" id="ticker"></div>
 
 <main>
-  <!-- HOME -->
+  <!-- ASK AI · merged Overview + Ask + Guide chat -->
   <div class="page active" id="home">
     <div class="content">
-      <div class="cols cols-7030" style="border-bottom:2px solid var(--ink)">
-        <div class="border-r" style="padding:30px 36px 30px 0">
-          <div class="hero-kicker anim">Northern Territory · City of Darwin</div>
-          <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
-          <p class="hero-sub anim anim-d2">Ask in plain English. Know your suburb, watch the canopy, explore NT services — real public data, on local servers.</p>
-          <div class="search-bar anim anim-d3" style="max-width:560px">
-            <input id="homeAsk" placeholder="Try: how do I get a police check in NT?"/>
-            <button onclick="goAsk()">Ask AI →</button>
+      <!-- INTRO (marketing; hides once the conversation starts) -->
+      <div id="askIntro">
+        <div class="cols cols-7030" style="border-bottom:2px solid var(--ink)">
+          <div class="border-r" style="padding:30px 36px 30px 0">
+            <div class="hero-kicker anim">Northern Territory · City of Darwin · Local AI</div>
+            <h1 class="hero-headline anim anim-d1">Ask the<br>Territory,<br><em>anything.</em></h1>
+            <p class="hero-sub anim anim-d2">Plain-English answers on NT &amp; Darwin government services and open data — what you need, how to apply, where the money goes. Ask below; no data leaves the Territory.</p>
+            <div class="chip-row anim anim-d4">
+              <div class="chip" onclick="ask('How do I register a dog in Darwin?')">register a dog</div>
+              <div class="chip" onclick="ask('What is the flood risk right now?')">flood risk now</div>
+              <div class="chip" onclick="ask('How do I register a business in the NT?')">register a business</div>
+            </div>
           </div>
-          <div class="chip-row anim anim-d4">
-            <div class="chip" onclick="goAsk('dogs in Malak')">dogs in Malak</div>
-            <div class="chip" onclick="goAsk('flood risk now')">flood risk now</div>
-            <div class="chip" onclick="goAsk('register a business NT')">register a business</div>
+          <div>
+            <div class="p ruled-b"><div class="sec-head">Live vitals</div></div>
+            <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
+              <div class="bigstat border-r"><div class="bigstat-n terra" id="s-datasets">—</div><div class="bigstat-label">Datasets</div></div>
+              <div class="bigstat"><div class="bigstat-n sun" id="s-records">—</div><div class="bigstat-label">Records</div></div>
+            </div>
+            <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
+              <div class="bigstat border-r"><div class="bigstat-n sage" id="s-suburbs">37</div><div class="bigstat-label">Suburbs</div></div>
+              <div class="bigstat"><div class="bigstat-n sky">100%</div><div class="bigstat-label">Self-hosted</div></div>
+            </div>
+            <div class="bigstat" style="border-top:1px solid var(--rule)"><div class="bigstat-n" style="font-size:32px" id="s-live">—</div><div class="bigstat-label">Live · Darwin · Flood signal</div></div>
           </div>
         </div>
-        <div>
-          <div class="p ruled-b"><div class="sec-head">Live vitals</div></div>
-          <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
-            <div class="bigstat border-r"><div class="bigstat-n terra" id="s-datasets">—</div><div class="bigstat-label">Datasets</div></div>
-            <div class="bigstat"><div class="bigstat-n sun" id="s-records">—</div><div class="bigstat-label">Records</div></div>
+        <div class="cols cols-3 mt32" style="border-top:2px solid var(--ink)">
+          <div>
+            <div class="p"><div class="sec-head mb8">Ask &amp; discover</div></div>
+            <div class="feat-block"><div class="feat-num">01</div><div class="feat-title">Ask anything</div><div class="feat-body">Plain English in, real answers out — grounded in real NT public data.</div></div>
+            <div class="feat-block"><div class="feat-num">02</div><div class="feat-title">Guided, step-by-step</div><div class="feat-body">What you need, how to apply, where to go and how long it takes.</div></div>
           </div>
-          <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
-            <div class="bigstat border-r"><div class="bigstat-n sage" id="s-suburbs">37</div><div class="bigstat-label">Suburbs</div></div>
-            <div class="bigstat"><div class="bigstat-n sky">100%</div><div class="bigstat-label">Self-hosted</div></div>
+          <div style="border-left:1px solid var(--rule);border-right:1px solid var(--rule)">
+            <div class="p"><div class="sec-head mb8">Explore</div></div>
+            <div class="feat-block"><div class="feat-num">03</div><div class="feat-title">Know your suburb</div><div class="feat-body">37 suburbs mapped to people, pets, trees and ward.</div></div>
+            <div class="feat-block"><div class="feat-num">04</div><div class="feat-title">Canopy &amp; climate</div><div class="feat-body">Suburb-by-suburb tree-cover change since 2011.</div></div>
           </div>
-          <div class="bigstat" style="border-top:1px solid var(--rule)"><div class="bigstat-n" style="font-size:32px" id="s-live">—</div><div class="bigstat-label">Live · Darwin · Flood signal</div></div>
+          <div>
+            <div class="p"><div class="sec-head mb8">Services</div></div>
+            <div class="feat-block"><div class="feat-num">05</div><div class="feat-title">Forms finder</div><div class="feat-body">Find any NT government form fast.</div></div>
+            <div class="feat-block"><div class="feat-num">06</div><div class="feat-title">How-To Hub</div><div class="feat-body">Step-by-step guides for NT services.</div></div>
+          </div>
         </div>
+        <div class="mt32 ruled2"><blockquote class="pull">"Public data, in plain language — for every resident of the Territory."</blockquote></div>
       </div>
-      <div class="cols cols-3 mt32" style="border-top:2px solid var(--ink)">
-        <div>
-          <div class="p"><div class="sec-head mb8">Ask &amp; discover</div></div>
-          <div class="feat-block"><div class="feat-num">01</div><div class="feat-title">Ask anything</div><div class="feat-body">Plain English in, real answers out — every response cites its source.</div></div>
-          <div class="feat-block"><div class="feat-num">02</div><div class="feat-title">Draft &amp; brief</div><div class="feat-body">Proposals and briefings grounded in public data.</div></div>
+
+      <!-- CHAT (the merged Ask AI + Guide assistant) -->
+      <div id="askChat">
+        <div class="ask-head">
+          <div class="hero-kicker" style="padding:0">AI Assistant · self-hosted model</div>
+          <button class="theme-btn" id="newChatBtn" style="display:none" onclick="resetChat()">↺ New chat</button>
         </div>
-        <div style="border-left:1px solid var(--rule);border-right:1px solid var(--rule)">
-          <div class="p"><div class="sec-head mb8">Explore</div></div>
-          <div class="feat-block"><div class="feat-num">03</div><div class="feat-title">Know your suburb</div><div class="feat-body">37 suburbs mapped to people, pets, trees and ward.</div></div>
-          <div class="feat-block"><div class="feat-num">04</div><div class="feat-title">Canopy &amp; climate</div><div class="feat-body">Suburb-by-suburb tree-cover change since 2011.</div></div>
+        <div class="examples" id="askExamples">
+          <span class="ex" onclick="ask('I just moved from Queensland — what do I need to do?')">Moved from QLD</span>
+          <span class="ex" onclick="ask('What do I need to work with children in the NT?')">Work with children</span>
+          <span class="ex" onclick="ask('How do I start a small business in Darwin?')">Start a business</span>
+          <span class="ex" onclick="ask('I need a police check for a job — what steps?')">Police check</span>
+          <span class="ex" onclick="ask('Can I get a rates rebate as a pensioner in Darwin?')">Pensioner rates rebate</span>
+          <span class="ex" onclick="ask('How much did each ward spend?')">Ward spend</span>
         </div>
-        <div>
-          <div class="p"><div class="sec-head mb8">Services</div></div>
-          <div class="feat-block"><div class="feat-num">05</div><div class="feat-title">Forms finder</div><div class="feat-body">Find any NT government form fast.</div></div>
-          <div class="feat-block"><div class="feat-num">06</div><div class="feat-title">How-To Hub</div><div class="feat-body">Step-by-step guides for NT services.</div></div>
+        <div id="messages"></div>
+        <div class="input-row">
+          <textarea id="msgInput" placeholder="Ask about any NT government service or dataset…" rows="1"></textarea>
+          <button class="send-btn" id="sendBtn" onclick="sendMsg()">Send</button>
         </div>
+        <div class="muted mt16">Powered by a local model · the other tabs work without it.</div>
       </div>
-      <div class="mt32 ruled2"><blockquote class="pull">"Public data, in plain language — for every resident of the Territory."</blockquote></div>
     </div>
   </div>
-
-  <!-- ASK -->
-  <div class="page" id="ask"><div class="content">
-    <div class="hero-kicker">AI Assistant · self-hosted model</div>
-    <h2 class="page-h">Ask <em>anything.</em></h2>
-    <div class="search-bar"><input id="askInput" value="What does Karama look like, and which ward is it in?"/><button onclick="doAsk()">Ask →</button></div>
-    <div class="chip-row">
-      <div class="chip" onclick="setQ(this)">how do I register a dog in Darwin?</div>
-      <div class="chip" onclick="setQ(this)">dogs registered in Malak</div>
-      <div class="chip" onclick="setQ(this)">flood risk right now</div>
-    </div>
-    <div class="sec-head mb8 mt16">Answer</div>
-    <div id="answerBox" class="answer-panel"><p class="muted" style="color:var(--cream)">Ask a question to see a grounded answer.</p></div>
-    <div class="muted mt16">Needs the local model running. Other tabs work without it.</div>
-  </div></div>
 
   <!-- SUBURB -->
   <div class="page" id="suburb"><div class="content">
@@ -376,18 +409,90 @@ async function loadVitals(){
   }catch(e){ el('ticker').innerHTML='<span class="ticker-item">Build the database to see live vitals</span>'; }
 }
 
-/* ASK */
-function setQ(c){el('askInput').value=c.textContent;doAsk();}
-function goAsk(q){go('ask');if(q)el('askInput').value=q;doAsk();}
-async function doAsk(){
-  const q=el('askInput').value.trim(); if(!q)return;
-  const box=el('answerBox'); box.innerHTML='<p class="muted" style="color:var(--cream)">Thinking… the model is reasoning over the data.</p>';
-  try{
-    const r=await (await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})})).json();
-    if(r.model_offline){box.innerHTML=`<p>⚠ ${r.hint}</p>`;return;}
-    box.innerHTML=`<p>${(r.answer||r.error||'No answer').replace(/\n/g,'<br>')}</p>`;
-  }catch(e){box.innerHTML=`<p>Error: ${e}</p>`;}
+/* ASK AI · conversational chat (merged Overview + Ask + Guide) */
+const homePage=el('home'), msgsEl=el('messages'), inputEl=el('msgInput'), sendBtn=el('sendBtn');
+const convo=[];               // {role, content} sent to /api/guide for memory
+let thinking=false, greeted=false, modelOnline=null;
+
+function ask(q){ if(q){inputEl.value=q;} sendMsg(); }
+
+function startChat(){
+  if(!homePage.classList.contains('chatting')){
+    homePage.classList.add('chatting');
+    el('askChat').scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
+function resetChat(){
+  convo.length=0; msgsEl.innerHTML=''; greeted=false;
+  homePage.classList.remove('chatting');
+  greet(); window.scrollTo(0,0); inputEl.value=''; inputEl.style.height='50px';
+}
+function greet(){
+  if(greeted) return; greeted=true;
+  if(modelOnline===false){
+    addMsg('system','AI model is currently offline. Use <a href="/forms">Form Finder</a> or <a href="/howto">How-To Hub</a> to search without AI.');
+  }else{
+    addMsg('assistant',"Hi! I'm your NT Government guide. Ask me about any service — licences, permits, registrations, forms, or the open data — and I'll explain what you need and how to apply.");
+  }
+}
+
+fetch('/api/health').then(r=>r.json()).then(d=>{ modelOnline = d.model_server!==false; })
+  .catch(()=>{ modelOnline=null; });
+
+async function sendMsg(){
+  const q=inputEl.value.trim();
+  if(!q||thinking) return;
+  startChat(); greet();
+  inputEl.value=''; inputEl.style.height='50px';
+  addMsg('user', esc(q));
+  const history=convo.slice(-8);
+  convo.push({role:'user',content:q});
+  const typingEl=addTyping();
+  thinking=true; sendBtn.disabled=true;
+  try{
+    const res=await fetch('/api/guide',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q, history})});
+    const data=await res.json();
+    typingEl.remove();
+    if(data.model_offline){
+      modelOnline=false;
+      addMsg('system', (data.hint||'AI model is offline.')+' Try <a href="/forms">forms</a> or <a href="/howto">how-to guides</a>.');
+    }else if(data.error){
+      addMsg('system','Error: '+esc(data.error));
+    }else{
+      const ans=data.answer||'';
+      convo.push({role:'assistant',content:ans});
+      addMsg('assistant', formatAnswer(ans));
+    }
+  }catch(e){
+    typingEl.remove();
+    addMsg('system','Network error: '+esc(e.message));
+  }finally{
+    thinking=false; sendBtn.disabled=false; inputEl.focus();
+  }
+}
+
+function addMsg(role, html){
+  const d=document.createElement('div');
+  d.className='msg '+role; d.innerHTML=html;
+  msgsEl.appendChild(d); msgsEl.scrollTop=msgsEl.scrollHeight;
+  return d;
+}
+function addTyping(){
+  const d=document.createElement('div');
+  d.className='typing';
+  d.innerHTML='<span class="dot"></span><span class="dot"></span><span class="dot"></span>';
+  msgsEl.appendChild(d); msgsEl.scrollTop=msgsEl.scrollHeight;
+  return d;
+}
+function formatAnswer(text){
+  return esc(text)
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/\n\n/g,'</p><p>')
+    .replace(/\n/g,'<br>')
+    .replace(/^/,'<p>').replace(/$/,'</p>');
+}
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
 /* SUBURB */
 async function initSuburbs(){
@@ -551,8 +656,9 @@ function animateBars(){document.querySelectorAll('.fill[data-w]').forEach(f=>{f.
 
 /* init */
 el('mdate').textContent=new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · Darwin, NT';
-el('homeAsk')&&el('homeAsk').addEventListener('keydown',e=>{if(e.key==='Enter')goAsk();});
-el('askInput').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
+inputEl.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendMsg();}});
+inputEl.addEventListener('input',()=>{inputEl.style.height='auto';inputEl.style.height=Math.min(inputEl.scrollHeight,140)+'px';});
+greet();
 loadVitals(); initSuburbs();
 </script>
 </body>

@@ -539,6 +539,18 @@ class Handler(BaseHTTPRequestHandler):
                 self._json({"answer": None, "model_offline": True,
                     "hint": "AI guide offline — try searching Forms or How-To guides instead."})
                 return 200
+            # Fold prior turns in so the guide remembers the conversation.
+            transcript = ""
+            history = body.get("history")
+            if isinstance(history, list):
+                for turn in history[-8:]:
+                    if not isinstance(turn, dict):
+                        continue
+                    content = (turn.get("content") or "").strip()[:1500]
+                    if not content:
+                        continue
+                    who = "Citizen" if turn.get("role") == "user" else "Guide"
+                    transcript += f"{who}: {content}\n"
             ctx_prompt = (
                 "You are a helpful Northern Territory (NT) local government services "
                 "guide for citizens of Darwin and the NT. You help citizens understand "
@@ -546,8 +558,10 @@ class Handler(BaseHTTPRequestHandler):
                 "Be concise, friendly, and practical. Focus on NT-specific information. "
                 "If you don't know the exact current fee or processing time, say so and "
                 "direct them to the official NT Government website (nt.gov.au).\n\n"
-                f"Citizen's question: {question}"
             )
+            if transcript:
+                ctx_prompt += f"Conversation so far:\n{transcript}\n"
+            ctx_prompt += f"Citizen's question: {question}"
             from agent.agent import run
             try:
                 with _lock:
