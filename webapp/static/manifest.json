@@ -1,0 +1,31 @@
+{
+  "name": "Ask Territory",
+  "short_name": "AskNT",
+  "description": "NT Government forms, guides, and services — Darwin & Northern Territory",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait-primary",
+  "background_color": "#0f1117",
+  "theme_color": "#e8a020",
+  "categories": ["government", "utilities"],
+  "lang": "en-AU",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='24' fill='%230f1117'/%3E%3Ctext x='96' y='130' font-size='120' text-anchor='middle' fill='%23e8a020'%3E🏛%3C/text%3E%3C/svg%3E",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='64' fill='%230f1117'/%3E%3Ctext x='256' y='360' font-size='320' text-anchor='middle' fill='%23e8a020'%3E🏛%3C/text%3E%3C/svg%3E",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    { "name": "Ask AI",       "url": "/",      "description": "Ask about NT data and services" },
+    { "name": "Find a Form",  "url": "/forms", "description": "Search NT Government forms" },
+    { "name": "How-To Guides","url": "/howto", "description": "Step-by-step guides to NT services" }
+  ]
+}

@@ -1,0 +1,488 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#f5f0e8"/>
+<title>NT Tour Guide — AskTerritory.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f5f0e8;--cream2:#ede8dc;--cream3:#e4ddd0;
+  --ink:#1a1208;--ink2:#3a2e1e;--ink3:#6b5c44;
+  --terra:#c8441a;--terra2:#e05c30;--sun:#f0b429;
+  --sage:#3d6b4f;--sky:#1e4a7a;
+  --rule:rgba(26,18,8,0.15);--rule2:rgba(26,18,8,0.08);
+  --field:#ffffff;--tex:.6;--texblend:multiply;
+}
+html[data-theme="dark"]{
+  --cream:#15110c;--cream2:#1d1812;--cream3:#2a2219;
+  --ink:#f1e9db;--ink2:#d9cebb;--ink3:#9d8d75;
+  --terra:#e8623a;--terra2:#f0764e;--sun:#f3c156;
+  --sage:#6db389;--sky:#6aa6de;
+  --rule:rgba(241,233,219,0.16);--rule2:rgba(241,233,219,0.07);
+  --field:#241d15;--tex:.25;--texblend:screen;
+}
+html{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden;transition:background .2s}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:var(--tex);mix-blend-mode:var(--texblend)}
+
+.masthead{background:var(--cream);border-bottom:3px solid var(--ink);padding:0 40px;position:sticky;top:0;z-index:100}
+.masthead-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 10px;border-bottom:1px solid var(--rule)}
+.masthead-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:30px;letter-spacing:-.02em;line-height:1;color:var(--ink);text-decoration:none;white-space:nowrap}
+.masthead-title span{color:var(--terra);font-style:normal}
+.masthead-right{display:flex;align-items:center;gap:10px}
+.page-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);border:1px solid var(--terra);padding:3px 9px}
+.theme-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{background:var(--ink);color:var(--cream)}
+
+/* Hero */
+.hero{text-align:center;padding:40px 24px 28px;border-bottom:1px solid var(--rule)}
+.hero-kicker{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px}
+.hero h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(28px,5vw,44px);line-height:1;letter-spacing:-.02em;color:var(--ink);margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--terra)}
+.hero p{color:var(--ink3);font-size:15px;max-width:560px;margin:0 auto;line-height:1.6;font-weight:300}
+
+/* Search */
+.search-wrap{max-width:800px;margin:0 auto;padding:28px 24px 16px}
+.search-bar{display:flex;gap:0;border:2px solid var(--ink);overflow:hidden}
+.search-bar input{flex:1;padding:13px 18px;font:16px/1 'Barlow',sans-serif;background:var(--field);border:none;outline:none;color:var(--ink);min-width:0}
+.search-bar input::placeholder{color:var(--ink3)}
+.search-bar button{background:var(--terra);color:#fff;border:none;padding:0 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;border-left:2px solid var(--ink)}
+.search-bar button:hover{background:var(--terra2)}
+
+/* Category chips */
+.cat-scroll{max-width:800px;margin:0 auto;padding:14px 24px 8px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.cat-row{display:flex;gap:6px;flex-wrap:nowrap;white-space:nowrap}
+.cat-chip{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:transparent;border:1px solid var(--rule);color:var(--ink3);padding:5px 13px;cursor:pointer;transition:all .12s;white-space:nowrap;flex-shrink:0}
+.cat-chip:hover,.cat-chip.active{border-color:var(--terra);color:var(--terra);background:rgba(200,68,26,.06)}
+
+/* Stats */
+.stats-bar{max-width:800px;margin:0 auto;padding:0 24px 12px;display:flex;gap:8px;flex-wrap:wrap}
+.stat-pill{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.05em;border:1px solid var(--rule);padding:3px 12px;color:var(--ink3)}
+.stat-pill strong{color:var(--terra)}
+
+/* Grid */
+#results{max-width:800px;margin:0 auto;padding:0 24px 60px}
+.result-meta{font-size:13px;color:var(--ink3);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.result-meta strong{color:var(--ink)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+
+/* Card */
+.card{background:var(--cream);border:1px solid var(--rule);border-top:3px solid transparent;overflow:hidden;cursor:pointer;transition:border-color .15s,transform .12s}
+.card:hover{border-top-color:var(--terra);transform:translateY(-2px);background:var(--cream2)}
+.card-img{width:100%;height:130px;background:var(--cream3);display:flex;align-items:center;justify-content:center;font-size:48px;border-bottom:1px solid var(--rule)}
+.card-body{padding:12px 14px 12px}
+.card-cat{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);border:1px solid rgba(200,68,26,.3);display:inline-block;padding:2px 8px;margin-bottom:7px}
+.card-title{font-family:'Playfair Display',serif;font-weight:900;font-size:15px;margin-bottom:4px;line-height:1.2;color:var(--ink)}
+.card-region{font-size:11px;color:var(--ink3);margin-bottom:6px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+.card-summary{font-size:12px;color:var(--ink3);line-height:1.5;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-weight:300}
+.card-rating{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:12px}
+.stars{color:var(--sun);letter-spacing:1px;font-size:13px}
+.stars-empty{color:var(--rule)}
+
+/* Loading / empty */
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--rule);border-top-color:var(--terra);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-wrap{text-align:center;padding:60px}
+.empty-state{text-align:center;padding:60px 0;color:var(--ink3)}
+.empty-state h3{font-family:'Playfair Display',serif;font-weight:900;font-size:22px;margin-bottom:8px;color:var(--ink)}
+
+/* Pagination */
+.pagination{display:flex;gap:6px;justify-content:center;margin-top:24px;flex-wrap:wrap}
+.pg-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;background:none;border:1.5px solid var(--rule);color:var(--ink3);padding:6px 14px;cursor:pointer;transition:all .12s}
+.pg-btn:hover:not(:disabled){color:var(--terra);border-color:var(--terra)}
+.pg-btn.active{background:var(--terra);color:#fff;border-color:var(--terra)}
+.pg-btn:disabled{opacity:.4;cursor:default}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(26,18,8,.6);z-index:200;display:flex;align-items:flex-start;justify-content:center;padding:20px 16px;overflow-y:auto}
+.modal{background:var(--cream);border:2px solid var(--ink);width:100%;max-width:680px;margin:auto;overflow:hidden}
+.modal-hero{background:var(--cream3);padding:36px 24px 22px;text-align:center;position:relative;border-bottom:2px solid var(--ink)}
+.modal-emoji{font-size:52px;margin-bottom:10px}
+.modal-title{font-family:'Playfair Display',serif;font-weight:900;font-size:24px;margin-bottom:4px;color:var(--ink)}
+.modal-region{font-size:13px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+.modal-cat-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);border:1px solid var(--terra);display:inline-block;padding:3px 10px;margin-top:8px}
+.close-btn{position:absolute;top:12px;right:12px;background:none;border:1.5px solid var(--ink);color:var(--ink);width:30px;height:30px;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.close-btn:hover{background:var(--ink);color:var(--cream)}
+.modal-content{padding:20px 24px}
+
+.modal-rating-bar{display:flex;align-items:center;gap:12px;background:var(--cream2);border:1px solid var(--rule);padding:12px 16px;margin-bottom:18px}
+.avg-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:28px;letter-spacing:-.02em;color:var(--sun)}
+.big-stars{font-size:22px;color:var(--sun);letter-spacing:2px}
+.rev-count-lg{font-size:13px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif}
+
+.section-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:10px;border-bottom:1px solid var(--rule);padding-bottom:4px}
+.description{font-size:14px;line-height:1.7;color:var(--ink2);margin-bottom:18px;font-weight:300}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px}
+.info-item{background:var(--cream2);border:1px solid var(--rule);padding:10px 12px}
+.info-key{font-family:'Barlow Condensed',sans-serif;font-size:11px;color:var(--ink3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:3px}
+.info-val{font-size:13px;color:var(--ink2);font-weight:500}
+.tips-box{background:var(--cream2);border-left:3px solid var(--terra);padding:12px 14px;margin-bottom:18px;font-size:13px;color:var(--ink2);line-height:1.6;font-weight:300}
+.tips-box strong{color:var(--terra);font-family:'Barlow Condensed',sans-serif;font-weight:700;text-transform:uppercase;letter-spacing:.06em;font-size:11px}
+
+.action-btns{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.btn-action{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.07em;text-transform:uppercase;display:inline-flex;align-items:center;gap:6px;padding:9px 18px;cursor:pointer;text-decoration:none;border:none;transition:all .15s}
+.btn-website{background:var(--terra);color:#fff}
+.btn-website:hover{background:var(--terra2)}
+.btn-maps{background:none;border:1.5px solid var(--ink);color:var(--ink)}
+.btn-maps:hover{background:var(--ink);color:var(--cream)}
+
+/* Reviews */
+.reviews-section{border-top:2px solid var(--ink);padding-top:18px;margin-top:4px}
+.review-toggle{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.07em;text-transform:uppercase;background:none;border:1.5px solid var(--ink);color:var(--ink);padding:8px 16px;cursor:pointer;width:100%;margin-bottom:14px;transition:all .15s}
+.review-toggle:hover{background:var(--ink);color:var(--cream)}
+.review-form{background:var(--cream2);border:1px solid var(--rule);padding:16px;margin-bottom:16px;display:none}
+.review-form.open{display:block}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.form-row.full{grid-template-columns:1fr}
+.form-field label{display:block;font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);margin-bottom:4px}
+.form-field input,.form-field textarea{width:100%;background:var(--field);border:2px solid var(--ink);color:var(--ink);padding:9px 12px;font-size:13px;font-family:inherit;outline:none;transition:border-color .15s}
+.form-field textarea{resize:vertical;min-height:80px}
+.star-picker{display:flex;gap:6px;margin-top:4px}
+.star-pick{font-size:24px;cursor:pointer;color:var(--rule);transition:color .1s;line-height:1}
+.star-pick.on{color:var(--sun)}
+.submit-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;background:var(--terra);color:#fff;border:none;padding:10px 20px;cursor:pointer;width:100%;margin-top:10px;transition:opacity .15s}
+.submit-btn:hover{opacity:.85}
+.submit-btn:disabled{opacity:.4;cursor:default}
+
+.review-item{padding:12px 0;border-bottom:1px solid var(--rule)}
+.review-item:last-child{border-bottom:none}
+.review-header{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:5px}
+.reviewer-name{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase}
+.review-stars{color:var(--sun);font-size:13px}
+.review-date{font-size:11px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif}
+.review-text{font-size:13px;color:var(--ink3);line-height:1.55;font-weight:300}
+.load-more-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:none;border:1.5px solid var(--rule);color:var(--ink3);padding:7px 20px;cursor:pointer;width:100%;margin-top:10px;transition:all .12s}
+.load-more-btn:hover{border-color:var(--terra);color:var(--terra)}
+.no-reviews{color:var(--ink3);font-size:13px;padding:8px 0;font-weight:300}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:10px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+@media(max-width:900px){
+  .masthead{padding:0 16px}
+  .masthead-title{font-size:22px}
+  .search-wrap,#results,.stats-bar,.cat-scroll{padding-left:16px;padding-right:16px}
+}
+@media(max-width:520px){
+  .search-bar{flex-direction:column}
+  .search-bar button{border-left:none;border-top:2px solid var(--ink)}
+  .info-grid{grid-template-columns:1fr}
+  .form-row{grid-template-columns:1fr}
+  .modal-content{padding:16px}
+}
+@media print{.masthead,.search-wrap,.cat-scroll,.stats-bar,.pagination,.toast{display:none!important}.card{page-break-inside:avoid}}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <a class="masthead-title" href="/">AskTerritory<span>.com</span></a>
+    <div class="masthead-right">
+      <span class="page-badge">Tour Guide</span>
+      <button class="theme-btn" id="themeBtn">☀︎ Light</button>
+    </div>
+  </div>
+  <div id="nav-root"></div>
+</header>
+<script src="/nav.js"></script>
+<script src="/site-chrome.js" defer></script>
+
+<div class="hero">
+  <div class="hero-kicker">Northern Territory</div>
+  <h1>Explore the <em>Northern Territory</em></h1>
+  <p>Discover 70+ destinations — beaches, waterfalls, gorges, national parks, markets, wildlife and more. Real traveller reviews, tips and official links.</p>
+</div>
+
+<div class="search-wrap">
+  <div class="search-bar">
+    <input id="searchInput" type="search" placeholder="Search destinations — e.g. waterfall, gorge, sunset market, barramundi…" autocomplete="off" autofocus>
+    <button onclick="doSearch(1)">Search</button>
+  </div>
+</div>
+
+<div class="cat-scroll" id="catScroll">
+  <div class="cat-row" id="catRow">
+    <span class="cat-chip active" data-cat="" onclick="selectCat(this,'')">🗺 All</span>
+  </div>
+</div>
+
+<div class="stats-bar" id="statsBar"></div>
+
+<div id="results">
+  <div class="loading-wrap"><div class="spinner"></div></div>
+</div>
+
+<!-- Destination modal -->
+<div id="destModal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalInner">
+    <div class="modal-hero" id="modalHero">
+      <button class="close-btn" onclick="closeModal()">✕</button>
+      <div class="modal-emoji" id="modalEmoji"></div>
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-region" id="modalRegion"></div>
+      <div class="modal-cat-badge" id="modalCat"></div>
+    </div>
+    <div class="modal-content">
+      <div class="modal-rating-bar" id="modalRatingBar" style="display:none">
+        <div class="avg-num" id="modalAvgNum"></div>
+        <div>
+          <div class="big-stars" id="modalBigStars"></div>
+          <div class="rev-count-lg" id="modalRevCount"></div>
+        </div>
+      </div>
+      <div class="section-label">About</div>
+      <div class="description" id="modalDesc"></div>
+      <div class="section-label">Details</div>
+      <div class="info-grid" id="modalInfoGrid"></div>
+      <div class="tips-box" id="modalTips" style="display:none"></div>
+      <div class="action-btns" id="modalActions"></div>
+      <div class="reviews-section">
+        <div class="section-label">Reviews</div>
+        <button class="review-toggle" onclick="toggleReviewForm()">✏️ Write a review</button>
+        <div class="review-form" id="reviewForm">
+          <div class="form-row">
+            <div class="form-field">
+              <label>Your name (optional)</label>
+              <input id="rvName" placeholder="Anonymous">
+            </div>
+            <div class="form-field">
+              <label>Rating</label>
+              <div class="star-picker" id="starPicker">
+                <span class="star-pick" data-v="1" onclick="setStar(1)">★</span>
+                <span class="star-pick" data-v="2" onclick="setStar(2)">★</span>
+                <span class="star-pick" data-v="3" onclick="setStar(3)">★</span>
+                <span class="star-pick" data-v="4" onclick="setStar(4)">★</span>
+                <span class="star-pick" data-v="5" onclick="setStar(5)">★</span>
+              </div>
+            </div>
+          </div>
+          <div class="form-row full">
+            <div class="form-field">
+              <label>Your experience</label>
+              <textarea id="rvText" placeholder="What was it like? Any tips for other visitors?"></textarea>
+            </div>
+          </div>
+          <button class="submit-btn" id="submitRevBtn" onclick="submitReview()">Submit Review</button>
+        </div>
+        <div id="reviewList"></div>
+        <button class="load-more-btn" id="loadMoreBtn" style="display:none" onclick="loadMoreReviews()">Load more reviews</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+// Theme toggle
+const _root = document.documentElement;
+const _tBtn = document.getElementById('themeBtn');
+function _paintTheme(){
+  const d = _root.dataset.theme==='dark';
+  _tBtn.textContent = d ? '☽ Dark' : '☀︎ Light';
+  document.querySelector('meta[name=theme-color]').setAttribute('content', d?'#15110c':'#f5f0e8');
+}
+const _saved = localStorage.getItem('at-theme');
+if (_saved) _root.dataset.theme = _saved;
+_paintTheme();
+_tBtn.onclick = () => { _root.dataset.theme = _root.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('at-theme',_root.dataset.theme); _paintTheme(); };
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+
+const resultsEl = document.getElementById('results');
+const statsBar  = document.getElementById('statsBar');
+
+let currentCat='', currentQuery='', currentPage=1, totalPages=1;
+let openDestId=null, reviewPage=1, reviewTotal=0, pickedStar=0;
+
+loadStats();
+doSearch(1);
+document.getElementById('searchInput').addEventListener('keydown', e => { if (e.key==='Enter') doSearch(1); });
+
+async function loadStats() {
+  try {
+    const d = await (await fetch('/api/tour/stats')).json();
+    if (!d.total) return;
+    statsBar.innerHTML = `<span class="stat-pill"><strong>${d.total.toLocaleString()}</strong> destinations</span>`
+      + (d.by_category||[]).slice(0,6).map(c=>`<span class="stat-pill">${esc(c.category.replace('_',' '))} <strong>${c.count}</strong></span>`).join('');
+    const row = document.getElementById('catRow');
+    (d.categories||[]).forEach(([key,label,emoji]) => {
+      const sp = document.createElement('span');
+      sp.className = 'cat-chip'; sp.dataset.cat = key;
+      sp.textContent = `${emoji} ${label}`;
+      sp.onclick = () => selectCat(sp, key);
+      row.appendChild(sp);
+    });
+  } catch(e) {}
+}
+
+function selectCat(el, cat) {
+  document.querySelectorAll('.cat-chip').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  currentCat = cat;
+  doSearch(1);
+}
+
+async function doSearch(page) {
+  currentPage = page;
+  currentQuery = document.getElementById('searchInput').value.trim();
+  resultsEl.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+  try {
+    const params = new URLSearchParams({q:currentQuery, category:currentCat, page, limit:12});
+    const d = await (await fetch(`/api/tour/search?${params}`)).json();
+    totalPages = d.pages || 1;
+    renderResults(d);
+  } catch(e) {
+    resultsEl.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${esc(e.message)}</p></div>`;
+  }
+}
+
+function renderResults(d) {
+  const results = d.results || [];
+  if (!results.length) {
+    resultsEl.innerHTML = `<div class="empty-state"><h3>No destinations found</h3><p>Try a different search or clear filters.</p></div>`;
+    return;
+  }
+  const label = currentQuery ? `<strong>${d.total}</strong> result${d.total!==1?'s':''} for "<strong>${esc(currentQuery)}</strong>"` : `<strong>${d.total}</strong> destinations`;
+  const catLabel = currentCat ? ` in <strong>${esc(currentCat.replace('_',' '))}</strong>` : '';
+  const cards = results.map(r => {
+    const stars = renderStars(r.avg_rating);
+    const ratingHtml = r.review_count
+      ? `<div class="card-rating">${stars}<span style="color:var(--ink3);font-size:11px;margin-left:2px">${r.avg_rating} (${r.review_count})</span></div>`
+      : `<div class="card-rating" style="color:var(--ink3);font-size:11px;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em">No reviews yet</div>`;
+    return `<div class="card" onclick="openDest(${r.id})">
+      <div class="card-img">${r.category_emoji||'📍'}</div>
+      <div class="card-body">
+        <div class="card-cat">${esc(r.category_emoji||'')} ${esc(r.category_label)}</div>
+        <div class="card-title">${esc(r.name)}</div>
+        <div class="card-region">📍 ${esc(r.region)}</div>
+        <div class="card-summary">${esc(r.summary)}</div>
+        ${ratingHtml}
+      </div>
+    </div>`;
+  }).join('');
+  resultsEl.innerHTML = `<div class="result-meta"><span>${label}${catLabel}</span><span>Page ${currentPage} of ${totalPages}</span></div><div class="grid">${cards}</div>${renderPagination(currentPage,totalPages)}`;
+}
+
+function renderPagination(page, total) {
+  if (total<=1) return '';
+  const btns = [];
+  btns.push(`<button class="pg-btn" onclick="doSearch(${page-1})" ${page===1?'disabled':''}>← Prev</button>`);
+  for (let p=Math.max(1,page-2); p<=Math.min(total,page+2); p++)
+    btns.push(`<button class="pg-btn${p===page?' active':''}" onclick="doSearch(${p})">${p}</button>`);
+  btns.push(`<button class="pg-btn" onclick="doSearch(${page+1})" ${page===total?'disabled':''}>Next →</button>`);
+  return `<div class="pagination">${btns.join('')}</div>`;
+}
+
+async function openDest(id) {
+  openDestId=id; pickedStar=0; reviewPage=1;
+  document.getElementById('reviewForm').classList.remove('open');
+  document.getElementById('rvName').value=''; document.getElementById('rvText').value=''; setStar(0);
+  document.getElementById('destModal').style.display='flex';
+  document.getElementById('reviewList').innerHTML='<div class="loading-wrap" style="padding:20px"><div class="spinner"></div></div>';
+  try {
+    const d = await (await fetch(`/api/tour/destination/${id}`)).json();
+    if (d.error) { closeModal(); showToast(d.error); return; }
+    document.getElementById('modalEmoji').textContent = d.category_emoji||'📍';
+    document.getElementById('modalTitle').textContent = d.name;
+    document.getElementById('modalRegion').textContent = `📍 ${d.region}`;
+    document.getElementById('modalCat').textContent = `${d.category_emoji||''} ${d.category_label}`;
+    document.getElementById('modalDesc').textContent = d.description||d.summary;
+    if (d.review_count>0) {
+      document.getElementById('modalRatingBar').style.display='flex';
+      document.getElementById('modalAvgNum').textContent = d.avg_rating;
+      document.getElementById('modalBigStars').innerHTML = renderStars(d.avg_rating);
+      document.getElementById('modalRevCount').textContent = `${d.review_count} review${d.review_count!==1?'s':''}`;
+    } else { document.getElementById('modalRatingBar').style.display='none'; }
+    const infoItems = [['📍 Address',d.address],['⏰ Hours',d.hours],['💰 Price',d.price],['📞 Phone',d.phone]].filter(([,v])=>v);
+    document.getElementById('modalInfoGrid').innerHTML = infoItems.map(([k,v])=>`<div class="info-item"><div class="info-key">${esc(k)}</div><div class="info-val">${esc(v)}</div></div>`).join('');
+    if (d.tips) {
+      document.getElementById('modalTips').style.display='block';
+      document.getElementById('modalTips').innerHTML = `<strong>💡 Tips</strong><br>${esc(d.tips)}`;
+    } else document.getElementById('modalTips').style.display='none';
+    let btns='';
+    if (d.website) btns+=`<a class="btn-action btn-website" href="${escA(d.website)}" target="_blank" rel="noopener">🔗 Official Website</a>`;
+    if (d.maps_url) btns+=`<a class="btn-action btn-maps" href="${escA(d.maps_url)}" target="_blank" rel="noopener">🗺 Get Directions</a>`;
+    document.getElementById('modalActions').innerHTML = btns;
+    reviewTotal = d.review_count||0;
+    await loadReviews(1, true);
+  } catch(e) { showToast('Failed to load: '+e.message); }
+}
+
+function closeModal() { document.getElementById('destModal').style.display='none'; openDestId=null; }
+
+async function loadReviews(page, replace) {
+  const el = document.getElementById('reviewList');
+  const lm = document.getElementById('loadMoreBtn');
+  if (replace) el.innerHTML='';
+  try {
+    const d = await (await fetch(`/api/tour/reviews/${openDestId}?page=${page}&limit=3`)).json();
+    const reviews = d.reviews||[];
+    if (!reviews.length && replace) { el.innerHTML='<div class="no-reviews">No reviews yet — be the first to share your experience!</div>'; lm.style.display='none'; return; }
+    reviews.forEach(r => {
+      const div = document.createElement('div');
+      div.className='review-item';
+      div.innerHTML=`<div class="review-header"><div><span class="reviewer-name">${esc(r.reviewer_name)}</span> <span class="review-stars">${renderStarsFull(r.rating)}</span></div><div class="review-date">${esc(r.created_at.slice(0,10))}</div></div><div class="review-text">${esc(r.review_text)}</div>`;
+      el.appendChild(div);
+    });
+    reviewPage=page;
+    lm.style.display = page<(d.pages||1)?'block':'none';
+  } catch(e) { if (replace) el.innerHTML='<div class="no-reviews">Could not load reviews.</div>'; }
+}
+
+function loadMoreReviews() { loadReviews(reviewPage+1, false); }
+function toggleReviewForm() { document.getElementById('reviewForm').classList.toggle('open'); }
+function setStar(n) {
+  pickedStar=n;
+  document.querySelectorAll('.star-pick').forEach(s=>s.classList.toggle('on',parseInt(s.dataset.v)<=n));
+}
+
+async function submitReview() {
+  if (!openDestId) return;
+  if (!pickedStar) { showToast('Please pick a star rating'); return; }
+  const text = document.getElementById('rvText').value.trim();
+  if (!text) { showToast('Please write something about your experience'); return; }
+  const name = document.getElementById('rvName').value.trim()||'Anonymous';
+  const btn = document.getElementById('submitRevBtn');
+  btn.disabled=true;
+  try {
+    const res = await fetch('/api/tour/review',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({destination_id:openDestId,name,rating:pickedStar,text})});
+    const d = await res.json();
+    if (d.ok) {
+      showToast('Review submitted — thank you!');
+      document.getElementById('reviewForm').classList.remove('open');
+      document.getElementById('rvName').value=''; document.getElementById('rvText').value=''; setStar(0);
+      reviewPage=1; await loadReviews(1,true);
+    } else showToast(d.error||'Failed to submit');
+  } catch(e) { showToast('Error: '+e.message); }
+  finally { btn.disabled=false; }
+}
+
+function renderStars(avg) {
+  if (avg==null) return `<span class="stars-empty">☆☆☆☆☆</span>`;
+  const full=Math.round(avg);
+  return `<span class="stars">${'★'.repeat(full)}</span><span class="stars-empty">${'☆'.repeat(5-full)}</span>`;
+}
+function renderStarsFull(n) {
+  return `<span class="stars">${'★'.repeat(n)}</span><span class="stars-empty">${'☆'.repeat(5-n)}</span>`;
+}
+let _toastTimer;
+function showToast(msg) {
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(_toastTimer); _toastTimer=setTimeout(()=>t.classList.remove('show'),3500);
+}
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function escA(s) { return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+document.addEventListener('keydown', e => { if (e.key==='Escape') closeModal(); });
+</script>
+</body>
+</html>

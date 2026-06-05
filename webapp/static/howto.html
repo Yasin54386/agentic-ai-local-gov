@@ -1,0 +1,433 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<link rel="manifest" href="/manifest.json"/>
+<meta name="theme-color" content="#f5f0e8"/>
+<title>How-To Hub — AskTerritory.com</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --cream:#f5f0e8;--cream2:#ede8dc;--cream3:#e4ddd0;
+  --ink:#1a1208;--ink2:#3a2e1e;--ink3:#6b5c44;
+  --terra:#c8441a;--terra2:#e05c30;--sun:#f0b429;
+  --sage:#3d6b4f;--sky:#1e4a7a;
+  --rule:rgba(26,18,8,0.15);--rule2:rgba(26,18,8,0.08);
+  --field:#ffffff;--tex:.6;--texblend:multiply;
+}
+html[data-theme="dark"]{
+  --cream:#15110c;--cream2:#1d1812;--cream3:#2a2219;
+  --ink:#f1e9db;--ink2:#d9cebb;--ink3:#9d8d75;
+  --terra:#e8623a;--terra2:#f0764e;--sun:#f3c156;
+  --sage:#6db389;--sky:#6aa6de;
+  --rule:rgba(241,233,219,0.16);--rule2:rgba(241,233,219,0.07);
+  --field:#241d15;--tex:.25;--texblend:screen;
+}
+html{background:var(--cream);color:var(--ink);font-family:'Barlow',sans-serif;-webkit-font-smoothing:antialiased}
+body{min-height:100vh;overflow-x:hidden;transition:background .2s}
+body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  opacity:var(--tex);mix-blend-mode:var(--texblend)}
+
+.masthead{background:var(--cream);border-bottom:3px solid var(--ink);padding:0 40px;position:sticky;top:0;z-index:100}
+.masthead-top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0 10px;border-bottom:1px solid var(--rule)}
+.masthead-title{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:30px;letter-spacing:-.02em;line-height:1;color:var(--ink);text-decoration:none;white-space:nowrap}
+.masthead-title span{color:var(--terra);font-style:normal}
+.masthead-right{display:flex;align-items:center;gap:10px}
+.page-badge{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--terra);border:1px solid var(--terra);padding:3px 9px}
+.theme-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
+.theme-btn:hover{background:var(--ink);color:var(--cream)}
+
+/* Hero */
+.hero{text-align:center;padding:40px 24px 28px;border-bottom:1px solid var(--rule)}
+.hero-kicker{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:10px}
+.hero h1{font-family:'Playfair Display',serif;font-weight:900;font-size:clamp(28px,5vw,44px);line-height:1;letter-spacing:-.02em;color:var(--ink);margin-bottom:10px}
+.hero h1 em{font-style:italic;color:var(--terra)}
+.hero p{color:var(--ink3);font-size:15px;max-width:560px;margin:0 auto;line-height:1.6;font-weight:300}
+
+/* Search */
+.search-wrap{max-width:720px;margin:0 auto;padding:28px 24px 20px}
+.search-bar{display:flex;gap:0;border:2px solid var(--ink);overflow:hidden;margin-bottom:12px}
+.search-bar input{flex:1;padding:13px 18px;font:16px/1 'Barlow',sans-serif;background:var(--field);border:none;outline:none;color:var(--ink);min-width:0}
+.search-bar input::placeholder{color:var(--ink3)}
+.search-bar button{background:var(--terra);color:#fff;border:none;padding:0 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap;border-left:2px solid var(--ink)}
+.search-bar button:hover{background:var(--terra2)}
+.search-bar .btn-ai{background:var(--ink);color:var(--cream)}
+.search-bar .btn-ai:hover{background:var(--terra)}
+.chips-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:7px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:12px;letter-spacing:.05em;background:var(--cream2);border:1px solid var(--rule);padding:5px 13px;cursor:pointer;color:var(--ink3);transition:all .12s}
+.chip:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+
+/* Filter row */
+.filter-row{max-width:720px;margin:0 auto 4px;padding:0 24px;display:flex;gap:6px;flex-wrap:wrap}
+.cat-chip{font-family:'Barlow Condensed',sans-serif;font-weight:600;font-size:11px;letter-spacing:.06em;text-transform:uppercase;background:transparent;border:1px solid var(--rule);color:var(--ink3);padding:4px 12px;cursor:pointer;transition:all .12s}
+.cat-chip.active{border-color:var(--terra);color:var(--terra);background:rgba(200,68,26,.06)}
+
+/* Stats / banners */
+.stats-bar{max-width:720px;margin:0 auto 4px;padding:0 24px}
+.stats-pills{display:flex;gap:8px;flex-wrap:wrap}
+.stat-pill{font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:600;letter-spacing:.05em;border:1px solid var(--rule);padding:3px 12px;color:var(--ink3)}
+.stat-pill strong{color:var(--terra)}
+#expandedBanner{max-width:720px;margin:0 auto 6px;padding:0 24px;display:none}
+.expanded-inner{background:rgba(30,74,122,.06);border:1px solid rgba(30,74,122,.2);padding:9px 14px;font-size:13px;color:var(--ink3)}
+.expanded-inner strong{color:var(--sky)}
+.dym{max-width:720px;margin:0 auto 6px;padding:0 24px}
+.dym-inner{background:rgba(200,68,26,.06);border:1px solid rgba(200,68,26,.2);padding:9px 14px;font-size:13px;color:var(--ink3)}
+.dym-inner a{color:var(--terra);cursor:pointer;text-decoration:underline}
+
+/* Results */
+#results{max-width:720px;margin:0 auto;padding:0 24px 60px}
+.result-meta{font-size:13px;color:var(--ink3);margin-bottom:14px;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.04em;text-transform:uppercase}
+.result-meta strong{color:var(--ink)}
+
+/* Guide card */
+.card{background:var(--cream);border:1px solid var(--rule);border-left:3px solid transparent;margin-bottom:8px;overflow:hidden;transition:border-color .15s}
+.card:hover{border-left-color:var(--terra)}
+.card-header{padding:16px 18px 12px;cursor:pointer;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.card-left{flex:1}
+.card-title{font-family:'Playfair Display',serif;font-weight:900;font-size:17px;margin-bottom:5px;color:var(--ink)}
+.card-summary{color:var(--ink3);font-size:13px;line-height:1.55;font-weight:300}
+.card-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.tag{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.06em;text-transform:uppercase;border:1px solid;padding:2px 9px}
+.tag-terra{color:var(--terra);border-color:rgba(200,68,26,.35)}
+.tag-sky{color:var(--sky);border-color:rgba(30,74,122,.3)}
+.tag-sage{color:var(--sage);border-color:rgba(61,107,79,.3)}
+.chevron{color:var(--ink3);font-size:18px;flex-shrink:0;margin-top:2px;transition:transform .2s}
+.card.open .chevron{transform:rotate(180deg)}
+
+/* Expanded body */
+.card-body{display:none;border-top:1px solid var(--rule);padding:16px 18px;background:var(--cream2)}
+.card.open .card-body{display:block}
+.steps-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px}
+.steps{list-style:none}
+.steps li{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start;font-size:13px;line-height:1.5;color:var(--ink2);font-weight:300}
+.step-num{flex-shrink:0;width:22px;height:22px;background:var(--terra);color:#fff;font-family:'Barlow Condensed',sans-serif;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:1px}
+
+/* Links */
+.links-section{margin-top:14px}
+.links-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px}
+.official-link{display:inline-flex;align-items:center;gap:7px;background:var(--ink);color:var(--cream);text-decoration:none;padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.06em;text-transform:uppercase;margin-right:8px;margin-bottom:6px;transition:background .15s}
+.official-link:hover{background:var(--terra)}
+.official-link svg{flex-shrink:0}
+
+/* Info pills */
+.info-pills{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 4px}
+.fee-pill{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;border:1px solid rgba(61,107,79,.35);color:var(--sage);padding:2px 9px}
+.time-pill{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:.06em;border:1px solid rgba(30,74,122,.3);color:var(--sky);padding:2px 9px}
+.indigenous-note{background:rgba(240,180,41,.06);border:1px solid rgba(240,180,41,.25);padding:8px 12px;font-size:12px;color:var(--sun);margin-top:8px;font-weight:300}
+html[data-theme="light"] .indigenous-note{color:#8a6000}
+
+/* Related forms */
+.related-section{margin-top:12px;padding-top:12px;border-top:1px solid var(--rule)}
+.related-label{font-family:'Barlow Condensed',sans-serif;font-size:11px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:6px}
+.related-link{display:inline-flex;align-items:center;gap:6px;background:var(--cream3);border:1px solid var(--rule);color:var(--ink2);text-decoration:none;padding:5px 12px;font-family:'Barlow Condensed',sans-serif;font-size:12px;margin-right:6px;margin-bottom:4px;transition:background .12s}
+.related-link:hover{background:var(--terra);color:#fff;border-color:var(--terra)}
+.report-btn{background:transparent;border:none;color:var(--ink3);font-size:11px;cursor:pointer;padding:4px 0 0;font-family:'Barlow Condensed',sans-serif;letter-spacing:.04em}
+.report-btn:hover{color:var(--terra)}
+
+/* Loading / empty */
+.empty-state{text-align:center;padding:60px 0;color:var(--ink3)}
+.empty-state h3{font-family:'Playfair Display',serif;font-weight:900;font-size:22px;margin-bottom:8px;color:var(--ink)}
+.spinner{display:inline-block;width:24px;height:24px;border:3px solid var(--rule);border-top-color:var(--terra);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-wrap{text-align:center;padding:40px}
+
+/* Admin */
+.admin-strip{max-width:720px;margin:0 auto;padding:0 24px 10px;display:flex;justify-content:flex-end;gap:8px;align-items:center}
+.admin-strip span{font-size:12px;color:var(--ink3);font-family:'Barlow Condensed',sans-serif}
+.btn-sm{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.07em;text-transform:uppercase;background:none;border:1.5px solid var(--rule);color:var(--ink3);padding:5px 12px;cursor:pointer;transition:all .12s}
+.btn-sm:hover{border-color:var(--terra);color:var(--terra)}
+
+/* Modal */
+.modal-bg{position:fixed;inset:0;background:rgba(26,18,8,.55);z-index:200;display:flex;align-items:center;justify-content:center;padding:16px}
+.modal{background:var(--cream);border:2px solid var(--ink);padding:24px;max-width:440px;width:100%}
+.modal h3{font-family:'Playfair Display',serif;font-weight:900;font-size:18px;margin-bottom:12px}
+.modal textarea{width:100%;background:var(--field);border:2px solid var(--ink);color:var(--ink);padding:10px;font-size:13px;font-family:inherit;resize:vertical;min-height:80px;margin-bottom:12px;outline:none}
+.modal-btns{display:flex;gap:8px;justify-content:flex-end}
+
+/* Toast */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:10px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
+.toast.show{opacity:1}
+
+@media print{
+  .masthead,.search-wrap,.stats-bar,#expandedBanner,.admin-strip,.filter-row,.dym,.btn-sm,.chip,.chips{display:none!important}
+  .card-body{display:block!important}
+  .card{border:1px solid #ccc;page-break-inside:avoid}
+}
+@media(max-width:900px){
+  .masthead{padding:0 16px}
+  .masthead-title{font-size:22px}
+  .search-wrap,#results,.stats-bar,.dym,#expandedBanner,.admin-strip,.filter-row{padding-left:16px;padding-right:16px}
+}
+@media(max-width:480px){
+  .search-bar{flex-direction:column}
+  .search-bar button{border-left:none;border-top:2px solid var(--ink)}
+}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="masthead-top">
+    <a class="masthead-title" href="/">AskTerritory<span>.com</span></a>
+    <div class="masthead-right">
+      <span class="page-badge">How-To Hub</span>
+      <button class="theme-btn" id="themeBtn">☀︎ Light</button>
+    </div>
+  </div>
+  <div id="nav-root"></div>
+</header>
+<script src="/nav.js"></script>
+<script src="/site-chrome.js" defer></script>
+
+<!-- Report modal -->
+<div id="reportModal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeReport()">
+  <div class="modal">
+    <h3>Report a problem</h3>
+    <div id="reportTarget" style="font-size:12px;color:var(--ink3);margin-bottom:10px"></div>
+    <textarea id="reportIssue" placeholder="Describe the problem — broken link, outdated steps, wrong information…"></textarea>
+    <div class="modal-btns">
+      <button class="btn-sm" onclick="closeReport()">Cancel</button>
+      <button class="btn-sm" style="background:var(--terra);border-color:var(--terra);color:#fff" onclick="submitReport()">Send Report</button>
+    </div>
+  </div>
+</div>
+
+<div id="dymBanner" class="dym" style="display:none">
+  <div class="dym-inner">Did you mean: <a id="dymLink" onclick="useDym()"></a>?</div>
+</div>
+
+<div class="hero">
+  <div class="hero-kicker">Independent guide · NT &amp; Darwin services</div>
+  <h1>The <em>How-To</em> Hub</h1>
+  <p>Search 1,000+ plain-language, step-by-step guides to Northern Territory services — from converting a licence to getting an Ochre Card. An independent project, not an official government service.</p>
+</div>
+
+<div class="search-wrap">
+  <div class="search-bar">
+    <input id="searchInput" type="search" placeholder="e.g. convert interstate licence, ochre card, police check, security licence…" autocomplete="off" autofocus>
+    <button onclick="doSearch('keyword')">Search</button>
+    <button class="btn-ai" onclick="doSearch('ai')" title="AI expands your search with synonyms and related NT services">AI Search</button>
+  </div>
+  <div class="chips-label">Popular guides:</div>
+  <div class="chips">
+    <span class="chip" onclick="q('convert interstate driving licence')">Convert interstate licence</span>
+    <span class="chip" onclick="q('ochre card working with children')">Ochre Card</span>
+    <span class="chip" onclick="q('police check')">Police check</span>
+    <span class="chip" onclick="q('security licence')">Security licence</span>
+    <span class="chip" onclick="q('register dog pet')">Register a pet</span>
+    <span class="chip" onclick="q('building permit')">Building permit</span>
+    <span class="chip" onclick="q('development application')">Development application</span>
+    <span class="chip" onclick="q('rates rebate concession')">Rates rebate</span>
+    <span class="chip" onclick="q('register business')">Register a business</span>
+    <span class="chip" onclick="q('birth certificate')">Birth certificate</span>
+    <span class="chip" onclick="q('liquor licence')">Liquor licence</span>
+    <span class="chip" onclick="q('change name')">Change your name</span>
+    <span class="chip" onclick="q('enrol school')">Enrol in school</span>
+    <span class="chip" onclick="q('ndis disability')">NDIS / Disability</span>
+    <span class="chip" onclick="q('fishing licence permit')">Fishing licence</span>
+  </div>
+</div>
+
+<div class="stats-bar" id="statsBar" style="display:none">
+  <div class="stats-pills" id="statsPills"></div>
+</div>
+
+<div id="expandedBanner">
+  <div class="expanded-inner">
+    <strong>AI also searched for:</strong> <span id="expandedTerms"></span>
+  </div>
+</div>
+
+<div class="filter-row" id="filterRow" style="display:none">
+  <span style="font-size:12px;color:var(--ink3);align-self:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Filter:</span>
+</div>
+
+<div id="toast" class="toast"></div>
+<div id="results">
+  <div class="empty-state">
+    <h3>Search guides to NT services</h3>
+    <p>Type what you need help with — or pick a popular guide.<br>
+    Use <strong>AI Search</strong> for smarter synonym matching.</p>
+  </div>
+</div>
+
+<script>
+// Theme toggle
+const _root = document.documentElement;
+const _tBtn = document.getElementById('themeBtn');
+function _paintTheme(){
+  const d = _root.dataset.theme==='dark';
+  _tBtn.textContent = d ? '☽ Dark' : '☀︎ Light';
+  document.querySelector('meta[name=theme-color]').setAttribute('content', d?'#15110c':'#f5f0e8');
+}
+const _saved = localStorage.getItem('at-theme');
+if (_saved) _root.dataset.theme = _saved;
+_paintTheme();
+_tBtn.onclick = () => { _root.dataset.theme = _root.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('at-theme',_root.dataset.theme); _paintTheme(); };
+
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
+
+const input = document.getElementById('searchInput');
+const resultsEl = document.getElementById('results');
+const expandedBanner = document.getElementById('expandedBanner');
+const expandedTermsEl = document.getElementById('expandedTerms');
+const statsBar = document.getElementById('statsBar');
+const statsPills = document.getElementById('statsPills');
+const filterRow = document.getElementById('filterRow');
+const scrapeStatus = document.getElementById('scrapeStatus');
+
+let currentResults = [];
+let activeCategory = null;
+let _reportUrl = '', _reportTitle = '';
+
+loadStats();
+input.addEventListener('keydown', e => { if (e.key === 'Enter') doSearch('keyword'); });
+
+function q(term) { input.value = term; doSearch('keyword'); }
+
+function useDym() {
+  input.value = document.getElementById('dymLink').textContent;
+  document.getElementById('dymBanner').style.display = 'none';
+  doSearch('keyword');
+}
+
+async function doSearch(mode) {
+  const query = input.value.trim();
+  if (!query) return;
+  resultsEl.innerHTML = '<div class="loading-wrap"><div class="spinner"></div></div>';
+  expandedBanner.style.display = 'none';
+  filterRow.style.display = 'none';
+  document.getElementById('dymBanner').style.display = 'none';
+  activeCategory = null;
+  try {
+    const res = await fetch(`/api/howto/search?q=${encodeURIComponent(query)}&mode=${mode}`);
+    const data = await res.json();
+    currentResults = data.results || [];
+    if (data.error) showToast('Search error: ' + data.error);
+    if (data.did_you_mean) {
+      document.getElementById('dymLink').textContent = data.did_you_mean;
+      document.getElementById('dymBanner').style.display = 'block';
+    }
+    if (data.fuzzy) showToast('Fuzzy match — showing closest results for "' + query + '"');
+    if (mode === 'ai' && (!data.expanded_terms || !data.expanded_terms.length)) {
+      showToast('AI model offline — showing keyword results instead.');
+    } else if ((data.expanded_terms||[]).length && mode === 'ai') {
+      expandedTermsEl.textContent = data.expanded_terms.join(', ');
+      expandedBanner.style.display = 'block';
+    }
+    buildCategoryFilter(currentResults);
+    renderResults(currentResults, query, mode, data.expanded_terms||[]);
+  } catch(e) {
+    resultsEl.innerHTML = `<div class="empty-state"><h3>Error</h3><p>${esc(e.message)}</p></div>`;
+  }
+}
+
+function buildCategoryFilter(results) {
+  const cats = {};
+  results.forEach(r => { if (r.category) cats[r.category] = (cats[r.category]||0)+1; });
+  const sorted = Object.entries(cats).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  if (sorted.length < 2) { filterRow.style.display = 'none'; return; }
+  filterRow.innerHTML = '<span style="font-size:12px;color:var(--ink3);align-self:center;font-family:\'Barlow Condensed\',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Filter:</span>'
+    + sorted.map(([cat,cnt]) => `<span class="cat-chip" onclick="filterBy('${esc(cat)}')">${esc(cat)} <strong style="color:var(--ink)">${cnt}</strong></span>`).join('');
+  filterRow.style.display = 'flex';
+}
+
+function filterBy(cat) {
+  document.querySelectorAll('.cat-chip').forEach(c => c.classList.toggle('active', c.textContent.startsWith(cat)));
+  if (activeCategory === cat) { activeCategory = null; renderResults(currentResults, input.value, '', []); }
+  else { activeCategory = cat; renderResults(currentResults.filter(r=>r.category===cat), input.value, '', []); }
+}
+
+function renderResults(results, query, mode, expanded) {
+  if (!results.length) {
+    resultsEl.innerHTML = `<div class="empty-state"><h3>No guides found for "${esc(query)}"</h3><p>Try different keywords or use <strong>AI Search</strong>.</p></div>`;
+    return;
+  }
+  const modeTag = mode==='ai' ? ' <span style="color:var(--sky)">(AI-expanded)</span>' : '';
+  const meta = `<div class="result-meta"><strong>${results.length}</strong> guide${results.length!==1?'s':''} for "<strong>${esc(query)}</strong>"${modeTag}
+    <button class="btn-sm" onclick="window.print()" style="margin-left:10px">Print</button>
+  </div>`;
+
+  const cards = results.map((r,i) => {
+    const steps = (r.steps||[]).length
+      ? `<div class="steps-label">Steps</div><ol class="steps">${r.steps.map((s,n)=>`<li><span class="step-num">${n+1}</span><span>${esc(s)}</span></li>`).join('')}</ol>`
+      : '';
+    const links = (r.links||[]).length
+      ? `<div class="links-section"><div class="links-label">Official Link${r.links.length>1?'s':''}</div>${r.links.map(l=>`<a class="official-link" href="${escA(l.url)}" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>${esc(l.label||'Open official page')}</a>`).join('')}</div>`
+      : '';
+    const summary = r.summary ? `<div class="card-summary">${esc(r.summary.slice(0,200))}${r.summary.length>200?'…':''}</div>` : '';
+    const infoPills = (r.fee||r.processing_time)
+      ? `<div class="info-pills">${r.fee?`<span class="fee-pill">💰 ${esc(r.fee)}</span>`:''} ${r.processing_time?`<span class="time-pill">⏱ ${esc(r.processing_time)}</span>`:''}</div>`
+      : '';
+    const indig = r.indigenous_note ? `<div class="indigenous-note">🌏 <strong>Remote/Indigenous communities:</strong> ${esc(r.indigenous_note)}</div>` : '';
+    const relForms = (r.related_forms||[]).length
+      ? `<div class="related-section"><div class="related-label">Related Forms</div>${r.related_forms.map(f=>`<a class="related-link" href="${escA(f.url)}" target="_blank" rel="noopener">📄 ${esc(f.title)}</a>`).join('')}</div>`
+      : '';
+    const firstLink = (r.links&&r.links[0]) ? r.links[0].url : '';
+    return `<div class="card" id="card-${i}">
+      <div class="card-header" onclick="toggleCard(${i})">
+        <div class="card-left">
+          <div class="card-title">${esc(r.title)}</div>
+          ${summary}${infoPills}
+          <div class="card-tags">
+            ${r.category?`<span class="tag tag-terra">${esc(r.category)}</span>`:''}
+            ${r.department?`<span class="tag tag-sky">${esc(r.department)}</span>`:''}
+          </div>
+        </div>
+        <span class="chevron">▾</span>
+      </div>
+      <div class="card-body">${steps}${links}${indig}${relForms}
+        <button class="report-btn" onclick="openReport('${escA(firstLink)}','${escA(r.title)}')">⚑ Report a problem with this guide</button>
+      </div>
+    </div>`;
+  }).join('');
+  resultsEl.innerHTML = meta + cards;
+}
+
+function toggleCard(i) { document.getElementById('card-'+i).classList.toggle('open'); }
+
+async function loadStats() {
+  try {
+    const data = await (await fetch('/api/howto/stats')).json();
+    if (!data.total_guides) return;
+    statsBar.style.display = 'block';
+    statsPills.innerHTML = `<span class="stat-pill"><strong>${data.total_guides.toLocaleString()}</strong> guides indexed</span>`
+      + (data.by_category||[]).slice(0,5).map(c=>`<span class="stat-pill">${esc(c.category)}: <strong>${c.count}</strong></span>`).join('');
+  } catch(e) {}
+}
+
+let _toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+}
+
+function esc(s)  { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escA(s) { return String(s||'').replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+
+function openReport(url, title) {
+  _reportUrl = url; _reportTitle = title;
+  document.getElementById('reportTarget').textContent = title || url;
+  document.getElementById('reportIssue').value = '';
+  document.getElementById('reportModal').style.display = 'flex';
+}
+function closeReport() { document.getElementById('reportModal').style.display = 'none'; }
+async function submitReport() {
+  const issue = document.getElementById('reportIssue').value.trim();
+  if (!issue) { showToast('Please describe the problem first.'); return; }
+  try {
+    await fetch('/api/feedback', {method:'POST',headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({url:_reportUrl, title:_reportTitle, source:'howto', issue})});
+    closeReport(); showToast('Report submitted — thanks!');
+  } catch(e) { showToast('Failed: ' + e.message); }
+}
+</script>
+</body>
+</html>

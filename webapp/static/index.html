@@ -4,7 +4,7 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
 <meta name="theme-color" content="#f5f0e8"/>
-<title>Ask Territory</title>
+<title>AskTerritory.com</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Barlow+Condensed:wght@300;400;600;700;900&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet"/>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -41,47 +41,23 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
 .theme-btn:hover{background:var(--ink);color:var(--cream)}
 
-/* language switcher (custom UI over Google Translate) */
-.lang{position:relative}
-.lang-btn{display:inline-flex;align-items:center;gap:7px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;letter-spacing:.08em;text-transform:uppercase;
-  background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 11px;cursor:pointer;white-space:nowrap;line-height:1}
-.lang-btn:hover{background:var(--ink);color:var(--cream)}
-.lang-globe{font-size:13px;line-height:1}.lang-caret{font-size:9px;opacity:.7}
-.lang-menu{position:absolute;top:calc(100% + 7px);right:0;min-width:200px;max-height:62vh;overflow-y:auto;
-  background:var(--cream);border:1.5px solid var(--ink);box-shadow:5px 5px 0 var(--rule);z-index:300;display:none}
-.lang-menu.open{display:block}
-.lang-item{display:block;width:100%;text-align:left;font-family:'Barlow',sans-serif;font-size:14px;color:var(--ink2);
-  background:none;border:none;border-bottom:1px solid var(--rule2);padding:9px 15px;cursor:pointer}
-.lang-item:last-child{border-bottom:none}
-.lang-item:hover{background:var(--terra);color:#fff}
-.lang-item.active{color:var(--terra);font-weight:600}.lang-item.active:hover{color:#fff}
-/* suppress Google's own injected chrome — we drive it from the custom menu */
-.goog-te-banner-frame,.goog-te-gadget,.skiptranslate{display:none!important}
-#google_translate_element{display:none!important}
-body{top:0!important}
-#goog-gt-tt,.goog-te-balloon-frame{display:none!important}
-.goog-text-highlight{background:none!important;box-shadow:none!important;color:inherit!important}
-
-/* site footer */
-.site-footer{border-top:3px solid var(--ink);background:var(--cream2);margin-top:48px}
-.footer-inner{max-width:1300px;margin:0 auto;padding:36px 40px;display:grid;grid-template-columns:60fr 40fr;gap:40px}
-.footer-logo{font-family:'Playfair Display',serif;font-style:italic;font-weight:900;font-size:26px;color:var(--ink);margin-bottom:12px}
-.footer-logo span{color:var(--terra);font-style:normal}
-.footer-note{font-size:13px;line-height:1.6;color:var(--ink3);font-weight:300;max-width:62ch}
-.footer-note strong{color:var(--ink2);font-weight:600}
-.footer-meta{text-align:right}
-.footer-credit{font-family:'Barlow Condensed',sans-serif;font-size:13px;letter-spacing:.05em;color:var(--ink3);text-transform:uppercase;line-height:1.5}
-.footer-credit a{display:inline-block;margin-top:4px;font-weight:700;font-size:17px;color:var(--terra);text-decoration:none;letter-spacing:.01em}
-.footer-credit a:hover{text-decoration:underline}
-.footer-copy{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3);margin-top:16px}
-.footer-fine{font-size:11px;color:var(--ink3);opacity:.85;margin-top:10px;font-weight:300;line-height:1.5}
-
+.nav-wrap{position:relative}
+.nav-hamburger{display:none;align-items:center;justify-content:center;width:44px;height:44px;background:none;border:none;cursor:pointer;color:var(--ink3);font-size:22px;line-height:1}
+.nav-hamburger:hover{color:var(--terra)}
 .nav-strip{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .nav-strip::-webkit-scrollbar{display:none}
 .nav-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.1em;
-  padding:10px 18px;border:none;background:none;color:var(--ink3);cursor:pointer;white-space:nowrap;border-top:3px solid transparent;transition:all .15s;position:relative}
+  padding:10px 18px;border:none;background:none;color:var(--ink3);cursor:pointer;white-space:nowrap;border-top:3px solid transparent;transition:all .15s;position:relative;text-decoration:none}
 .nav-btn:hover{color:var(--ink);background:var(--cream2)}
 .nav-btn.active{color:var(--terra);border-top-color:var(--terra)}
+@media(max-width:767px){
+  .nav-hamburger{display:flex}
+  .nav-strip{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;z-index:200;background:var(--cream);border-bottom:2px solid var(--rule);box-shadow:0 8px 24px rgba(26,18,8,.12)}
+  .nav-strip.open{display:flex}
+  .nav-btn{border-top:none;border-left:3px solid transparent;padding:13px 20px;font-size:13px}
+  .nav-btn.active{border-top:none;border-left-color:var(--terra);background:var(--cream2)}
+  .nav-strip span{display:none}
+}
 
 .page{display:none;animation:rise .3s ease}.page.active{display:block}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -104,6 +80,28 @@ body{top:0!important}
 .search-bar input::placeholder{color:var(--ink3)}
 .search-bar button{background:var(--terra);color:#fff;border:none;padding:0 24px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
 .search-bar button:hover{background:var(--terra2)}
+
+/* ── unified Ask chat ── */
+.chat-composer{display:flex;gap:0;border:2px solid var(--ink);overflow:hidden;margin:0 0 12px;max-width:620px}
+.chat-composer textarea{flex:1;padding:13px 18px;font:16px/1.45 'Barlow',sans-serif;background:var(--field);border:none;outline:none;color:var(--ink);resize:none;min-height:50px;max-height:160px;min-width:0}
+.chat-composer textarea::placeholder{color:var(--ink3)}
+.chat-composer button{background:var(--terra);color:#fff;border:none;padding:0 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:14px;letter-spacing:.08em;text-transform:uppercase;cursor:pointer;white-space:nowrap}
+.chat-composer button:hover{background:var(--terra2)}
+.chat-composer button:disabled{opacity:.45;cursor:default}
+.ask-reset{display:none;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);background:none;border:none;cursor:pointer;padding:4px 0;margin-bottom:10px}
+.ask-reset:hover{color:var(--terra)}
+#askCol.chatting #askIntro,#askCol.chatting #askChips{display:none}
+#askCol.chatting .ask-reset{display:inline-block}
+#thread{display:flex;flex-direction:column;gap:12px;max-width:620px}
+.msg{max-width:92%;padding:13px 17px;font-size:14px;line-height:1.6;animation:fadeUp .3s ease both;word-wrap:break-word}
+.msg.user{align-self:flex-end;background:var(--ink);color:var(--cream);font-weight:300}
+.msg.ai{align-self:flex-start;background:var(--cream2);border:1px solid var(--rule);color:var(--ink2)}
+.msg.ai strong{color:var(--terra);font-weight:600}
+.msg.sys{align-self:center;background:none;color:var(--ink3);font-style:italic;font-size:13px;text-align:center;max-width:100%;padding:6px 0}
+.typing{align-self:flex-start;display:flex;gap:6px;padding:15px 17px;background:var(--cream2);border:1px solid var(--rule)}
+.typing span{width:7px;height:7px;border-radius:50%;background:var(--ink3);animation:tblink 1.2s infinite both}
+.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes tblink{0%,80%,100%{opacity:.25}40%{opacity:1}}
 
 .bigstat{padding:24px 28px;position:relative;overflow:hidden}
 .bigstat-n{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:clamp(34px,5vw,52px);line-height:1;color:var(--ink);letter-spacing:-.02em}
@@ -180,10 +178,7 @@ body{top:0!important}
   .border-r{border-right:none}
   .bigstat{padding:18px 18px}
   .answer-panel,.pull,.p{padding:18px}
-  .footer-inner{grid-template-columns:1fr;padding:26px 16px;gap:22px}
-  .footer-meta{text-align:left}
 }
-@media(max-width:560px){#langLabel{display:none}.lang-btn{padding:6px 9px}}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--cream2)}::-webkit-scrollbar-thumb{background:var(--ink3)}
 </style>
 </head>
@@ -191,31 +186,28 @@ body{top:0!important}
 <header class="masthead">
   <div class="masthead-top">
     <div class="masthead-date" id="mdate">Darwin, NT</div>
-    <div class="masthead-title">Ask <span>Territory</span></div>
+    <div class="masthead-title">AskTerritory<span>.com</span></div>
     <div class="masthead-right">
       <span class="masthead-tagline">NT &amp; Darwin open data,<br>in plain language</span>
-      <div class="lang" id="langWrap">
-        <button class="lang-btn" id="langBtn" aria-haspopup="true" aria-expanded="false" title="Translate this page">
-          <span class="lang-globe">🌐</span><span id="langLabel">English</span><span class="lang-caret">▾</span>
-        </button>
-        <div class="lang-menu" id="langMenu" role="menu"></div>
-      </div>
       <button class="theme-btn" id="themeBtn">☀︎ Light</button>
     </div>
   </div>
-  <nav class="nav-strip">
-    <button class="nav-btn active" data-p="home">Overview</button>
-    <button class="nav-btn" data-p="ask">Ask AI</button>
-    <button class="nav-btn" data-p="suburb">My Suburb</button>
-    <button class="nav-btn" data-p="canopy">Canopy</button>
-    <button class="nav-btn" data-p="equity">Ward Spend</button>
-    <button class="nav-btn" data-p="motion">City Motion</button>
-    <button class="nav-btn" data-p="money">The Money</button>
-    <button class="nav-btn" data-p="decisions">Decisions</button>
-    <button class="nav-btn" data-p="grants">Grants</button>
-    <button class="nav-btn" data-p="weather">Weather</button>
-    <button class="nav-btn" data-p="data">Data</button>
-  </nav>
+  <div class="nav-wrap">
+    <button class="nav-hamburger" id="navToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav-strip" id="navStrip">
+      <button class="nav-btn active" data-p="home">Ask AI</button>
+      <button class="nav-btn" data-p="suburb">My Suburb</button>
+      <button class="nav-btn" data-p="canopy">Canopy</button>
+      <button class="nav-btn" data-p="motion">City Motion</button>
+      <button class="nav-btn" data-p="decisions">Decisions</button>
+      <button class="nav-btn" data-p="weather">Weather</button>
+      <button class="nav-btn" data-p="data">Data</button>
+      <span style="width:1px;background:var(--rule);margin:8px 4px;flex-shrink:0"></span>
+      <a href="/forms"  class="nav-btn">📋 Forms</a>
+      <a href="/howto"  class="nav-btn">📖 How-To</a>
+      <a href="/tour"   class="nav-btn">🏖 Tour</a>
+    </nav>
+  </div>
 </header>
 
 <div class="ticker" id="ticker"></div>
@@ -225,19 +217,25 @@ body{top:0!important}
   <div class="page active" id="home">
     <div class="content">
       <div class="cols cols-7030" style="border-bottom:2px solid var(--ink)">
-        <div class="border-r" style="padding:30px 36px 30px 0">
-          <div class="hero-kicker anim">Northern Territory · City of Darwin</div>
-          <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
-          <p class="hero-sub anim anim-d2">Ask in plain English. Know your suburb, follow the money, watch the canopy — real NT public data, on local servers.</p>
-          <div class="search-bar anim anim-d3" style="max-width:560px">
-            <input id="homeAsk" placeholder="Try: how much did Waters Ward spend?"/>
-            <button onclick="goAsk()">Ask AI →</button>
+        <div class="border-r" id="askCol" style="padding:30px 36px 30px 0">
+          <div id="askIntro">
+            <div class="hero-kicker anim">Ask the Territory · data &amp; services</div>
+            <h1 class="hero-headline anim anim-d1">The<br>Territory,<br><em>explained.</em></h1>
+            <p class="hero-sub anim anim-d2">One assistant for everything public — your suburb, the canopy, council spending, and how to get a licence, permit or form. Ask in plain English; answers cite their source.</p>
           </div>
-          <div class="chip-row anim anim-d4">
-            <div class="chip" onclick="goAsk('dogs in Malak')">dogs in Malak</div>
-            <div class="chip" onclick="goAsk('flood risk now')">flood risk now</div>
-            <div class="chip" onclick="goAsk('grants for festivals')">grants for festivals</div>
+          <button class="ask-reset" onclick="resetChat()">↺ New conversation</button>
+          <div class="chat-composer anim anim-d3">
+            <textarea id="askInput" rows="1" placeholder="Ask anything — e.g. how do I get a police check in NT?"></textarea>
+            <button id="askSend" onclick="send()">Ask →</button>
           </div>
+          <div class="chip-row anim anim-d4" id="askChips">
+            <div class="chip" onclick="chip(this)">how do I get a police check?</div>
+            <div class="chip" onclick="chip(this)">dogs in Malak</div>
+            <div class="chip" onclick="chip(this)">register a business in NT</div>
+            <div class="chip" onclick="chip(this)">Waters Ward spending</div>
+            <div class="chip" onclick="chip(this)">flood risk now</div>
+          </div>
+          <div id="thread"></div>
         </div>
         <div>
           <div class="p ruled-b"><div class="sec-head">Live vitals</div></div>
@@ -264,29 +262,14 @@ body{top:0!important}
           <div class="feat-block"><div class="feat-num">04</div><div class="feat-title">Canopy &amp; climate</div><div class="feat-body">Suburb-by-suburb tree-cover change since 2011.</div></div>
         </div>
         <div>
-          <div class="p"><div class="sec-head mb8">Accountability</div></div>
-          <div class="feat-block"><div class="feat-num">05</div><div class="feat-title">Follow the money</div><div class="feat-body">Capital spend by category, ward and year.</div></div>
-          <div class="feat-block"><div class="feat-num">06</div><div class="feat-title">Ward spend</div><div class="feat-body">Council spend compared across wards.</div></div>
+          <div class="p"><div class="sec-head mb8">Services</div></div>
+          <div class="feat-block"><div class="feat-num">05</div><div class="feat-title">Forms finder</div><div class="feat-body">Find any NT government form fast.</div></div>
+          <div class="feat-block"><div class="feat-num">06</div><div class="feat-title">How-To Hub</div><div class="feat-body">Step-by-step guides for NT services.</div></div>
         </div>
       </div>
       <div class="mt32 ruled2"><blockquote class="pull">"Public data, in plain language — for every resident of the Territory."</blockquote></div>
     </div>
   </div>
-
-  <!-- ASK -->
-  <div class="page" id="ask"><div class="content">
-    <div class="hero-kicker">AI Assistant · self-hosted model</div>
-    <h2 class="page-h">Ask <em>anything.</em></h2>
-    <div class="search-bar"><input id="askInput" value="What does Karama look like, and which ward is it in?"/><button onclick="doAsk()">Ask →</button></div>
-    <div class="chip-row">
-      <div class="chip" onclick="setQ(this)">councillor expenses by ward</div>
-      <div class="chip" onclick="setQ(this)">dogs registered in Malak</div>
-      <div class="chip" onclick="setQ(this)">flood risk right now</div>
-    </div>
-    <div class="sec-head mb8 mt16">Answer</div>
-    <div id="answerBox" class="answer-panel"><p class="muted" style="color:var(--cream)">Ask a question to see a grounded answer.</p></div>
-    <div class="muted mt16">Needs the local model running. Other tabs work without it.</div>
-  </div></div>
 
   <!-- SUBURB -->
   <div class="page" id="suburb"><div class="content">
@@ -307,11 +290,7 @@ body{top:0!important}
   </div></div>
 
   <!-- EQUITY / WARD SPEND -->
-  <div class="page" id="equity"><div class="content">
-    <div class="hero-kicker">Accountability · councillor expenses by ward</div>
-    <h2 class="page-h">Spending across <em>wards.</em></h2>
-    <div id="equityBody"><div class="loading">Loading ward spend…</div></div>
-  </div></div>
+  <div class="page" id="equity" style="display:none"></div>
 
   <!-- MOTION -->
   <div class="page" id="motion"><div class="content">
@@ -320,12 +299,7 @@ body{top:0!important}
     <div id="motionBody"><div class="loading">Loading mobility data…</div></div>
   </div></div>
 
-  <!-- MONEY -->
-  <div class="page" id="money"><div class="content">
-    <div class="hero-kicker">Finance · capital expenditure</div>
-    <h2 class="page-h">Every dollar, <em>accounted for.</em></h2>
-    <div id="moneyBody"><div class="loading">Loading capital spend…</div></div>
-  </div></div>
+  <div class="page" id="money" style="display:none"></div>
 
   <!-- DECISIONS -->
   <div class="page" id="decisions"><div class="content">
@@ -335,13 +309,7 @@ body{top:0!important}
     <div id="decisionsBody"><div class="loading">Loading decisions…</div></div>
   </div></div>
 
-  <!-- GRANTS -->
-  <div class="page" id="grants"><div class="content">
-    <div class="hero-kicker">Finance · grants &amp; sponsorships</div>
-    <h2 class="page-h">Find <em>the funding.</em></h2>
-    <div class="search-bar" style="max-width:520px"><input id="grantQ" placeholder="search organisation or event…"/><button onclick="loadGrants()">Search →</button></div>
-    <div id="grantsBody"><div class="loading">Loading grants…</div></div>
-  </div></div>
+  <div class="page" id="grants" style="display:none"></div>
 
   <!-- WEATHER -->
   <div class="page" id="weather"><div class="content">
@@ -364,23 +332,6 @@ body{top:0!important}
   </div></div>
 </main>
 
-<footer class="site-footer">
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <div class="footer-logo">Ask <span>Territory</span></div>
-      <p class="footer-note">An independent, non-commercial project that makes Northern Territory &amp; City of Darwin <strong>public open data</strong> easy to ask questions of, in plain language. It is <strong>not affiliated with, endorsed by, or an official service of any government agency.</strong> Figures are drawn from public open-data portals and may be incomplete or out of date — always confirm anything important with the relevant authority.</p>
-    </div>
-    <div class="footer-meta">
-      <p class="footer-credit">Designed, developed &amp; maintained by
-        <a href="https://www.linkedin.com/in/mohammad-yasin-arafat-083425174/" target="_blank" rel="noopener noreferrer">Mohammad Yasin Arafat ↗</a></p>
-      <p class="footer-copy">© <span id="footYear">2026</span> Mohammad Yasin Arafat · All rights reserved.</p>
-      <p class="footer-fine">Page translations are provided by Google Translate — machine translation may be imperfect, and translated text is processed by Google.</p>
-    </div>
-  </div>
-</footer>
-
-<div id="google_translate_element"></div>
-
 <script>
 const $=s=>document.querySelector(s), el=id=>document.getElementById(id);
 const fmt=n=>n==null?'—':Number(n).toLocaleString();
@@ -397,43 +348,6 @@ const paintTheme=()=>{tBtn.textContent = root.dataset.theme==='dark'?'☾ Dark':
 paintTheme();
 tBtn.onclick=()=>{root.dataset.theme=root.dataset.theme==='dark'?'light':'dark';localStorage.setItem('at-theme',root.dataset.theme);paintTheme();};
 
-/* LANGUAGE — custom dropdown driving a hidden Google Translate widget */
-const LANGS=[
-  {c:'en',n:'English'},{c:'zh-CN',n:'中文（简体）'},{c:'zh-TW',n:'中文（繁體）'},
-  {c:'el',n:'Ελληνικά'},{c:'id',n:'Bahasa Indonesia'},{c:'tl',n:'Filipino'},
-  {c:'vi',n:'Tiếng Việt'},{c:'ar',n:'العربية'},{c:'ne',n:'नेपाली'},{c:'hi',n:'हिन्दी'},
-  {c:'pa',n:'ਪੰਜਾਬੀ'},{c:'th',n:'ไทย'},{c:'km',n:'ខ្មែរ'},{c:'ko',n:'한국어'},
-  {c:'ja',n:'日本語'},{c:'pt',n:'Português'},{c:'es',n:'Español'},{c:'fr',n:'Français'},
-  {c:'de',n:'Deutsch'},{c:'sw',n:'Kiswahili'}
-];
-function googleTranslateElementInit(){
-  new google.translate.TranslateElement({pageLanguage:'en',autoDisplay:false,includedLanguages:LANGS.map(l=>l.c).join(',')},'google_translate_element');
-}
-(function initLang(){
-  const wrap=el('langWrap'),btn=el('langBtn'),menu=el('langMenu'),label=el('langLabel');
-  const current=()=>{const m=document.cookie.match(/googtrans=\/[^/]*\/([^;]+)/);return m?decodeURIComponent(m[1]):'en';};
-  function paint(){const cur=current(),f=LANGS.find(l=>l.c===cur);label.textContent=f?f.n:'English';
-    [...menu.children].forEach(it=>it.classList.toggle('active',it.dataset.c===cur));}
-  menu.innerHTML=LANGS.map(l=>`<button class="lang-item" role="menuitem" data-c="${l.c}">${l.n}</button>`).join('');
-  paint();
-  const waitCombo=(cb,t=0)=>{const c=document.querySelector('.goog-te-combo');if(c)return cb(c);if(t>40)return;setTimeout(()=>waitCombo(cb,t+1),150);};
-  function setLang(code){
-    if(code==='en'){ // back to source language: clear Google's cookie and reload
-      const exp='=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
-      document.cookie='googtrans'+exp;
-      document.cookie='googtrans'+exp+';domain=.'+location.hostname;
-      location.reload();return;
-    }
-    waitCombo(c=>{c.value=code;c.dispatchEvent(new Event('change'));setTimeout(paint,500);});
-  }
-  menu.querySelectorAll('.lang-item').forEach(it=>it.onclick=()=>{
-    menu.classList.remove('open');btn.setAttribute('aria-expanded','false');setLang(it.dataset.c);});
-  btn.onclick=e=>{e.stopPropagation();const open=menu.classList.toggle('open');btn.setAttribute('aria-expanded',open);};
-  document.addEventListener('click',e=>{if(!wrap.contains(e.target)){menu.classList.remove('open');btn.setAttribute('aria-expanded','false');}});
-  setTimeout(paint,1200); // reflect any language restored from a prior visit
-})();
-el('footYear')&&(el('footYear').textContent=new Date().getFullYear());
-
 /* NAV (lazy-load each panel) */
 const loaders={};
 document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{
@@ -442,7 +356,17 @@ document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{
   b.classList.add('active'); el(b.dataset.p).classList.add('active'); window.scrollTo(0,0);
   if(loaders[b.dataset.p]) loaders[b.dataset.p]();
 });
-function go(p){document.querySelector(`.nav-btn[data-p="${p}"]`).click();}
+function go(p){const btn=document.querySelector(`.nav-btn[data-p="${p}"]`);if(btn)btn.click();}
+// Honour /?p= links arriving from sub-pages ('ask' folded into home)
+(()=>{let _p=new URLSearchParams(location.search).get('p');if(_p==='ask')_p='home';if(_p)go(_p);})();
+// Hamburger toggle
+(()=>{
+  const tog=document.getElementById('navToggle'), strip=document.getElementById('navStrip');
+  if(!tog||!strip) return;
+  tog.addEventListener('click',e=>{e.stopPropagation();const o=strip.classList.toggle('open');tog.innerHTML=o?'&#10005;':'&#9776;';tog.setAttribute('aria-expanded',o);});
+  strip.addEventListener('click',e=>{if(e.target.closest('.nav-btn')){strip.classList.remove('open');tog.innerHTML='&#9776;';tog.setAttribute('aria-expanded',false);}});
+  document.addEventListener('click',()=>{strip.classList.remove('open');tog.innerHTML='&#9776;';tog.setAttribute('aria-expanded',false);});
+})();
 
 /* TICKER + HOME STATS */
 async function loadVitals(){
@@ -463,18 +387,34 @@ async function loadVitals(){
   }catch(e){ el('ticker').innerHTML='<span class="ticker-item">Build the database to see live vitals</span>'; }
 }
 
-/* ASK */
-function setQ(c){el('askInput').value=c.textContent;doAsk();}
-function goAsk(q){go('ask');if(q)el('askInput').value=q;doAsk();}
-async function doAsk(){
-  const q=el('askInput').value.trim(); if(!q)return;
-  const box=el('answerBox'); box.innerHTML='<p class="muted" style="color:var(--cream)">Thinking… the model is reasoning over the data.</p>';
+/* ASK — unified chat (data + services) with short multi-turn memory */
+const thread=el('thread'), askInput=el('askInput'), askCol=el('askCol'), askSend=el('askSend');
+let chatHistory=[]; let chatBusy=false;
+const escH=s=>String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+const fmtAns=s=>escH(s).replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+function addMsg(role,html){const d=document.createElement('div');d.className='msg '+role;d.innerHTML=html;thread.appendChild(d);d.scrollIntoView({behavior:'smooth',block:'nearest'});return d;}
+function chip(c){send(typeof c==='string'?c:c.textContent);}
+function resetChat(){chatHistory=[];thread.innerHTML='';askCol.classList.remove('chatting');askInput.value='';askInput.style.height='';askInput.focus();}
+async function send(q){
+  q=(q!=null?q:askInput.value).trim(); if(!q||chatBusy)return;
+  chatBusy=true; askSend.disabled=true; askCol.classList.add('chatting');
+  askInput.value=''; askInput.style.height='';
+  addMsg('user',escH(q).replace(/\n/g,'<br>'));
+  const prior=chatHistory.slice(-6);
+  chatHistory.push({role:'user',content:q});
+  const typing=document.createElement('div');typing.className='typing';
+  typing.innerHTML='<span></span><span></span><span></span>';thread.appendChild(typing);typing.scrollIntoView({block:'nearest'});
   try{
-    const r=await (await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question:q})})).json();
-    if(r.model_offline){box.innerHTML=`<p>⚠ ${r.hint}</p>`;return;}
-    box.innerHTML=`<p>${(r.answer||r.error||'No answer').replace(/\n/g,'<br>')}</p>`;
-  }catch(e){box.innerHTML=`<p>Error: ${e}</p>`;}
+    const r=await (await fetch('/api/ask',{method:'POST',headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({question:q,history:prior})})).json();
+    typing.remove();
+    if(r.model_offline){addMsg('sys','⚠ '+(r.hint||'AI is offline.'));}
+    else{const a=r.answer||r.error||'No answer produced.';addMsg('ai',fmtAns(a));chatHistory.push({role:'assistant',content:a});}
+  }catch(e){typing.remove();addMsg('sys','Something went wrong: '+e);}
+  chatBusy=false; askSend.disabled=false; askInput.focus();
 }
+// backward-compat for any external caller / ?p=ask deep links
+function goAsk(q){go('home');if(q)send(q);}
 
 /* SUBURB */
 async function initSuburbs(){
@@ -505,8 +445,13 @@ loaders.canopy=async()=>{
   const box=el('canopyBody');
   try{
     const d=await getJSON('/api/canopy');
-    const worst=Math.max(...d.areas.map(a=>Math.abs(a.change)),1);
-    const rows=d.areas.map(a=>{
+    const areas=d.areas||[];
+    if(!areas.length){
+      box.innerHTML='<div class="answer-panel"><p>Canopy data not loaded yet. Run the data fetch to populate this view.</p></div>';
+      return;
+    }
+    const worst=Math.max(...areas.map(a=>Math.abs(a.change)),1);
+    const rows=areas.map(a=>{
       const cls=a.change<0?'chg-dn':'chg-up', f=a.change<0?'fill-terra':'fill-sage';
       return `<div class="chart-row" style="grid-template-columns:130px 1fr 70px 70px">
         <div><div class="chart-label">${a.area}</div><div class="chart-sub">${a.y2021}% (2021)</div></div>
@@ -514,7 +459,7 @@ loaders.canopy=async()=>{
         <div class="num" style="font-size:15px">${a.y2021}%</div>
         <div class="${cls}">${a.change>0?'+':''}${a.change}pp</div></div>`;}).join('');
     box.innerHTML=`<div class="sec-head mb8">Tree-canopy change · 2011 → 2021 (biggest loss first)</div>${rows}
-      <div class="answer-panel mt24"><p>Real canopy figures. <strong>${d.areas[0].area}</strong> shows the steepest decline at <strong>${d.areas[0].change}pp</strong> since 2011 — a priority for the next planting program.</p></div>`;
+      <div class="answer-panel mt24"><p>Real canopy figures. <strong>${areas[0].area}</strong> shows the steepest decline at <strong>${areas[0].change}pp</strong> since 2011 — a priority for the next planting program.</p></div>`;
     animateBars();
   }catch(e){errBox(box,e);}
 };
@@ -539,7 +484,9 @@ loaders.equity=async()=>{
 loaders.motion=async()=>{
   const box=el('motionBody');
   try{
-    const d=await getJSON('/api/mobility'); const s=d.series, max=Math.max(...s.map(x=>x.trips),1);
+    const d=await getJSON('/api/mobility'); const s=d.series||[];
+    if(!s.length){box.innerHTML='<div class="answer-panel"><p>City motion data not loaded yet.</p></div>';return;}
+    const max=Math.max(...s.map(x=>x.trips),1);
     const bars=s.map((x,i)=>`<div class="spark-b" style="transition-delay:${i*40}ms" data-h="${x.trips/max*100}%" title="${x.month}: ${fmt(x.trips)}"></div>`).join('');
     box.innerHTML=`
       <div class="cols cols-3" style="border:2px solid var(--ink);border-bottom:none">
@@ -572,7 +519,7 @@ async function loadDecisions(){
   const box=el('decisionsBody');box.innerHTML='<div class="loading">Searching…</div>';
   try{
     const d=await getJSON('/api/decisions?q='+encodeURIComponent(el('decQ').value));
-    const rows=d.decisions.map(x=>`<tr><td class="muted">${x.date||''}</td><td><strong style="color:var(--ink)">${x.title||''}</strong></td><td><span class="badge badge-sky">${x.department||''}</span></td></tr>`).join('');
+    const rows=(d.decisions||[]).map(x=>`<tr><td class="muted">${x.date||''}</td><td><strong style="color:var(--ink)">${x.title||''}</strong></td><td><span class="badge badge-sky">${x.department||''}</span></td></tr>`).join('');
     box.innerHTML=`<div class="muted mb8">${fmt(d.total)} decisions matched</div>
       <table class="dt"><thead><tr><th>Date</th><th>Decision</th><th>Department</th></tr></thead><tbody>${rows||'<tr><td>No matches</td></tr>'}</tbody></table>`;
   }catch(e){errBox(box,e);}
@@ -631,10 +578,11 @@ function animateBars(){document.querySelectorAll('.fill[data-w]').forEach(f=>{f.
 
 /* init */
 el('mdate').textContent=new Date().toLocaleDateString('en-AU',{weekday:'long',day:'numeric',month:'long',year:'numeric'})+' · Darwin, NT';
-el('homeAsk')&&el('homeAsk').addEventListener('keydown',e=>{if(e.key==='Enter')goAsk();});
-el('askInput').addEventListener('keydown',e=>{if(e.key==='Enter')doAsk();});
+// composer: auto-grow + Enter-to-send (Shift+Enter inserts a newline)
+askInput.addEventListener('input',()=>{askInput.style.height='auto';askInput.style.height=Math.min(askInput.scrollHeight,160)+'px';});
+askInput.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send();}});
 loadVitals(); initSuburbs();
 </script>
-<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+<script src="/site-chrome.js" defer></script>
 </body>
 </html>

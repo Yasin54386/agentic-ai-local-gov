@@ -12,6 +12,9 @@ data/askterritory.db
 *.db-wal
 *.db-shm
 
+# Runtime request logs (written by the web server)
+logs/
+
 # Python
 __pycache__/
 *.pyc
