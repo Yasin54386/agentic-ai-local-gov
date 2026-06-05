@@ -7,6 +7,11 @@
 # The migrated database is BUILT from migrations + committed data, not committed
 # (no binary churn). Rebuild: python -m db.migrate && python -m db.load
 data/askterritory.db
+data/askterritory.db-wal
+data/askterritory.db-shm
+
+# Runtime server logs
+logs/
 
 # Python
 __pycache__/
