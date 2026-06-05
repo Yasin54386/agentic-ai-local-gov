@@ -41,12 +41,23 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   background:none;border:1.5px solid var(--ink);color:var(--ink);padding:6px 12px;cursor:pointer;white-space:nowrap}
 .theme-btn:hover{background:var(--ink);color:var(--cream)}
 
+.nav-wrap{position:relative}
+.nav-hamburger{display:none;align-items:center;justify-content:center;width:44px;height:44px;background:none;border:none;cursor:pointer;color:var(--ink3);font-size:22px;line-height:1}
+.nav-hamburger:hover{color:var(--terra)}
 .nav-strip{display:flex;gap:0;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .nav-strip::-webkit-scrollbar{display:none}
 .nav-btn{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:12px;text-transform:uppercase;letter-spacing:.1em;
-  padding:10px 18px;border:none;background:none;color:var(--ink3);cursor:pointer;white-space:nowrap;border-top:3px solid transparent;transition:all .15s;position:relative}
+  padding:10px 18px;border:none;background:none;color:var(--ink3);cursor:pointer;white-space:nowrap;border-top:3px solid transparent;transition:all .15s;position:relative;text-decoration:none}
 .nav-btn:hover{color:var(--ink);background:var(--cream2)}
 .nav-btn.active{color:var(--terra);border-top-color:var(--terra)}
+@media(max-width:767px){
+  .nav-hamburger{display:flex}
+  .nav-strip{display:none;flex-direction:column;position:absolute;top:100%;left:0;right:0;z-index:200;background:var(--cream);border-bottom:2px solid var(--rule);box-shadow:0 8px 24px rgba(26,18,8,.12)}
+  .nav-strip.open{display:flex}
+  .nav-btn{border-top:none;border-left:3px solid transparent;padding:13px 20px;font-size:13px}
+  .nav-btn.active{border-top:none;border-left-color:var(--terra);background:var(--cream2)}
+  .nav-strip span{display:none}
+}
 
 .page{display:none;animation:rise .3s ease}.page.active{display:block}
 @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
@@ -159,21 +170,24 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
       <button class="theme-btn" id="themeBtn">☀︎ Light</button>
     </div>
   </div>
-  <nav class="nav-strip">
-    <button class="nav-btn active" data-p="home">Overview</button>
-    <button class="nav-btn" data-p="ask">Ask AI</button>
-    <button class="nav-btn" data-p="suburb">My Suburb</button>
-    <button class="nav-btn" data-p="canopy">Canopy</button>
-    <button class="nav-btn" data-p="motion">City Motion</button>
-    <button class="nav-btn" data-p="decisions">Decisions</button>
-    <button class="nav-btn" data-p="weather">Weather</button>
-    <button class="nav-btn" data-p="data">Data</button>
-    <span style="width:1px;background:#2a2d3a;margin:8px 4px;flex-shrink:0"></span>
-    <a href="/forms"  class="nav-btn" style="text-decoration:none">📋 Forms</a>
-    <a href="/howto"  class="nav-btn" style="text-decoration:none">📖 How-To</a>
-    <a href="/tour"   class="nav-btn" style="text-decoration:none">🏖 Tour</a>
-    <a href="/guide"  class="nav-btn" style="text-decoration:none">🤖 Guide</a>
-  </nav>
+  <div class="nav-wrap">
+    <button class="nav-hamburger" id="navToggle" aria-label="Open menu" aria-expanded="false">&#9776;</button>
+    <nav class="nav-strip" id="navStrip">
+      <button class="nav-btn active" data-p="home">Overview</button>
+      <button class="nav-btn" data-p="ask">Ask AI</button>
+      <button class="nav-btn" data-p="suburb">My Suburb</button>
+      <button class="nav-btn" data-p="canopy">Canopy</button>
+      <button class="nav-btn" data-p="motion">City Motion</button>
+      <button class="nav-btn" data-p="decisions">Decisions</button>
+      <button class="nav-btn" data-p="weather">Weather</button>
+      <button class="nav-btn" data-p="data">Data</button>
+      <span style="width:1px;background:var(--rule);margin:8px 4px;flex-shrink:0"></span>
+      <a href="/forms"  class="nav-btn">📋 Forms</a>
+      <a href="/howto"  class="nav-btn">📖 How-To</a>
+      <a href="/tour"   class="nav-btn">🏖 Tour</a>
+      <a href="/guide"  class="nav-btn">🤖 Guide</a>
+    </nav>
+  </div>
 </header>
 
 <div class="ticker" id="ticker"></div>
@@ -334,6 +348,14 @@ document.querySelectorAll('.nav-btn').forEach(b=>b.onclick=()=>{
 function go(p){const btn=document.querySelector(`.nav-btn[data-p="${p}"]`);if(btn)btn.click();}
 // Honour /?p= links arriving from sub-pages
 (()=>{const _p=new URLSearchParams(location.search).get('p');if(_p)go(_p);})();
+// Hamburger toggle
+(()=>{
+  const tog=document.getElementById('navToggle'), strip=document.getElementById('navStrip');
+  if(!tog||!strip) return;
+  tog.addEventListener('click',e=>{e.stopPropagation();const o=strip.classList.toggle('open');tog.innerHTML=o?'&#10005;':'&#9776;';tog.setAttribute('aria-expanded',o);});
+  strip.addEventListener('click',e=>{if(e.target.closest('.nav-btn')){strip.classList.remove('open');tog.innerHTML='&#9776;';tog.setAttribute('aria-expanded',false);}});
+  document.addEventListener('click',()=>{strip.classList.remove('open');tog.innerHTML='&#9776;';tog.setAttribute('aria-expanded',false);});
+})();
 
 /* TICKER + HOME STATS */
 async function loadVitals(){
