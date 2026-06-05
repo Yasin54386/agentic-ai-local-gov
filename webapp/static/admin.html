@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin Dashboard — AskTerritory.com</title>
+<style>
+  :root{--bg:#0f1117;--surface:#1a1d27;--border:#2a2d3a;--accent:#e8a020;--accent2:#3b82f6;--green:#22c55e;--red:#ef4444;--text:#e2e8f0;--muted:#8892a0;--radius:10px}
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:'Segoe UI',system-ui,sans-serif;min-height:100vh}
+  header{background:var(--surface);border-bottom:1px solid var(--border);padding:14px 24px;display:flex;align-items:center;gap:12px}
+  .logo{font-size:18px;font-weight:700;color:var(--accent)}.logo span{color:var(--text)}
+  .nav{display:flex;gap:16px;margin-left:auto}.nav a{color:var(--muted);text-decoration:none;font-size:13px}.nav a:hover{color:var(--text)}
+  main{max-width:1100px;margin:0 auto;padding:24px 16px}
+  h2{font-size:18px;font-weight:700;margin-bottom:16px;color:var(--text)}
+  h3{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:24px}
+  .stat{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+  .stat-val{font-size:28px;font-weight:800;color:var(--accent);margin-bottom:4px}
+  .stat-label{font-size:12px;color:var(--muted)}
+  .panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+  .search-row{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .search-row:last-child{border-bottom:none}
+  .search-q{color:var(--text);font-weight:500}
+  .search-cnt{background:rgba(232,160,32,.1);border:1px solid rgba(232,160,32,.2);color:var(--accent);font-size:11px;padding:2px 8px;border-radius:99px}
+  .feedback-row{padding:10px 0;border-bottom:1px solid var(--border);font-size:13px}
+  .feedback-row:last-child{border-bottom:none}
+  .fb-url{color:var(--accent2);font-size:11px;word-break:break-all;margin-bottom:3px}
+  .fb-issue{color:var(--muted);font-size:12px;margin-bottom:3px}
+  .fb-meta{color:var(--muted);font-size:11px}
+  .badge-up{background:rgba(34,197,94,.1);border:1px solid rgba(34,197,94,.2);color:var(--green);font-size:11px;padding:2px 8px;border-radius:99px}
+  .badge-dn{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.2);color:var(--red);font-size:11px;padding:2px 8px;border-radius:99px}
+  .refresh-btn{background:var(--surface);border:1px solid var(--border);color:var(--muted);padding:6px 14px;border-radius:8px;font-size:12px;cursor:pointer}
+  .refresh-btn:hover{color:var(--text)}
+  .empty{color:var(--muted);font-size:13px;padding:8px 0}
+  .db-info{font-size:13px;color:var(--muted);display:flex;gap:16px;flex-wrap:wrap}
+  .db-info span strong{color:var(--text)}
+  @media(max-width:600px){.two-col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="nav-root"></div>
+<script src="/nav.js"></script>
+
+<main>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+    <h2>System Overview</h2>
+    <button class="refresh-btn" onclick="loadAll()">↻ Refresh</button>
+  </div>
+
+  <div class="grid" id="statsGrid">
+    <div class="stat"><div class="stat-val">…</div><div class="stat-label">Forms indexed</div></div>
+    <div class="stat"><div class="stat-val">…</div><div class="stat-label">How-To guides</div></div>
+    <div class="stat"><div class="stat-val">…</div><div class="stat-label">DB size (MB)</div></div>
+    <div class="stat"><div class="stat-val">…</div><div class="stat-label">Dead forms</div></div>
+    <div class="stat"><div class="stat-val">…</div><div class="stat-label">Feedback reports</div></div>
+    <div class="stat"><div class="stat-val">…</div><div class="stat-label">AI model</div></div>
+  </div>
+
+  <div class="two-col">
+    <div class="panel">
+      <h3>Top searches — Forms (7 days)</h3>
+      <div id="formsPopular"><div class="empty">Loading…</div></div>
+    </div>
+    <div class="panel">
+      <h3>Top searches — How-To (7 days)</h3>
+      <div id="howtoPopular"><div class="empty">Loading…</div></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h3>Recent citizen feedback</h3>
+    <div id="feedbackList"><div class="empty">Loading…</div></div>
+  </div>
+</main>
+
+<script>
+const key = new URLSearchParams(location.search).get('key') || '';
+const keyParam = key ? `?key=${encodeURIComponent(key)}` : '';
+
+async function loadAll() {
+  await Promise.all([loadStats(), loadFeedback()]);
+}
+
+async function loadStats() {
+  try {
+    const res  = await fetch(`/api/admin/stats${keyParam}`);
+    if (res.status === 403) {
+      document.body.innerHTML = '<div style="text-align:center;padding:60px;color:#8892a0">Access denied — add ?key=ADMIN_KEY to the URL.</div>';
+      return;
+    }
+    const d    = await res.json();
+    const grid = document.getElementById('statsGrid');
+    const vals = [
+      d.forms?.toLocaleString(),
+      d.howto_guides?.toLocaleString(),
+      d.db_size_mb,
+      d.dead_forms,
+      d.feedback,
+      d.model_up ? '<span class="badge-up">Online</span>' : '<span class="badge-dn">Offline</span>',
+    ];
+    const labels = ['Forms indexed','How-To guides','DB size (MB)','Dead forms','Feedback reports','AI model'];
+    grid.innerHTML = vals.map((v,i) =>
+      `<div class="stat"><div class="stat-val">${v ?? '—'}</div><div class="stat-label">${labels[i]}</div></div>`
+    ).join('');
+
+    renderPopular('formsPopular', d.forms_popular || []);
+    renderPopular('howtoPopular', d.howto_popular || []);
+  } catch(e) {
+    console.error(e);
+  }
+}
+
+function renderPopular(elId, items) {
+  const el = document.getElementById(elId);
+  if (!items.length) { el.innerHTML = '<div class="empty">No searches logged yet.</div>'; return; }
+  el.innerHTML = items.map(s =>
+    `<div class="search-row">
+       <span class="search-q">${esc(s.query)}</span>
+       <div style="display:flex;gap:6px;align-items:center">
+         <span style="font-size:11px;color:var(--muted)">${s.avg_results} results avg</span>
+         <span class="search-cnt">${s.count}×</span>
+       </div>
+     </div>`
+  ).join('');
+}
+
+async function loadFeedback() {
+  try {
+    const res  = await fetch(`/api/admin/feedback${keyParam}`);
+    const list = await res.json();
+    const el   = document.getElementById('feedbackList');
+    if (!list.length) { el.innerHTML = '<div class="empty">No feedback submitted yet.</div>'; return; }
+    el.innerHTML = list.map(f =>
+      `<div class="feedback-row">
+         <div class="fb-url"><span class="badge-dn">${esc(f.source)}</span> ${esc(f.title || f.url)}</div>
+         <div class="fb-issue">${esc(f.issue)}</div>
+         <div class="fb-meta">${esc(f.url)} · ${esc(f.created_at)}</div>
+       </div>`
+    ).join('');
+  } catch(e) {}
+}
+
+function esc(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+loadAll();
+</script>
+</body>
+</html>

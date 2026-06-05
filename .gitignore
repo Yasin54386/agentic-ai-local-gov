@@ -8,10 +8,6 @@
 # (no binary churn). Rebuild: python -m db.migrate && python -m db.load
 data/askterritory.db
 
-# SQLite WAL/SHM sidecars are transient runtime artifacts — never commit them
-*.db-wal
-*.db-shm
-
 # Python
 __pycache__/
 *.pyc

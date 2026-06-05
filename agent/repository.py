@@ -435,5 +435,102 @@ class Repository:
         wards = [{"ward": k, "spend": round(v)} for k, v in sorted(agg.items(), key=lambda x: -x[1])]
         return {"wards": wards, "total": round(sum(w["spend"] for w in wards))}
 
+    # ---- howto guides & forms search ------------------------------------
+
+    def search_howto(self, query: str = "", category: str = "", limit: int = 10) -> dict:
+        """Full-text search over NT government how-to guides."""
+        if not self.ready:
+            return self._not_ready()
+        q = (query or "").strip()
+        cat = (category or "").strip()
+        where, params = [], []
+        if cat:
+            where.append("LOWER(category) LIKE ?")
+            params.append(f"%{cat.lower()}%")
+        clause = (" WHERE " + " AND ".join(where)) if where else ""
+        if q:
+            words = re.findall(r"\w+", q)
+            fts_q = " OR ".join(f"{w}*" for w in words if w)
+            try:
+                rows = self.db.fetchall(
+                    f"SELECT g.id, g.title, g.summary, g.category, g.steps_json, "
+                    f"g.links_json, g.updated_at "
+                    f"FROM howto_fts JOIN howto_guides g ON howto_fts.rowid = g.id "
+                    f"WHERE howto_fts MATCH ?{' AND ' + ' AND '.join(where) if where else ''} "
+                    f"ORDER BY bm25(howto_fts) LIMIT ?",
+                    (fts_q, *params, limit),
+                )
+            except Exception:
+                rows = self.db.fetchall(
+                    f"SELECT id, title, summary, category, steps_json, links_json, updated_at "
+                    f"FROM howto_guides{clause} LIMIT ?", (*params, limit))
+        else:
+            rows = self.db.fetchall(
+                f"SELECT id, title, summary, category, steps_json, links_json, updated_at "
+                f"FROM howto_guides{clause} ORDER BY id DESC LIMIT ?", (*params, limit))
+        guides = []
+        for r in rows:
+            try:
+                steps = json.loads(r["steps_json"] or "[]")
+            except Exception:
+                steps = []
+            try:
+                links = json.loads(r["links_json"] or "[]")
+            except Exception:
+                links = []
+            guides.append({
+                "id": r["id"], "title": r["title"], "summary": r["summary"] or "",
+                "category": r["category"] or "", "steps": steps[:5],
+                "links": links[:3], "updated_at": r["updated_at"] or "",
+            })
+        total = self.db.fetchone("SELECT COUNT(*) AS c FROM howto_guides")["c"]
+        return {"query": query, "category": category, "total_in_db": total,
+                "returned": len(guides), "guides": guides}
+
+    def search_forms(self, query: str = "", category: str = "", limit: int = 10) -> dict:
+        """Full-text search over NT government forms and applications."""
+        if not self.ready:
+            return self._not_ready()
+        q = (query or "").strip()
+        cat = (category or "").strip()
+        where, params = [], []
+        if cat:
+            where.append("LOWER(category) LIKE ?")
+            params.append(f"%{cat.lower()}%")
+        clause = (" WHERE " + " AND ".join(where)) if where else ""
+        if q:
+            words = re.findall(r"\w+", q)
+            fts_q = " OR ".join(f"{w}*" for w in words if w)
+            try:
+                rows = self.db.fetchall(
+                    f"SELECT f.id, f.title, f.url, f.category, f.department, f.fee, "
+                    f"f.description "
+                    f"FROM forms_fts JOIN forms f ON forms_fts.rowid = f.id "
+                    f"WHERE forms_fts MATCH ?{' AND ' + ' AND '.join(where) if where else ''} "
+                    f"ORDER BY bm25(forms_fts) LIMIT ?",
+                    (fts_q, *params, limit),
+                )
+            except Exception:
+                rows = self.db.fetchall(
+                    f"SELECT id, title, url, category, department, fee, description "
+                    f"FROM forms{clause} LIMIT ?", (*params, limit))
+        else:
+            rows = self.db.fetchall(
+                f"SELECT id, title, url, category, department, fee, description "
+                f"FROM forms{clause} ORDER BY id DESC LIMIT ?", (*params, limit))
+        forms = []
+        for r in rows:
+            forms.append({
+                "id": r["id"], "title": r["title"], "url": r.get("url") or "",
+                "category": r.get("category") or "", "department": r.get("department") or "",
+                "fee": r.get("fee") or "", "description": r.get("description") or "",
+            })
+        try:
+            total = self.db.fetchone("SELECT COUNT(*) AS c FROM forms")["c"]
+        except Exception:
+            total = len(forms)
+        return {"query": query, "category": category, "total_in_db": total,
+                "returned": len(forms), "forms": forms}
+
     def close(self) -> None:
         self.db.close()

@@ -39,7 +39,44 @@ def _safe(name: str) -> str:
     return re.sub(r"[^A-Za-z0-9._-]+", "_", name).strip("_")[:80] or "resource"
 
 
-def download_dataset(store: CatalogStore, row, formats: set[str] | None) -> int:
+def _ingest_and_delete(target: Path, canonical_id: str, unified_db: str) -> int:
+    """Parse a downloaded file into unified DB then delete it. Returns row count."""
+    import sqlite3, json, glob as _glob
+    from datetime import datetime, timezone
+    from .unify import iter_rows_for_dataset, canon_row, load_catalog_meta, SCHEMA
+
+    source_dir = str(target.parent)
+    meta_by_id = load_catalog_meta(DEFAULT_DB)
+    meta = meta_by_id.get(canonical_id, {"title": canonical_id, "source": "", "domain": "other"})
+
+    rows = []
+    for i, row in enumerate(iter_rows_for_dataset(source_dir)):
+        if isinstance(row, dict):
+            rows.append(canon_row(i, canonical_id, meta, row))
+
+    if rows:
+        con = sqlite3.connect(unified_db)
+        # Create table if not exists (first run)
+        try:
+            con.execute("SELECT 1 FROM records LIMIT 1")
+        except sqlite3.OperationalError:
+            con.executescript(SCHEMA)
+        con.executemany(
+            "INSERT OR REPLACE INTO records VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", rows)
+        con.commit()
+        con.close()
+
+    # Delete raw file to free disk
+    try:
+        target.unlink()
+    except Exception:
+        pass
+
+    return len(rows)
+
+
+def download_dataset(store: CatalogStore, row, formats: set[str] | None,
+                     stream: bool = False, unified_db: str = "data/unified.db") -> int:
     n = 0
     dest = Path(RAW_ROOT) / _safe(row["source_system"]) / _safe(row["source_dataset_id"])
     for res in store.resources_for(row["canonical_id"]):
@@ -60,6 +97,9 @@ def download_dataset(store: CatalogStore, row, formats: set[str] | None) -> int:
         target.write_bytes(data)
         store.mark_downloaded(res["id"], str(target))
         print(f"  + {row['canonical_id']} [{fmt}] -> {target} ({len(data)} bytes)")
+        if stream:
+            ingested = _ingest_and_delete(target, row["canonical_id"], unified_db)
+            print(f"    -> ingested {ingested} rows, raw file deleted")
         n += 1
     return n
 
@@ -72,6 +112,10 @@ def main(argv: list[str] | None = None) -> int:
                    help="download data for the clean API sources (Darwin ODS + ArcGIS)")
     p.add_argument("--all", action="store_true", help="download data for ALL datasets (large)")
     p.add_argument("--formats", nargs="*", help="restrict to these formats (e.g. JSON CSV GEOJSON)")
+    p.add_argument("--stream", action="store_true",
+                   help="ingest each file into unified DB then delete it immediately (saves disk)")
+    p.add_argument("--unified-db", default="data/unified.db",
+                   help="unified DB path (used with --stream)")
     args = p.parse_args(argv)
 
     store = CatalogStore(args.db)
@@ -90,7 +134,8 @@ def main(argv: list[str] | None = None) -> int:
 
     total = 0
     for row in rows:
-        total += download_dataset(store, row, formats)
+        total += download_dataset(store, row, formats,
+                                  stream=args.stream, unified_db=args.unified_db)
     print(f"[fetch] downloaded {total} resource files across {len(rows)} datasets")
     store.close()
     return 0

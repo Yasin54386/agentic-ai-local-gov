@@ -29,7 +29,15 @@ from typing import Any
 
 BACKEND = os.environ.get("LLM_BACKEND", "local").lower()
 DEFAULT_MODEL = os.environ.get(
-    "MODEL", "gpt-4o-mini" if BACKEND == "openai" else "qwen2.5:7b-instruct")
+    "MODEL", "gpt-4o-mini" if BACKEND == "openai" else "qwen2.5:14b")
+
+# Fallback model chain for openai backend (tried in order on 429/503)
+FALLBACK_MODELS = [m.strip() for m in os.environ.get("FALLBACK_MODELS", "").split(",") if m.strip()] or [
+    "openai/gpt-oss-20b:free",
+    "meta-llama/llama-3.3-70b-instruct:free",
+    "meta-llama/llama-3.2-3b-instruct:free",
+    "nousresearch/hermes-3-llama-3.1-405b:free",
+]
 
 OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
 LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
@@ -100,8 +108,22 @@ def _chat_openai(messages, tools, model, temperature) -> dict:
         body["tools"] = _fn_tools(tools)
         body["tool_choice"] = "auto"
     headers = {"authorization": f"Bearer {LLM_API_KEY}"} if LLM_API_KEY else {}
-    data = _post(f"{LLM_BASE_URL}/chat/completions", body, headers)
-    return (data.get("choices") or [{}])[0].get("message", {}) or {}
+    # Try primary model then fallbacks on rate-limit (429) or unavailable (503/404)
+    models_to_try = [model] + [m for m in FALLBACK_MODELS if m != model]
+    last_exc = None
+    for m in models_to_try:
+        try:
+            body["model"] = m
+            data = _post(f"{LLM_BASE_URL}/chat/completions", body, headers)
+            if m != model:
+                print(f"⚠  model {model} unavailable, used fallback {m}", file=sys.stderr)
+            return (data.get("choices") or [{}])[0].get("message", {}) or {}
+        except LocalModelError as exc:
+            if any(code in str(exc) for code in ("429", "503", "404")):
+                last_exc = exc
+                continue
+            raise
+    raise last_exc
 
 
 def chat(messages: list[dict], *, tools: list[dict] | None = None,

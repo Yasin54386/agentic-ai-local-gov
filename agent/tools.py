@@ -183,6 +183,35 @@ TOOLS: list[dict[str, Any]] = [
         "input_schema": {"type": "object", "properties": {}},
     },
     {
+        "name": "search_howto",
+        "description": "Search NT government step-by-step how-to guides. Use when someone "
+                       "asks HOW to do something — register a dog, apply for a permit, "
+                       "pay a fine, get a licence, etc. Returns matching guides with their "
+                       "summary, steps, and official links.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "what the person wants to do or find"},
+                "category": {"type": "string", "description": "optional: filter by service category (e.g. 'pets', 'planning', 'transport')"},
+                "limit": {"type": "integer", "default": 8},
+            },
+        },
+    },
+    {
+        "name": "search_forms",
+        "description": "Search NT government forms, applications, and downloadable documents. "
+                       "Use when someone needs a form, application, or official document — "
+                       "building permit, dog registration form, business licence, etc.",
+        "input_schema": {
+            "type": "object",
+            "properties": {
+                "query": {"type": "string", "description": "what form or application they need"},
+                "category": {"type": "string", "description": "optional: service category filter"},
+                "limit": {"type": "integer", "default": 8},
+            },
+        },
+    },
+    {
         "name": "flood_risk",
         "description": "Get an INDICATIVE wet-season flood-risk level for Darwin, derived "
                        "from the live rain forecast. Use for 'is there a flood risk' "
@@ -226,6 +255,12 @@ def dispatch(repo: Repository, name: str, args: dict[str, Any]) -> Any:
     if name == "find_records":
         return repo.find_records(args.get("area", ""), args.get("keyword", ""),
                                  args.get("limit", 50))
+    if name == "search_howto":
+        return repo.search_howto(args.get("query", ""), args.get("category", ""),
+                                 args.get("limit", 8))
+    if name == "search_forms":
+        return repo.search_forms(args.get("query", ""), args.get("category", ""),
+                                 args.get("limit", 8))
     if name == "live_weather":
         from ingestion import live
         return live.get_weather()
