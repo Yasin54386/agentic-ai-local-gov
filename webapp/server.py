@@ -260,6 +260,8 @@ class Handler(BaseHTTPRequestHandler):
             self._file(STATIC / "sw.js", "application/javascript"); return 200
         if u.path == "/nav.js":
             self._file(STATIC / "nav.js", "application/javascript"); return 200
+        if u.path == "/site-chrome.js":
+            self._file(STATIC / "site-chrome.js", "application/javascript"); return 200
         if u.path == "/favicon.ico":
             self.send_response(204); self.end_headers(); return 204
 

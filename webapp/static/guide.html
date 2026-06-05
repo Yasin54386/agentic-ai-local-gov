@@ -98,6 +98,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   <div id="nav-root"></div>
 </header>
 <script src="/nav.js"></script>
+<script src="/site-chrome.js" defer></script>
 
 <div class="hero">
   <div class="hero-kicker">Powered by a local AI</div>
@@ -165,7 +166,7 @@ fetch('/api/health').then(r=>r.json()).then(d=>{
   } else {
     const first = msgs.querySelector('.msg.system');
     if (first) first.remove();
-    addMsg('assistant',"Hi! I'm your NT Government guide. Ask me about any service — licences, permits, registrations, forms — and I'll explain what you need and how to apply.");
+    addMsg('assistant',"Hi! I'm an independent guide to Northern Territory & Darwin services — not an official government service. Ask me about licences, permits, registrations or forms and I'll explain what you need and how to apply. Always confirm the details with the relevant agency.");
   }
 }).catch(()=>{});
 

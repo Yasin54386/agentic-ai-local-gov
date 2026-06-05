@@ -152,8 +152,6 @@ html[data-theme="light"] .indigenous-note{color:#8a6000}
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:10px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 
-#google_translate_element{max-width:720px;margin:0 auto;padding:0 24px 4px;font-size:12px}
-
 @media print{
   .masthead,.search-wrap,.stats-bar,#expandedBanner,.admin-strip,.filter-row,.dym,.btn-sm,.chip,.chips{display:none!important}
   .card-body{display:block!important}
@@ -184,6 +182,7 @@ html[data-theme="light"] .indigenous-note{color:#8a6000}
   <div id="nav-root"></div>
 </header>
 <script src="/nav.js"></script>
+<script src="/site-chrome.js" defer></script>
 
 <!-- Report modal -->
 <div id="reportModal" class="modal-bg" style="display:none" onclick="if(event.target===this)closeReport()">
@@ -202,12 +201,10 @@ html[data-theme="light"] .indigenous-note{color:#8a6000}
   <div class="dym-inner">Did you mean: <a id="dymLink" onclick="useDym()"></a>?</div>
 </div>
 
-<div id="google_translate_element"></div>
-
 <div class="hero">
-  <div class="hero-kicker">Northern Territory Government</div>
-  <h1>Your <em>NT Government</em> How-To Hub</h1>
-  <p>Search 1,000+ step-by-step guides covering every Northern Territory government service — from converting a licence to getting an Ochre Card.</p>
+  <div class="hero-kicker">Independent guide · NT &amp; Darwin services</div>
+  <h1>The <em>How-To</em> Hub</h1>
+  <p>Search 1,000+ plain-language, step-by-step guides to Northern Territory services — from converting a licence to getting an Ochre Card. An independent project, not an official government service.</p>
 </div>
 
 <div class="search-wrap">
@@ -250,15 +247,10 @@ html[data-theme="light"] .indigenous-note{color:#8a6000}
   <span style="font-size:12px;color:var(--ink3);align-self:center;font-family:'Barlow Condensed',sans-serif;font-weight:600;letter-spacing:.06em;text-transform:uppercase">Filter:</span>
 </div>
 
-<div class="admin-strip">
-  <span id="scrapeStatus"></span>
-  <button class="btn-sm" onclick="triggerScrape()">Refresh guide database</button>
-</div>
-
 <div id="toast" class="toast"></div>
 <div id="results">
   <div class="empty-state">
-    <h3>Search NT government guides</h3>
+    <h3>Search guides to NT services</h3>
     <p>Type what you need help with — or pick a popular guide.<br>
     Use <strong>AI Search</strong> for smarter synonym matching.</p>
   </div>
@@ -279,10 +271,6 @@ _paintTheme();
 _tBtn.onclick = () => { _root.dataset.theme = _root.dataset.theme==='dark'?'light':'dark'; localStorage.setItem('at-theme',_root.dataset.theme); _paintTheme(); };
 
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
-
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage:'en',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');
-}
 
 const input = document.getElementById('searchInput');
 const resultsEl = document.getElementById('results');
@@ -413,16 +401,6 @@ async function loadStats() {
   } catch(e) {}
 }
 
-async function triggerScrape() {
-  if (!confirm('Re-scrape all NT government websites for guides? May take several minutes.')) return;
-  scrapeStatus.textContent = 'Scraping…';
-  try {
-    const data = await (await fetch('/api/howto/scrape',{method:'POST'})).json();
-    scrapeStatus.textContent = `Done: ${data.upserted} guides upserted.`;
-    loadStats();
-  } catch(e) { scrapeStatus.textContent = 'Failed: ' + e.message; }
-}
-
 let _toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -451,6 +429,5 @@ async function submitReport() {
   } catch(e) { showToast('Failed: ' + e.message); }
 }
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 </body>
 </html>

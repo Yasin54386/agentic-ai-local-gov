@@ -127,9 +127,6 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
 .toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--ink);color:var(--cream);padding:10px 22px;font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:13px;letter-spacing:.06em;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none}
 .toast.show{opacity:1}
 
-/* Google Translate placement */
-#google_translate_element{max-width:700px;margin:0 auto 4px;padding:0 24px;font-size:12px}
-
 @media print{
   .masthead,.search-wrap,.stats-bar,#expandedBanner,.admin-strip,.dym,.btn-sm,.chip{display:none!important}
   .card{border:1px solid #ccc;page-break-inside:avoid}
@@ -159,6 +156,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   <div id="nav-root"></div>
 </header>
 <script src="/nav.js"></script>
+<script src="/site-chrome.js" defer></script>
 
 <!-- Report modal -->
 <div class="modal-bg" id="reportModal" style="display:none" onclick="if(event.target===this)closeReport()">
@@ -213,13 +211,6 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
   <div class="dym-inner">Did you mean: <a id="dymLink"></a>?</div>
 </div>
 
-<div id="google_translate_element"></div>
-
-<div class="admin-strip">
-  <span id="scrapeStatus"></span>
-  <button class="btn-sm" onclick="triggerScrape()">Refresh form database</button>
-</div>
-
 <div id="toast" class="toast"></div>
 <div id="results">
   <div class="empty-state">
@@ -244,11 +235,6 @@ _tBtn.onclick = () => { _root.dataset.theme = _root.dataset.theme==='dark'?'ligh
 
 // PWA
 if ('serviceWorker' in navigator) navigator.serviceWorker.register('/sw.js').catch(()=>{});
-
-// Google Translate
-function googleTranslateElementInit() {
-  new google.translate.TranslateElement({pageLanguage:'en',layout:google.translate.TranslateElement.InlineLayout.SIMPLE},'google_translate_element');
-}
 
 const input = document.getElementById('searchInput');
 const resultsEl = document.getElementById('results');
@@ -355,17 +341,6 @@ async function loadStats() {
   } catch(e) {}
 }
 
-async function triggerScrape() {
-  if (!confirm('Re-scrape all NT government websites for forms? May take several minutes.')) return;
-  scrapeStatus.textContent = 'Scraping…';
-  try {
-    const res = await fetch('/api/forms/scrape', {method:'POST'});
-    const data = await res.json();
-    scrapeStatus.textContent = `Done: ${data.upserted} forms upserted.`;
-    loadStats();
-  } catch(e) { scrapeStatus.textContent = 'Failed: ' + e.message; }
-}
-
 let _toastTimer;
 function showToast(msg) {
   const t = document.getElementById('toast');
@@ -376,6 +351,5 @@ function showToast(msg) {
 function escHtml(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function escAttr(s) { return String(s).replace(/"/g,'&quot;'); }
 </script>
-<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit" async></script>
 </body>
 </html>
