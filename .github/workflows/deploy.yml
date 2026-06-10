@@ -1,12 +1,14 @@
-# CI/CD — push to main → run tests → SSH deploy to Oracle Cloud VM
+# CI/CD — push to main → run tests → SSH deploy to a DigitalOcean droplet
 #
 # Required GitHub Secrets (Settings → Secrets and variables → Actions):
-#   ORACLE_HOST        Public IP of your Oracle VM
-#   ORACLE_USER        SSH username (usually: ubuntu)
-#   ORACLE_SSH_KEY     Private SSH key (the .pem file contents, full text)
-#   ORACLE_DEPLOY_DIR  Path on the VM, e.g. /opt/ask-territory
+#   DO_HOST        Public IP (or domain) of your DigitalOcean droplet
+#   DO_USER        SSH username (root, or a sudo user e.g. deploy)
+#   DO_SSH_KEY     Private SSH key authorised on the droplet (full text)
+#   DO_DEPLOY_DIR  Path on the droplet, e.g. /opt/ask-territory
+#
+# First-time droplet setup is a one-off: see deploy/DIGITALOCEAN.md.
 
-name: Deploy to Oracle Cloud
+name: Deploy to DigitalOcean
 
 on:
   push:
@@ -80,6 +82,10 @@ jobs:
           print('All edge-case queries passed without exception')
           "
 
+      - name: Run unit tests
+        run: |
+          python -m unittest discover -s tests -p 'test_*.py' -v
+
       - name: Verify API routes registered
         run: |
           python -c "
@@ -92,51 +98,52 @@ jobs:
 
   # ── 2. Deploy ─────────────────────────────────────────────────────────────
   deploy:
-    name: Deploy to Oracle VM
+    name: Deploy to DigitalOcean droplet
     runs-on: ubuntu-latest
     needs: test          # only deploy if tests pass
     if: github.ref == 'refs/heads/main'
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Set up SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.ORACLE_SSH_KEY }}" > ~/.ssh/deploy_key
+          echo "${{ secrets.DO_SSH_KEY }}" > ~/.ssh/deploy_key
           chmod 600 ~/.ssh/deploy_key
-          ssh-keyscan -H "${{ secrets.ORACLE_HOST }}" >> ~/.ssh/known_hosts
+          ssh-keyscan -H "${{ secrets.DO_HOST }}" >> ~/.ssh/known_hosts 2>/dev/null
 
-      - name: Deploy to Oracle VM
+      - name: Deploy over SSH
         env:
-          HOST: ${{ secrets.ORACLE_HOST }}
-          USER: ${{ secrets.ORACLE_USER }}
-          DIR:  ${{ secrets.ORACLE_DEPLOY_DIR }}
+          HOST: ${{ secrets.DO_HOST }}
+          USER: ${{ secrets.DO_USER }}
+          DIR:  ${{ secrets.DO_DEPLOY_DIR }}
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$USER@$HOST" bash <<'REMOTE'
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no "$USER@$HOST" \
+            "DIR='$DIR' bash -s" <<'REMOTE'
             set -e
+            cd "$DIR"
 
             echo "==> Pulling latest code"
-            cd "${{ env.DIR }}"
             git fetch origin main
             git reset --hard origin/main
 
-            echo "==> Running database migrations"
+            echo "==> Building the database (schema + seed + committed data)"
             python3 -m db.migrate
+            python3 -m db.load || echo "  (db.load skipped/failed — seed data from migrations still present)"
 
-            echo "==> Rebuilding and restarting containers"
+            echo "==> Rebuilding and restarting the web container"
+            # Default profile = web only. Use 'docker compose --profile model up'
+            # once you move to a bigger droplet to also run Ollama + refresh.
             sudo docker compose up -d --build --remove-orphans
 
-            echo "==> Waiting for app to be healthy"
+            echo "==> Waiting for the app to report healthy"
             for i in $(seq 1 12); do
-              STATUS=$(curl -sf http://localhost:8000/api/health | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('ok','false'))" 2>/dev/null || echo "false")
+              STATUS=$(curl -sf http://localhost:8000/api/health \
+                | python3 -c "import sys,json; print(json.load(sys.stdin).get('ok','false'))" 2>/dev/null || echo "false")
               if [ "$STATUS" = "True" ] || [ "$STATUS" = "true" ]; then
-                echo "App healthy after ${i}x5s wait."
+                echo "App healthy after ${i}x5s."
                 break
               fi
-              echo "  waiting... ($i/12)"
-              sleep 5
+              echo "  waiting... ($i/12)"; sleep 5
             done
 
             echo "==> Deploy complete on $(hostname) at $(date)"
@@ -144,26 +151,19 @@ jobs:
 
       - name: Smoke test public endpoints
         run: |
-          BASE="http://${{ secrets.ORACLE_HOST }}"
+          BASE="http://${{ secrets.DO_HOST }}"
 
-          # Health check
           HTTP=$(curl -sf -o /dev/null -w "%{http_code}" "$BASE/api/health" 2>/dev/null || echo "000")
           echo "Health: $HTTP"
 
-          # Forms search must return at least one result for 'dog'
           FORMS=$(curl -sf "$BASE/api/forms/search?q=dog" 2>/dev/null || echo '{}')
-          COUNT=$(echo "$FORMS" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d.get('results',[])))" 2>/dev/null || echo "0")
+          COUNT=$(echo "$FORMS" | python3 -c "import sys,json; print(len(json.load(sys.stdin).get('results',[])))" 2>/dev/null || echo "0")
           echo "Forms search 'dog': $COUNT results"
-          if [ "$COUNT" -lt 1 ]; then
-            echo "WARNING: forms search returned 0 results for 'dog'"
-          fi
+          [ "$COUNT" -lt 1 ] && echo "WARNING: forms search returned 0 results for 'dog'" || true
 
-          # Howto search must return at least one result for 'licence'
           HOWTO=$(curl -sf "$BASE/api/howto/search?q=licence" 2>/dev/null || echo '{}')
-          COUNT=$(echo "$HOWTO" | python3 -c "import sys,json; d=json.load(sys.stdin); print(len(d.get('results',[])))" 2>/dev/null || echo "0")
+          COUNT=$(echo "$HOWTO" | python3 -c "import sys,json; print(len(json.load(sys.stdin).get('results',[])))" 2>/dev/null || echo "0")
           echo "Howto search 'licence': $COUNT results"
-          if [ "$COUNT" -lt 1 ]; then
-            echo "WARNING: howto search returned 0 results for 'licence'"
-          fi
+          [ "$COUNT" -lt 1 ] && echo "WARNING: howto search returned 0 results for 'licence'" || true
 
-          echo "Deployment pipeline finished successfully."
+          echo "Deployment pipeline finished."

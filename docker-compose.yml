@@ -1,11 +1,17 @@
-# Ask Territory — full self-hosted stack: web UI + local LLM + 6-hourly refresh.
+# Ask Territory — self-hosted stack.
+#
+#   docker compose up -d --build                 → web only (cheap droplet, chat offline)
+#   docker compose --profile model up -d --build → web + Ollama model + refresh (8GB+ box)
+#
 # Everything runs on your own server. Only the web port is exposed (to nginx).
 
 services:
-  # The self-hosted language model (Qwen2.5-7B via Ollama).
+  # The self-hosted language model (Qwen2.5 via Ollama).
+  # Behind the "model" profile so a small droplet can run web-only.
   ollama:
     image: ollama/ollama:latest
     restart: unless-stopped
+    profiles: ["model"]
     volumes:
       - ollama_models:/root/.ollama
     # Uncomment to use an NVIDIA GPU (much faster):
@@ -27,14 +33,17 @@ services:
     ports:
       - "127.0.0.1:8000:8000"     # bind to localhost only; nginx terminates TLS
     depends_on:
-      - ollama
+      ollama:
+        condition: service_started
+        required: false           # web runs fine without the model (chat shows offline)
 
-  # OPTIONAL — the web app now self-refreshes on access (live every 10 min,
+  # OPTIONAL — the web app self-refreshes on access (live every 10 min,
   # datasets every 24h), so this scheduled job is only a belt-and-braces backup
-  # for periods of zero traffic. Safe to remove if the app gets regular visits.
+  # for periods of zero traffic. Behind the "model" profile alongside Ollama.
   refresh:
     build: .
     restart: unless-stopped
+    profiles: ["model"]
     command: ["python", "-m", "ingestion.refresh", "--interval", "21600"]
     environment:
       - OLLAMA_HOST=http://ollama:11434
