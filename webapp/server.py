@@ -118,6 +118,37 @@ def _call(fn):
     with _lock:
         return fn(repo)
 
+GUIDE_SYSTEM = (
+    "You are a helpful Northern Territory (NT) local government services "
+    "guide for citizens of Darwin and the NT. You help citizens understand "
+    "what government services they need, what steps to take, and where to go. "
+    "Be concise, friendly, and practical. Focus on NT-specific information. "
+    "If you don't know the exact current fee or processing time, say so and "
+    "direct them to the official NT Government website (nt.gov.au).\n\n"
+)
+
+def _guide_prompt(question: str, history=None) -> str:
+    """Build the /api/guide prompt, folding recent turns in so the guide
+    remembers the conversation. History is untrusted client input: only the
+    last 8 well-formed turns are used, each capped at 1500 chars."""
+    transcript = ""
+    if isinstance(history, list):
+        for turn in history[-8:]:
+            if not isinstance(turn, dict):
+                continue
+            content = (turn.get("content") or "")
+            if not isinstance(content, str):
+                continue
+            content = content.strip()[:1500]
+            if not content:
+                continue
+            who = "Citizen" if turn.get("role") == "user" else "Guide"
+            transcript += f"{who}: {content}\n"
+    prompt = GUIDE_SYSTEM
+    if transcript:
+        prompt += f"Conversation so far:\n{transcript}\n"
+    return prompt + f"Citizen's question: {question}"
+
 def _fdb():
     """Read-only DB connection for search queries (WAL mode: no lock contention)."""
     import sqlite3
@@ -539,29 +570,7 @@ class Handler(BaseHTTPRequestHandler):
                 self._json({"answer": None, "model_offline": True,
                     "hint": "AI guide offline — try searching Forms or How-To guides instead."})
                 return 200
-            # Fold prior turns in so the guide remembers the conversation.
-            transcript = ""
-            history = body.get("history")
-            if isinstance(history, list):
-                for turn in history[-8:]:
-                    if not isinstance(turn, dict):
-                        continue
-                    content = (turn.get("content") or "").strip()[:1500]
-                    if not content:
-                        continue
-                    who = "Citizen" if turn.get("role") == "user" else "Guide"
-                    transcript += f"{who}: {content}\n"
-            ctx_prompt = (
-                "You are a helpful Northern Territory (NT) local government services "
-                "guide for citizens of Darwin and the NT. You help citizens understand "
-                "what government services they need, what steps to take, and where to go. "
-                "Be concise, friendly, and practical. Focus on NT-specific information. "
-                "If you don't know the exact current fee or processing time, say so and "
-                "direct them to the official NT Government website (nt.gov.au).\n\n"
-            )
-            if transcript:
-                ctx_prompt += f"Conversation so far:\n{transcript}\n"
-            ctx_prompt += f"Citizen's question: {question}"
+            ctx_prompt = _guide_prompt(question, body.get("history"))
             from agent.agent import run
             try:
                 with _lock:
