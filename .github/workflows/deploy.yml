@@ -130,6 +130,10 @@ jobs:
             python3 -m db.migrate
             python3 -m db.load || echo "  (db.load skipped/failed — seed data from migrations still present)"
 
+            # Container runs as appuser (UID 1000); it must own the data dir to
+            # write the SQLite WAL files. The DB was just built as root.
+            sudo chown -R 1000:1000 data
+
             echo "==> Rebuilding and restarting the web container"
             # Default profile = web only. Use 'docker compose --profile model up'
             # once you move to a bigger droplet to also run Ollama + refresh.

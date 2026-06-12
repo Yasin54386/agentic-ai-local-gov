@@ -6,8 +6,9 @@ WORKDIR /app
 # No third-party Python deps — everything is standard library.
 COPY . /app
 
-# Non-root user for safety.
-RUN useradd -m appuser && chown -R appuser /app
+# Non-root user for safety. Pinned UID 1000 so the host can chown the bind-mounted
+# ./data directory to match (the app needs to write the SQLite WAL files).
+RUN useradd -m -u 1000 appuser && chown -R appuser /app
 USER appuser
 
 ENV PORT=8000 \

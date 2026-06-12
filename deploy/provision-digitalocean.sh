@@ -42,6 +42,10 @@ echo "==> 4/6  Build the database (schema + seed + committed open data)"
 sudo python3 -m db.migrate
 sudo python3 -m db.load || echo "  (db.load skipped — seed data from migrations still present)"
 
+# The DB is built as root, but the container runs as appuser (UID 1000) and must
+# be able to write the SQLite WAL files. Hand the data dir to that UID.
+sudo chown -R 1000:1000 data
+
 echo "==> 5/6  Start the web container (web-only profile, no model)"
 sudo docker compose up -d --build --remove-orphans
 
