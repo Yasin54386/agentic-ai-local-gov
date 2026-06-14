@@ -24,8 +24,6 @@ import urllib.parse
 import urllib.request
 
 DB_PATH  = os.path.join(os.path.dirname(__file__), '..', 'db', 'askterritory.db')
-OLLAMA   = os.environ.get('OLLAMA_URL', 'http://localhost:11434')
-MODEL    = os.environ.get('MODEL', 'qwen2.5:7b-instruct')
 DELAY    = 1.2   # seconds between HTTP requests
 
 
@@ -44,21 +42,13 @@ def fetch_text(url: str, timeout: int = 10) -> str:
 
 
 def ask_llm(prompt: str) -> str:
-    parsed = urllib.parse.urlparse(OLLAMA)
-    host   = parsed.hostname or 'localhost'
-    port   = parsed.port or 11434
-    body   = json.dumps({'model': MODEL, 'prompt': prompt, 'stream': False}).encode()
-    conn   = http.client.HTTPConnection(host, port, timeout=30)
+    """Ask the hosted AI (budget-gated via agent.llm). Needs ANTHROPIC_API_KEY."""
+    sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
     try:
-        conn.request('POST', '/api/generate', body=body,
-                     headers={'Content-Type': 'application/json'})
-        resp = conn.getresponse()
-        data = json.loads(resp.read())
-        return data.get('response', '').strip()
+        from agent import llm
+        return llm.complete(prompt, max_tokens=400, endpoint='freshness')
     except Exception as e:
         return f'[llm error: {e}]'
-    finally:
-        conn.close()
 
 
 def load_guides(limit: int) -> list[dict]:

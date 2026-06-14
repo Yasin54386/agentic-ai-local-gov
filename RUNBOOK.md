@@ -1,9 +1,10 @@
 # RUNBOOK — Run "Ask Darwin" on localhost
 
-A step-by-step guide to run the whole system on your own machine. Everything is
-self-hosted: no external API, no cloud, no API keys. Python 3.10+ only (the data
-and web layers need **zero** pip installs); the language model runs locally via
-Ollama.
+A step-by-step guide to run the whole system on your own machine. The data and
+web layers are pure Python 3.10+ (**zero** pip installs). The chat is "AI
+Powered" by a hosted API: it needs `pip install -r requirements.txt` and an
+`ANTHROPIC_API_KEY`. Chat questions are processed by a third-party AI service —
+don't include personal information. Everything else works with no key.
 
 ---
 
@@ -11,8 +12,8 @@ Ollama.
 
 - **Python 3.10+** — check: `python3 --version`
 - **git** (to clone) — the repo already contains the harvested data + SQL databases.
-- For the chat ("Ask") feature only: **Ollama** (free, local). The other features
-  work without it.
+- For the chat ("Ask") feature only: `pip install -r requirements.txt` and an
+  `ANTHROPIC_API_KEY`. The other features work without it.
 
 ```bash
 git clone <your-repo-url> agentic-ai-local-gov
@@ -59,22 +60,25 @@ PostgreSQL instead, set `DATABASE_URL` first — see **DB-SETUP.md**.
 
 ---
 
-## 2. (Optional) Start the self-hosted language model
+## 2. (Optional) Enable the AI chat
 
 Needed only for the **Ask** chat tab. The Live / Neighbourhood / Transparency /
 Repository tabs work without it.
 
 ```bash
-bash scripts/setup_local_model.sh
-# installs Ollama + pulls qwen2.5:7b-instruct (one-time ~4.7 GB download)
+pip install -r requirements.txt
+export ANTHROPIC_API_KEY=sk-...
 ```
 
-Check it's up:
+Check it's configured:
 ```bash
-curl -s http://localhost:11434/api/tags >/dev/null && echo "model server UP"
+curl -s http://localhost:8000/api/health | grep -o '"ai_available":[a-z]*'
 ```
 
-> No GPU? It still runs on CPU (slower). Smaller/faster option: `MODEL=qwen2.5:3b-instruct`.
+> **Privacy:** chat questions are sent to a third-party AI service — don't
+> include personal information. **Cost:** spend is capped by a hard monthly
+> budget (`BUDGET_MONTHLY_AUD`, default 100); at the cap the chat pauses and the
+> data tabs keep working.
 
 ---
 
@@ -178,11 +182,11 @@ python3 -m webapp.server
 
 | Symptom | Fix |
 |---|---|
-| Ask tab says "model offline" | Start Ollama (step 2). Other tabs still work. |
+| Ask tab says "AI offline" | Set `ANTHROPIC_API_KEY` and `pip install -r requirements.txt` (step 2). Other tabs still work. |
+| Ask tab says allowance used up | The monthly/daily budget cap was reached — chat resumes on the 1st (or next day). Data tabs keep working. |
 | `Unified table not built` | Run `python3 -m ingestion.unify` (step 1). |
 | Port already in use | `PORT=9000 python3 -m webapp.server` |
 | Live weather empty | Needs outbound internet to Open-Meteo; flood/weather are the only online calls. |
-| Model slow | Use a smaller model: `MODEL=qwen2.5:3b-instruct`, or run on a GPU box. |
 
 Everything except the live weather call and the one-time model download runs
 fully offline on your machine.

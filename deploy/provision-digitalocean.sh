@@ -10,8 +10,9 @@
 #
 # (or scp it up and `bash provision-digitalocean.sh`)
 #
-# This sets up the WEB-ONLY stack (no AI model) for a small droplet. To add the
-# self-hosted model later on a bigger box, see deploy/DIGITALOCEAN.md.
+# This sets up the web stack on a small droplet. The AI chat is powered by a
+# hosted API — set ANTHROPIC_API_KEY in the environment / .env (see
+# deploy/DIGITALOCEAN.md). No model server runs on the droplet.
 # ─────────────────────────────────────────────────────────────────────────────
 set -euo pipefail
 

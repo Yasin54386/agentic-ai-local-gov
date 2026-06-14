@@ -1,10 +1,12 @@
-# Agent — Self-Hosted Data Assistant
+# Agent — AI-Powered Data Assistant
 
-A backend-agnostic agent (Layer 4) that answers plain-language questions about
-the NT/Darwin public data repository (Layer 3), driven by a **self-hosted**
-open-weight model running on **your own server**. No external API. No data
-leaves your machine. This is the sovereign architecture your governance layer
-(docs/05) requires.
+An agent (Layer 4) that answers plain-language questions about the NT/Darwin
+public data repository (Layer 3), powered by a hosted AI model reached through
+`llm.py` — the single, budget-gated choke point for every model call.
+
+> **Privacy:** chat questions are processed by a third-party AI service. Don't
+> include personal information. The data panels, forms and how-to search never
+> call the model and work with no key set.
 
 ## How it works
 
@@ -13,9 +15,9 @@ your question
      │
      ▼
 ┌──────────────────────────────┐
-│ agent loop (agent.py)        │   the ~loop from docs/01
+│ agent loop (agent.py)        │   the loop from docs/01
 │   ↕ tools (tools.py)          │   "the hands" — read-only data tools
-│   ↕ local model (llm.py)      │   Qwen2.5-7B via Ollama on localhost
+│   ↕ llm.py                    │   hosted AI · budget-gated · prompt-cached
 └──────────────────────────────┘
      │ reads
      ▼
@@ -23,26 +25,28 @@ data repository (ingestion/) — 1,104 datasets, real records
 ```
 
 The model decides which tools to call; the tools read the real harvested data;
-the model reasons over the results and answers — citing dataset ids. The model
-never sees the internet and the data never leaves your server.
+the model reasons over the results and answers — citing dataset ids. Tool
+results are trimmed before they go back to the model (input is the cost driver).
 
-## Model: Qwen2.5-7B-Instruct
+## Cost controls (why this stays cheap)
 
-- **Apache-2.0** — free, permissive, fine for government/commercial use.
-- Runs on a decent CPU (~6–8 GB RAM) or a small GPU. No GPU? Still works, slower.
-- Strong at tool-use + retrieval-grounded answering (our exact use case).
-- Want it sharper? `MODEL=qwen2.5:32b-instruct` (needs a real GPU).
+Every call passes through `llm.py`, which:
 
-## Setup (one time)
+- checks the budget ledger (`budget.py`) **before** each call and records real
+  token usage **after** — so a fixed monthly AUD ceiling cannot be exceeded;
+- caches the system prompt + tool definitions (prompt caching);
+- keeps `max_tokens` small (≈500), shrinking further in "degraded" mode.
+
+Most traffic never reaches the model at all: the data panels are token-free and
+a normalized-question answer cache (`answer_cache.py`) serves repeats for $0.
+
+## Setup
+
+Set an API key in the environment, then ask:
 
 ```bash
-# installs Ollama + pulls the model (everything local):
-bash scripts/setup_local_model.sh
-```
+export ANTHROPIC_API_KEY=sk-...
 
-## Use
-
-```bash
 # one-shot question:
 python -m agent.cli "How much did each ward spend? Which ward spent the most?"
 
@@ -54,14 +58,17 @@ Example questions the agent can answer from the real data:
 - "Total councillor expenses by ward."
 - "How many animal registrations are there, and by suburb?"
 - "What datasets do we have about trees or the environment?"
-- "Show me the landfill gas generation figures."
 
 ## Configuration (env vars)
 
 | Var | Default | Meaning |
 |-----|---------|---------|
-| `MODEL` | `qwen2.5:7b-instruct` | which local model to use |
-| `OLLAMA_HOST` | `http://localhost:11434` | local model server URL |
+| `ANTHROPIC_API_KEY` | _(unset)_ | API key. No key → chat offline, panels work. |
+| `MODEL` | `claude-haiku-4-5` | model id (provider-neutral in the UI) |
+| `MAX_OUTPUT_TOKENS` | `500` | per-call output cap |
+| `BUDGET_MONTHLY_AUD` | `100` | hard monthly spend ceiling |
+| `USD_PER_AUD` | `0.60` | conservative fixed FX rate |
+| `AI_DAILY_CALLS` | `450` | global daily call ceiling |
 
 ## The tools (the agent's hands)
 
@@ -78,7 +85,7 @@ All **read-only** — defined in `tools.py`, backed by `repository.py`:
 > When write actions are added later (e.g. raise a works order), the high-stakes
 > **human gate** from docs/05 wraps `dispatch()` in `tools.py` — one conditional.
 
-## No model? The data layer still works.
+## No key? The data layer still works.
 
 `repository.py` and `tools.py` have **no model dependency** and can be tested
 directly:
@@ -88,5 +95,5 @@ python -c "from agent.repository import Repository as R; \
 print(R().aggregate('smart.darwin.nt.gov.au:councillor-expenses','ward','amount','sum'))"
 ```
 
-This proves the data plumbing before you attach the local model — which is how
-this was built and verified.
+This proves the data plumbing independently of the AI — which is how this was
+built and verified.

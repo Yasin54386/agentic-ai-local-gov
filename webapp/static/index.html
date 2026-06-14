@@ -195,7 +195,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
     <div class="masthead-date" id="mdate">Darwin, NT</div>
     <div class="masthead-title">AskTerritory<span>.com</span></div>
     <div class="masthead-right">
-      <span class="masthead-tagline">Self-hosted · NT Open Data<br>No data leaves the Territory</span>
+      <span class="masthead-tagline">AI Powered · NT Open Data<br>Northern Territory &amp; Darwin</span>
       <button class="theme-btn" id="themeBtn">☀︎ Light</button>
     </div>
   </div>
@@ -227,9 +227,9 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
       <div id="askIntro">
         <div class="cols cols-7030" style="border-bottom:2px solid var(--ink)">
           <div class="border-r" style="padding:30px 36px 30px 0">
-            <div class="hero-kicker anim">Northern Territory · City of Darwin · Local AI</div>
+            <div class="hero-kicker anim">Northern Territory · City of Darwin · AI Powered</div>
             <h1 class="hero-headline anim anim-d1">Ask the<br>Territory,<br><em>anything.</em></h1>
-            <p class="hero-sub anim anim-d2">Plain-English answers on NT &amp; Darwin government services and open data — what you need, how to apply, where the money goes. Ask below; no data leaves the Territory.</p>
+            <p class="hero-sub anim anim-d2">Plain-English answers on NT &amp; Darwin government services and open data — what you need, how to apply, where the money goes. Ask below. Questions are processed by a third-party AI service — please don't include personal information.</p>
             <div class="chip-row anim anim-d4">
               <div class="chip" onclick="ask('How do I register a dog in Darwin?')">register a dog</div>
               <div class="chip" onclick="ask('What is the flood risk right now?')">flood risk now</div>
@@ -244,7 +244,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
             </div>
             <div class="cols cols-2" style="border-bottom:1px solid var(--rule)">
               <div class="bigstat border-r"><div class="bigstat-n sage" id="s-suburbs">37</div><div class="bigstat-label">Suburbs</div></div>
-              <div class="bigstat"><div class="bigstat-n sky">100%</div><div class="bigstat-label">Self-hosted</div></div>
+              <div class="bigstat"><div class="bigstat-n sky">100%</div><div class="bigstat-label">Open data</div></div>
             </div>
             <div class="bigstat" style="border-top:1px solid var(--rule)"><div class="bigstat-n" style="font-size:32px" id="s-live">—</div><div class="bigstat-label">Live · Darwin · Flood signal</div></div>
           </div>
@@ -272,7 +272,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
       <!-- CHAT (the merged Ask AI + Guide assistant) -->
       <div id="askChat">
         <div class="ask-head">
-          <div class="hero-kicker" style="padding:0">AI Assistant · self-hosted model</div>
+          <div class="hero-kicker" style="padding:0">AI Assistant · AI Powered</div>
           <button class="theme-btn" id="newChatBtn" style="display:none" onclick="resetChat()">↺ New chat</button>
         </div>
         <div class="examples" id="askExamples">
@@ -288,7 +288,7 @@ body::after{content:"";position:fixed;inset:0;pointer-events:none;z-index:999;
           <textarea id="msgInput" placeholder="Ask about any NT government service or dataset…" rows="1"></textarea>
           <button class="send-btn" id="sendBtn" onclick="sendMsg()">Send</button>
         </div>
-        <div class="muted mt16">Powered by a local model · the other tabs work without it.</div>
+        <div class="muted mt16">AI Powered · questions are processed by a third-party AI service, so don't include personal information · the other tabs work without it.</div>
       </div>
     </div>
   </div>
@@ -436,7 +436,7 @@ function greet(){
   }
 }
 
-fetch('/api/health').then(r=>r.json()).then(d=>{ modelOnline = d.model_server!==false; })
+fetch('/api/health').then(r=>r.json()).then(d=>{ modelOnline = d.ai_available!==false; })
   .catch(()=>{ modelOnline=null; });
 
 async function sendMsg(){
@@ -454,9 +454,9 @@ async function sendMsg(){
       body:JSON.stringify({question:q, history})});
     const data=await res.json();
     typingEl.remove();
-    if(data.model_offline){
+    if(data.ai_offline){
       modelOnline=false;
-      addMsg('system', (data.hint||'AI model is offline.')+' Try <a href="/forms">forms</a> or <a href="/howto">how-to guides</a>.');
+      addMsg('system', (data.hint||'AI chat is offline.')+' Try <a href="/forms">forms</a> or <a href="/howto">how-to guides</a>.');
     }else if(data.error){
       addMsg('system','Error: '+esc(data.error));
     }else{

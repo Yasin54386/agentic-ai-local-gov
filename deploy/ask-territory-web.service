@@ -3,7 +3,7 @@
 #           sudo systemctl enable --now ask-territory-web
 [Unit]
 Description=Ask Territory web app
-After=network-online.target ollama.service
+After=network-online.target
 Wants=network-online.target
 
 [Service]
@@ -11,8 +11,13 @@ Type=simple
 User=appuser
 WorkingDirectory=/opt/ask-territory
 Environment=PORT=8000
-Environment=OLLAMA_HOST=http://127.0.0.1:11434
-Environment=MODEL=qwen2.5:7b-instruct
+Environment=MODEL=claude-haiku-4-5
+Environment=MAX_OUTPUT_TOKENS=500
+Environment=BUDGET_MONTHLY_AUD=100
+# Supply the API key out-of-band (do NOT commit it):
+#   sudo systemctl edit ask-territory-web
+#   [Service]
+#   Environment=ANTHROPIC_API_KEY=sk-...
 ExecStart=/usr/bin/python3 -m webapp.server
 Restart=on-failure
 RestartSec=3

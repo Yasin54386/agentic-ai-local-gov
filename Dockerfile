@@ -1,9 +1,13 @@
-# Ask Territory — container image. Stdlib-only app, so the image is tiny.
+# Ask Territory — container image. Small app; the only dependency is the
+# Anthropic SDK used for the "AI Powered" chat.
 FROM python:3.11-slim
 
 WORKDIR /app
 
-# No third-party Python deps — everything is standard library.
+# Install deps first for layer caching.
+COPY requirements.txt /app/requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
+
 COPY . /app
 
 # Non-root user for safety. Pinned UID 1000 so the host can chown the bind-mounted
@@ -11,9 +15,11 @@ COPY . /app
 RUN useradd -m -u 1000 appuser && chown -R appuser /app
 USER appuser
 
+# ANTHROPIC_API_KEY is supplied at runtime (compose / systemd / platform secret),
+# never baked into the image. No key -> the chat shows offline; data panels work.
 ENV PORT=8000 \
-    OLLAMA_HOST=http://ollama:11434 \
-    MODEL=qwen2.5:7b-instruct
+    MODEL=claude-haiku-4-5 \
+    MAX_OUTPUT_TOKENS=500
 
 EXPOSE 8000
 

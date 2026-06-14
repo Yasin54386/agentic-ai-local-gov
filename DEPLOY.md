@@ -3,8 +3,8 @@
 **Total cost: $0/month** (Oracle Always Free) + ~$15–20/year (domain).
 
 This guide takes you from zero to a live HTTPS website running the full stack —
-web app, Form Finder, How-To Hub, and local AI model — on Oracle Cloud's
-permanently free ARM instance.
+web app, Form Finder, How-To Hub, and the AI-powered chat (hosted API) — on
+Oracle Cloud's permanently free ARM instance.
 
 ---
 
@@ -12,7 +12,7 @@ permanently free ARM instance.
 
 | Resource | Free allowance | What we use it for |
 |----------|---------------|-------------------|
-| VM.Standard.A1.Flex | **4 ARM vCPU · 24 GB RAM** | Web app + Ollama AI model |
+| VM.Standard.A1.Flex | **4 ARM vCPU · 24 GB RAM** | Web app (the AI is hosted; far less RAM needed now) |
 | Block storage | **200 GB** | OS + code + SQLite databases |
 | Bandwidth out | **10 TB/month** | More than enough for a council site |
 | Public IP | 1 static IP | Your server address |
@@ -182,8 +182,9 @@ Edit these values:
 ```bash
 DOMAIN=yourdomain.com.au          # your actual domain
 LETSENCRYPT_EMAIL=you@email.com   # not used with Cloudflare but keep it set
-LLM_BACKEND=local
-MODEL=qwen2.5:3b-instruct         # 3B is fast on 24GB ARM; change to 7b if you want more power
+ANTHROPIC_API_KEY=sk-...          # the hosted AI key (keep this secret)
+MODEL=claude-haiku-4-5            # provider-neutral in the UI
+BUDGET_MONTHLY_AUD=100            # hard monthly spend ceiling
 ```
 
 Save with `Ctrl+O`, exit with `Ctrl+X`.
@@ -211,7 +212,11 @@ sudo systemctl restart nginx
 
 ---
 
-## Step 4 — Run the app + AI model
+## Step 4 — Run the app
+
+The AI is hosted, so there is no model server to run or model to download — the
+box just needs the web app. (A small instance is plenty now; the old 24 GB
+requirement was only for running a model locally.)
 
 ### 4a — Apply database migrations
 
@@ -220,7 +225,7 @@ cd /opt/ask-territory
 python3 -m db.migrate
 ```
 
-### 4b — Start the full stack
+### 4b — Start the stack
 
 ```bash
 sudo docker compose up -d --build
@@ -228,27 +233,23 @@ sudo docker compose up -d --build
 
 This starts:
 - **web** — the Ask Territory app on `127.0.0.1:8000`
-- **ollama** — local AI model server on `127.0.0.1:11434`
-- **refresh** — 6-hourly data refresh job
+- (optional) **refresh** — add `--profile refresh` for the 6-hourly data job
 
-### 4c — Pull the AI model (one-time, ~2 GB for 3B)
+### 4c — Confirm the AI chat is configured
 
 ```bash
-# 3B model — fast on ARM, good for a public info tool
-sudo docker compose exec ollama ollama pull qwen2.5:3b-instruct
-
-# OR the 7B model — smarter but slower on CPU ARM
-# sudo docker compose exec ollama ollama pull qwen2.5:7b-instruct
+# Reads ANTHROPIC_API_KEY from your .env; "true" means chat is live.
+curl -s http://localhost:8000/api/health | grep -o '"ai_available":[a-z]*'
 ```
 
-This downloads ~2–5 GB. Grab a coffee.
+If the key is missing, the chat shows offline and every data tab still works.
 
 ### 4d — Verify everything is running
 
 ```bash
 # App health check
 curl -s localhost:8000/api/health
-# Expected: {"ok": true, "model_server": true, ...}
+# Expected: {"ok": true, "ai_available": true, ...}
 
 # Check all containers
 sudo docker compose ps
@@ -345,9 +346,11 @@ Backups go to `/opt/ask-territory/backups/` — consider copying them off-server
 - Make sure nginx is running: `sudo systemctl status nginx`
 - Make sure Oracle Security List has ports 80 and 443 open
 
-**App running but AI Search not working**
-- Model not pulled yet: `sudo docker compose exec ollama ollama list`
-- Pull it: `sudo docker compose exec ollama ollama pull qwen2.5:3b-instruct`
+**App running but AI chat not working**
+- Key not set: check `ANTHROPIC_API_KEY` is in `.env`, then `sudo docker compose up -d`
+- Confirm: `curl -s localhost:8000/api/health | grep ai_available` → should be `true`
+- Budget reached: `curl -s localhost:8000/api/budget` — if `state` is `paused`, the
+  monthly/daily cap is hit and chat resumes automatically (data tabs keep working)
 
 **Running out of disk space**
 - Check: `df -h` and `du -sh /opt/ask-territory/data/*`
@@ -357,11 +360,11 @@ Backups go to `/opt/ask-territory/backups/` — consider copying them off-server
 - Oracle VMs restart cleanly. Docker auto-restarts containers (`restart: unless-stopped` in compose).
 - If nginx didn't restart: `sudo systemctl start nginx`
 
-**Want to upgrade to 7B model later**
+**Want a higher-quality model later**
 ```bash
-sudo docker compose exec ollama ollama pull qwen2.5:7b-instruct
-# Edit .env: MODEL=qwen2.5:7b-instruct
-sudo docker compose restart web
+# Edit .env: MODEL=claude-sonnet-4-6   (higher quality, higher per-call cost —
+# the monthly budget cap still applies, so chat just pauses sooner if it's hit)
+sudo docker compose up -d
 ```
 
 ---
@@ -378,10 +381,9 @@ Citizen browser (anywhere)
         │ HTTP port 80 — proxied, origin IP hidden
         ▼
   Oracle ARM VM · ap-sydney-1 · Always Free
-  ├── nginx          (port 80 → proxy to 8000)
-  ├── Docker: web    (port 8000, Ask Territory app)
-  ├── Docker: ollama (port 11434, local AI — localhost only)
-  ├── Docker: refresh(6-hourly data sync)
+  ├── nginx          (port 80 → proxy to 8000; rate-limits /api/ask)
+  ├── Docker: web    (port 8000, Ask Territory app → hosted AI API)
+  ├── Docker: refresh(optional 6-hourly data sync)
   └── SQLite files   (/opt/ask-territory/data/*.db)
         ├── forms        (Form Finder — 1,000+ scraped forms)
         ├── howto_guides (How-To Hub — 1,000+ guides)
@@ -397,8 +399,8 @@ Citizen browser (anywhere)
 | Oracle Cloud VM (4 vCPU · 24 GB · 200 GB) | **$0/month** |
 | Cloudflare (CDN + DDoS + SSL) | **$0/month** |
 | Domain (`yourdomain.com.au`) | ~$20/year |
-| AI model (Qwen, self-hosted) | **$0** (no per-query fees) |
-| **Total** | **~$20/year** |
+| Hosted AI chat | **≤ $100 AUD/month** (hard budget cap; most traffic is token-free) |
+| **Total** | **~$20/year + capped AI spend** |
 
 ---
 
@@ -411,8 +413,8 @@ Citizen browser (anywhere)
 - [ ] Cloudflare SSL mode set to Full
 - [ ] ufw firewall enabled on the VM
 - [ ] Docker installed and `docker compose up -d` running
-- [ ] AI model pulled (`ollama pull qwen2.5:3b-instruct`)
-- [ ] `curl localhost:8000/api/health` returns `{"ok": true, "model_server": true}`
+- [ ] `ANTHROPIC_API_KEY` set in `.env`
+- [ ] `curl localhost:8000/api/health` returns `{"ok": true, "ai_available": true}`
 - [ ] `https://yourdomain.com.au` loads in browser
 - [ ] Forms scraper run — `SELECT COUNT(*) FROM forms` shows data
 - [ ] How-To scraper run — `SELECT COUNT(*) FROM howto_guides` shows data

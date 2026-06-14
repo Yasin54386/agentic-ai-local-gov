@@ -135,8 +135,8 @@ jobs:
             sudo chown -R 1000:1000 data
 
             echo "==> Rebuilding and restarting the web container"
-            # Default profile = web only. Use 'docker compose --profile model up'
-            # once you move to a bigger droplet to also run Ollama + refresh.
+            # The AI chat is hosted; set ANTHROPIC_API_KEY in the server's .env.
+            # Add '--profile refresh' to also run the periodic data refresh job.
             sudo docker compose up -d --build --remove-orphans
 
             echo "==> Waiting for the app to report healthy"

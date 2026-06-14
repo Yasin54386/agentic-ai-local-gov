@@ -1,56 +1,37 @@
-# Ask Territory — self-hosted stack.
+# Ask Territory — web stack.
 #
-#   docker compose up -d --build                 → web only (cheap droplet, chat offline)
-#   docker compose --profile model up -d --build → web + Ollama model + refresh (8GB+ box)
+#   docker compose up -d --build
 #
-# Everything runs on your own server. Only the web port is exposed (to nginx).
+# The app is a tiny stdlib Python + SQLite service. The chat is "AI Powered"
+# by a hosted API: set ANTHROPIC_API_KEY in the environment (or a .env file)
+# to enable it. Without a key the data panels, forms and how-to guides all
+# still work — only the chat tab shows offline.
 
 services:
-  # The self-hosted language model (Qwen2.5 via Ollama).
-  # Behind the "model" profile so a small droplet can run web-only.
-  ollama:
-    image: ollama/ollama:latest
-    restart: unless-stopped
-    profiles: ["model"]
-    volumes:
-      - ollama_models:/root/.ollama
-    # Uncomment to use an NVIDIA GPU (much faster):
-    # deploy:
-    #   resources:
-    #     reservations:
-    #       devices: [{ driver: nvidia, count: all, capabilities: [gpu] }]
-
-  # The Ask Territory web app + JSON API.
   web:
     build: .
     restart: unless-stopped
     environment:
       - PORT=8000
-      - OLLAMA_HOST=http://ollama:11434
-      - MODEL=${MODEL:-qwen2.5:7b-instruct}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
+      - MODEL=${MODEL:-claude-haiku-4-5}
+      - MAX_OUTPUT_TOKENS=${MAX_OUTPUT_TOKENS:-500}
+      # Hard spend ceiling (see agent/budget.py). Override per deployment.
+      - BUDGET_MONTHLY_AUD=${BUDGET_MONTHLY_AUD:-100}
+      - USD_PER_AUD=${USD_PER_AUD:-0.60}
+      - AI_DAILY_CALLS=${AI_DAILY_CALLS:-450}
     volumes:
-      - ./data:/app/data          # persist catalog/unified DBs + refresh snapshots
+      - ./data:/app/data          # persist catalog/unified DBs + the AI usage ledger
     ports:
       - "127.0.0.1:8000:8000"     # bind to localhost only; nginx terminates TLS
-    depends_on:
-      ollama:
-        condition: service_started
-        required: false           # web runs fine without the model (chat shows offline)
 
   # OPTIONAL — the web app self-refreshes on access (live every 10 min,
   # datasets every 24h), so this scheduled job is only a belt-and-braces backup
-  # for periods of zero traffic. Behind the "model" profile alongside Ollama.
+  # for periods of zero traffic. Behind the "refresh" profile.
   refresh:
     build: .
     restart: unless-stopped
-    profiles: ["model"]
+    profiles: ["refresh"]
     command: ["python", "-m", "ingestion.refresh", "--interval", "21600"]
-    environment:
-      - OLLAMA_HOST=http://ollama:11434
     volumes:
       - ./data:/app/data
-    depends_on:
-      - ollama
-
-volumes:
-  ollama_models:

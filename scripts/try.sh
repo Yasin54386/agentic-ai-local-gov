@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Try Ask Territory locally. No pip, no venv — pure Python standard library.
+# Try Ask Territory locally. The data panels are pure Python standard library;
+# the AI chat needs `pip install -r requirements.txt` and ANTHROPIC_API_KEY.
 # Usage:  bash scripts/try.sh
 set -euo pipefail
 
@@ -22,10 +23,11 @@ if [ ! -f data/askterritory.db ]; then
 fi
 
 # 3. Note about the chat tab.
-if ! curl -fsS http://localhost:11434/api/tags >/dev/null 2>&1; then
-  echo "==> Note: local model not running, so the 'Ask' chat tab will be disabled."
+if [ -z "${ANTHROPIC_API_KEY:-}" ]; then
+  echo "==> Note: ANTHROPIC_API_KEY not set, so the 'Ask' chat tab will be disabled."
   echo "    The Neighbourhood / Live / Transparency / Repository tabs work now."
-  echo "    To enable chat later: bash scripts/setup_local_model.sh"
+  echo "    To enable chat: pip install -r requirements.txt && export ANTHROPIC_API_KEY=sk-..."
+  echo "    (Chat questions are processed by a third-party AI service.)"
 fi
 
 # 4. Open the browser (best-effort) and start the server.

@@ -3,9 +3,9 @@
 Push-to-deploy: once set up, every push to `main` runs the tests and, if they
 pass, SSHes into your droplet and ships the new code automatically.
 
-This guide is the **web-only** path (the AI chat shows "model offline" until you
-size up). It runs comfortably on the cheapest droplet. Adding the self-hosted
-model later is one extra step (bottom of this file).
+The AI chat is powered by a hosted API, so it runs comfortably on the cheapest
+droplet — there is no model server to host. Set `ANTHROPIC_API_KEY` to turn the
+chat on (bottom of this file); without it the data panels still work.
 
 ---
 
@@ -64,24 +64,25 @@ Cloudflare: `sudo apt install certbot python3-certbot-nginx && sudo certbot
 
 ---
 
-## Later: turn on the self-hosted AI model
+## Turn on the AI chat
 
-The model (Ollama + Qwen2.5) needs real RAM. On CPU, give it **8 GB+**
-(~$48/mo droplet); a GPU droplet is faster but much pricier.
+The AI is hosted, so the cheapest droplet is enough — no resize, no model
+download.
 
-1. Resize the droplet (Power off → Resize → 8 GB) or create a bigger one.
-2. On the droplet:
+1. Put your key in the droplet's `.env` (never commit it):
    ```bash
    cd /opt/ask-territory
-   sudo docker compose --profile model up -d --build      # starts web + ollama + refresh
-   sudo docker compose exec ollama ollama pull qwen2.5:7b-instruct
+   echo "ANTHROPIC_API_KEY=sk-..." | sudo tee -a .env
+   sudo docker compose up -d --build
    ```
-3. The chat in the **Ask AI** page comes online automatically once
-   `/api/health` reports `model_server: true`.
+2. The chat in the **Ask AI** page comes online automatically once
+   `/api/health` reports `ai_available: true`.
 
-To make CI deploys keep the model running, change the deploy step in
-`.github/workflows/deploy.yml` from `docker compose up -d --build` to
-`docker compose --profile model up -d --build`.
+> **Cost is capped.** Spend is bounded by a hard monthly budget
+> (`BUDGET_MONTHLY_AUD`, default 100); most traffic is served token-free from
+> the data panels and answer cache. At the cap the chat pauses and the data
+> tabs keep working. **Privacy:** questions go to a third-party AI service —
+> the UI tells users not to include personal information.
 
 ---
 

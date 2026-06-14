@@ -5,9 +5,8 @@ Every tool here is READ-ONLY, so no human gate is required. When write tools
 are added (e.g. raise a works order), this is exactly where the high-stakes
 gate from docs/05 would wrap the dispatch.
 
-The schemas are plain JSON Schema (name / description / input_schema), the common
-function-calling shape understood by self-hosted model servers (Ollama, llama.cpp,
-vLLM) — no vendor lock-in.
+The schemas are plain JSON Schema (name / description / input_schema), the shape
+the hosted model's tool-use API consumes directly.
 """
 from __future__ import annotations
 

@@ -1,7 +1,7 @@
 """Ask Territory web server — stdlib only.
 
 Panels (Live, Neighbourhood, Transparency, Stats, Form Finder, How-To Hub,
-Guide Assistant, Admin) work without or with the local LLM.
+Guide Assistant, Admin) work with or without the AI chat being configured.
 
     python -m webapp.server            # http://localhost:8000
     PORT=9000 python -m webapp.server
@@ -671,6 +671,16 @@ class Handler(BaseHTTPRequestHandler):
                     "hint": "AI guide offline — try searching Forms or How-To guides instead."})
                 return 200
 
+            # Single-question turns (no conversation history) are cacheable by
+            # question; follow-ups depend on history so they bypass the cache.
+            history = body.get("history")
+            has_history = isinstance(history, list) and any(
+                isinstance(t, dict) and (t.get("content") or "").strip() for t in history)
+            if not has_history:
+                cached = answer_cache.get(question)
+                if cached is not None:
+                    self._json({"answer": cached, "cached": True}); return 200
+
             st = budget.status()
             if st["state"] == "paused":
                 self._json({"answer": budget.pause_message(st["reason"]),
@@ -683,13 +693,15 @@ class Handler(BaseHTTPRequestHandler):
             if not _ai_acquire(ip):
                 self._json({"error": "a previous question is still being answered"}, 429)
                 return 429
-            ctx_prompt = _guide_prompt(question, body.get("history"))
+            ctx_prompt = _guide_prompt(question, history)
             try:
                 from agent.agent import run
                 degraded = st["state"] == "degraded"
                 with _lock:
                     answer = run(ctx_prompt, repo=repo, degraded=degraded,
                                  max_tokens=250 if degraded else None, verbose=False)
+                if not has_history and st["state"] == "ok" and answer and not answer.startswith("("):
+                    answer_cache.put(question, answer)
                 self._json({"answer": answer, "degraded": degraded}); return 200
             except budget.BudgetExceededError as exc:
                 self._json({"answer": budget.pause_message(exc.reason), "paused": True})
