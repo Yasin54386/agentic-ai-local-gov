@@ -23,9 +23,12 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse, parse_qs
 
-from agent import llm
+from agent import answer_cache, budget, llm
 from agent.repository import Repository
 from agent.tools import dispatch
+
+# Hard cap on a chat question's length (defends input cost + abuse).
+MAX_QUESTION_CHARS = 500
 
 STATIC = Path(__file__).parent / "static"
 PORT   = int(os.environ.get("PORT", "8000"))
@@ -67,6 +70,50 @@ def _check_rate(ip: str, path: str) -> bool:
             return False
         dq.append(now)
     return True
+
+# ── per-IP AI limiter (the only token-spending paths) ─────────────────────────
+# Multi-window token bucket: at most N calls per minute / hour / day per IP,
+# plus a single in-flight AI request per IP. The GLOBAL daily ceiling that
+# bounds spend lives in agent.budget (AI_DAILY_CALLS); this is per-IP fairness
+# and abuse defence on top of it.
+AI_PER_MIN = int(os.environ.get("AI_PER_MIN", "5"))
+AI_PER_HR  = int(os.environ.get("AI_PER_HR",  "30"))
+AI_PER_DAY = int(os.environ.get("AI_PER_DAY", "100"))
+AI_PATHS   = {"/api/ask", "/api/guide"}
+_ai_lock      = threading.Lock()
+_ai_hits: dict[str, collections.deque] = collections.defaultdict(collections.deque)
+_ai_inflight: set[str] = set()
+
+def _ai_allow(ip: str) -> tuple[bool, int]:
+    """Return (allowed, retry_after_s). Records the hit when allowed."""
+    now = time.monotonic()
+    with _ai_lock:
+        dq = _ai_hits[ip]
+        while dq and now - dq[0] > 86400:
+            dq.popleft()
+        per_min = sum(1 for t in dq if now - t < 60)
+        per_hr  = sum(1 for t in dq if now - t < 3600)
+        per_day = len(dq)
+        if per_min >= AI_PER_MIN:
+            return False, 60
+        if per_hr >= AI_PER_HR:
+            return False, 3600
+        if per_day >= AI_PER_DAY:
+            return False, 86400
+        dq.append(now)
+    return True, 0
+
+def _ai_acquire(ip: str) -> bool:
+    """Single in-flight AI request per IP. Returns False if one is running."""
+    with _ai_lock:
+        if ip in _ai_inflight:
+            return False
+        _ai_inflight.add(ip)
+    return True
+
+def _ai_release(ip: str) -> None:
+    with _ai_lock:
+        _ai_inflight.discard(ip)
 
 # ── auto-refresh tiers ────────────────────────────────────────────────────────
 AUTOREFRESH  = os.environ.get("AUTOREFRESH", "1") != "0"
@@ -189,6 +236,16 @@ class Handler(BaseHTTPRequestHandler):
         body = json.dumps(obj, default=str).encode("utf-8")
         self.send_response(status)
         self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _too_many(self, retry_after: int):
+        body = json.dumps({"error": "rate limit exceeded",
+                           "retry_after": retry_after}).encode("utf-8")
+        self.send_response(429)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Retry-After", str(retry_after))
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
@@ -333,10 +390,18 @@ class Handler(BaseHTTPRequestHandler):
         if u.path == "/api/health":
             now = time.monotonic()
             ages = {n: (None if not t["at"] else round(now - t["at"])) for n, t in _tiers.items()}
-            self._json({"ok": True, "model_server": llm.server_up(),
-                        "model": llm.DEFAULT_MODEL, "autorefresh": AUTOREFRESH,
+            # Provider/model deliberately masked — surface only an "AI Powered" flag.
+            self._json({"ok": True, "ai_powered": True, "ai_available": llm.server_up(),
+                        "chat": budget.status()["state"], "autorefresh": AUTOREFRESH,
                         "ttl_s": {n: t["ttl"] for n, t in _tiers.items()},
                         "age_s": ages, "last_refresh": _last_result}); return 200
+        if u.path == "/api/budget":
+            # Transparency footer: spend vs cap, no provider details.
+            st = budget.status()
+            self._json({"state": st["state"],
+                        "month_spend_aud": st["month_spend_aud"],
+                        "month_cap_aud": st["month_cap_aud"],
+                        "month_pct": st["month_pct"]}); return 200
 
         # ── Form Finder ──
         if u.path == "/api/forms/search":
@@ -544,40 +609,95 @@ class Handler(BaseHTTPRequestHandler):
             self._log_req(status, t0)
 
     def _handle_post(self, u, body) -> int:
-        # ── AI chat ──
+        # ── AI chat ──  routing pyramid: cache → budget → limiter → model
         if u.path == "/api/ask":
             question = (body.get("question") or "").strip()
             if not question:
                 self._json({"error": "empty question"}, 400); return 400
+            if len(question) > MAX_QUESTION_CHARS:
+                self._json({"error": f"question too long (max {MAX_QUESTION_CHARS} chars)"}, 400)
+                return 400
             if not llm.server_up():
-                self._json({"answer": None, "model_offline": True,
-                    "hint": "Start your local model: `bash scripts/setup_local_model.sh`"})
-                return 200
-            from agent.agent import run
+                self._json({"answer": None, "ai_offline": True,
+                    "hint": "AI chat is offline right now — the data panels, "
+                            "forms and how-to guides still work."}); return 200
+
+            # Layer 2: repeat-answer cache (token-free).
+            cached = answer_cache.get(question)
+            if cached is not None:
+                self._json({"answer": cached, "cached": True}); return 200
+
+            # Budget pre-check: friendly pause without building the agent.
+            st = budget.status()
+            if st["state"] == "paused":
+                self._json({"answer": budget.pause_message(st["reason"]),
+                            "paused": True}); return 200
+
+            ip = self._client_ip()
+            ok, retry = _ai_allow(ip)
+            if not ok:
+                self._too_many(retry); return 429
+            if not _ai_acquire(ip):
+                self._json({"error": "a previous question is still being answered"}, 429)
+                return 429
             try:
+                from agent.agent import run
+                degraded = st["state"] == "degraded"
                 with _lock:
-                    answer = run(question, repo=repo, verbose=False)
-                self._json({"answer": answer}); return 200
+                    answer = run(question, repo=repo, degraded=degraded,
+                                 max_tokens=250 if degraded else None, verbose=False)
+                # Cache only clean, full answers (never paused/degraded/error/sentinel).
+                if st["state"] == "ok" and answer and not answer.startswith("("):
+                    answer_cache.put(question, answer)
+                self._json({"answer": answer, "degraded": degraded}); return 200
+            except budget.BudgetExceededError as exc:
+                self._json({"answer": budget.pause_message(exc.reason), "paused": True})
+                return 200
             except Exception as exc:
                 self._json({"error": str(exc)}, 500); return 500
+            finally:
+                _ai_release(ip)
 
         # ── Guide assistant (citizen-facing, NT-context prompt) ──
         if u.path == "/api/guide":
             question = (body.get("question") or "").strip()
             if not question:
                 self._json({"error": "empty question"}, 400); return 400
+            if len(question) > MAX_QUESTION_CHARS:
+                self._json({"error": f"question too long (max {MAX_QUESTION_CHARS} chars)"}, 400)
+                return 400
             if not llm.server_up():
-                self._json({"answer": None, "model_offline": True,
+                self._json({"answer": None, "ai_offline": True,
                     "hint": "AI guide offline — try searching Forms or How-To guides instead."})
                 return 200
+
+            st = budget.status()
+            if st["state"] == "paused":
+                self._json({"answer": budget.pause_message(st["reason"]),
+                            "paused": True}); return 200
+
+            ip = self._client_ip()
+            ok, retry = _ai_allow(ip)
+            if not ok:
+                self._too_many(retry); return 429
+            if not _ai_acquire(ip):
+                self._json({"error": "a previous question is still being answered"}, 429)
+                return 429
             ctx_prompt = _guide_prompt(question, body.get("history"))
-            from agent.agent import run
             try:
+                from agent.agent import run
+                degraded = st["state"] == "degraded"
                 with _lock:
-                    answer = run(ctx_prompt, repo=repo, verbose=False)
-                self._json({"answer": answer}); return 200
+                    answer = run(ctx_prompt, repo=repo, degraded=degraded,
+                                 max_tokens=250 if degraded else None, verbose=False)
+                self._json({"answer": answer, "degraded": degraded}); return 200
+            except budget.BudgetExceededError as exc:
+                self._json({"answer": budget.pause_message(exc.reason), "paused": True})
+                return 200
             except Exception as exc:
                 self._json({"error": str(exc)}, 500); return 500
+            finally:
+                _ai_release(ip)
 
         # ── Feedback submission ──
         if u.path == "/api/feedback":
@@ -655,7 +775,7 @@ class Handler(BaseHTTPRequestHandler):
 def main() -> int:
     srv = ThreadingHTTPServer(("0.0.0.0", PORT), Handler)
     print(f"Ask Territory  →  http://localhost:{PORT}")
-    print(f"  model: {'UP — ' + llm.DEFAULT_MODEL if llm.server_up() else 'offline (data panels still work)'}")
+    print(f"  chat: {'AI Powered (ready)' if llm.server_up() else 'offline (data panels still work)'}")
     print(f"  admin: http://localhost:{PORT}/admin" + (f"?key={ADMIN_KEY}" if ADMIN_KEY else " (no key set)"))
     try:
         srv.serve_forever()

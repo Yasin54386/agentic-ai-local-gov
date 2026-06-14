@@ -1,131 +1,127 @@
-"""The agent loop — Layer 4 orchestration over the local model + data tools.
+"""The agent loop — Layer 4 orchestration over the hosted model + data tools.
 
-This is the loop from docs/01: send the conversation + tools to the SELF-HOSTED
-model, run whatever tool it asks for against the real repository, feed results
-back, repeat until the model produces a final answer. No external services.
+Send the conversation + tools to the model, run whatever read-only tool it
+asks for against the real repository, feed trimmed results back, repeat until
+it produces a final answer. Every model call goes through agent.llm, which
+enforces the budget ceiling, so this loop stays small.
 """
 from __future__ import annotations
 
 import json
 from typing import Any
 
-from . import llm
+from . import budget, llm
 from .repository import Repository
 from .tools import TOOLS, dispatch
 
-SYSTEM_PROMPT = """You are "Ask Territory", a data assistant for Northern \
-Territory & City of Darwin local-government open data. Answer questions ONLY from \
-the data, which you reach through the tools. Think about WHICH tool fits before calling.
+SYSTEM_PROMPT = """You are "Ask Territory", an AI assistant for Northern \
+Territory and City of Darwin residents, answering from NT/Darwin local-government \
+open data which you reach through the tools.
+
+Scope — NT only:
+- Answer ONLY questions about the Northern Territory or the City of Darwin \
+(services, suburbs, council data, weather, forms, how-to). If a question is \
+about somewhere else or an unrelated topic, decline in ONE sentence and steer \
+back: "I can only help with Northern Territory and Darwin questions."
 
 Choosing the right tool:
-- About a SUBURB or WARD (e.g. "tell me about Karama", "dogs in Malak", \
-"Karama")? -> call neighbourhood_profile(suburb) FIRST to see what data exists \
-for that place, then dig in with query_unified(area=...).
-- "How much / how many / total / by ward / by category / by year"? -> use \
-query_unified(table=..., group_by=..., op="sum" or "count") or \
-aggregate(dataset_id, group_by, value, op).
-- A SUBURB's council spending/cost (e.g. "how much for Karama")? Council money is \
-by WARD, not suburb. So FIRST call suburb_lookup(suburb) to get its ward, THEN \
-query_unified(table="finance", area=<that ward>, group_by="category", op="sum").
-- A place AND a concept together (e.g. "Karama and expenses", "trees in Malak")? \
--> call find_records(area=..., keyword=...) to get exactly the records where both \
-co-occur. If it returns 0, say so honestly and read its "note".
-- Not sure which field or dataset has the answer? -> call find_columns(query) to \
-locate the column, its table and dataset; then fetch from there.
-- Exploring what exists? -> list_tables() and search_datasets(query).
+- About a SUBURB or WARD ("tell me about Karama", "dogs in Malak")? -> \
+neighbourhood_profile(suburb) first, then dig in with query_unified(area=...).
+- "How much / how many / total / by ward / by category / by year"? -> \
+query_unified(table=..., group_by=..., op="sum"|"count") or aggregate(...).
+- A suburb's council spending? Council money is by WARD, not suburb: call \
+suburb_lookup(suburb) for its ward, then query_unified(table="finance", area=<ward>).
+- A place AND a concept together ("Karama and expenses")? -> \
+find_records(area=..., keyword=...). If it returns 0, say so honestly.
+- Not sure which field/dataset? -> find_columns(query). Exploring? -> \
+list_tables() and search_datasets(query).
 - Weather, rain, flood, wet season? -> live_weather() / flood_risk().
-- HOW to do something, step-by-step, apply for / register / pay / get a licence? \
--> search_howto(query) — searches NT government how-to guides with steps and links.
-- Need a FORM, application, or document? -> search_forms(query) — finds official NT \
-government forms and downloadable documents.
+- HOW to do something (register/apply/pay/licence)? -> search_howto(query).
+- Need a FORM or document? -> search_forms(query).
 
 Hard rules:
-- Filter by what the question names (suburb, ward, year, category). NEVER answer a \
-question about one place with data about a different place.
+- Filter by what the question names (suburb, ward, year, category). NEVER answer \
+about one place with data about another.
 - NEVER summarise the first few rows of a dataset as if they answer the question.
-- If the data does NOT contain what was asked (e.g. there is no "cost" or "price" \
-for a suburb), say so plainly in one sentence, then offer what IS available for it \
-(e.g. its neighbourhood_profile). Do NOT substitute unrelated data.
-- Prefer aggregated numbers (sum/count) over raw rows. Be concise and factual, and \
-name the table or dataset you used.
-- When a question spans more than one source (e.g. a suburb AND the weather, or \
-spending AND population), consult each relevant tool and SYNTHESISE one combined \
-answer rather than answering from a single source.
+- If the data does NOT contain what was asked, say so plainly in one sentence, \
+then offer what IS available. Do NOT substitute unrelated data.
+- Prefer aggregated numbers (sum/count) over raw rows; name the table/dataset used.
 
 Response style:
-- Keep answers short and conversational — 3 to 6 sentences max for simple questions.
-- NEVER use markdown tables. Use plain sentences or a short bullet list (3-5 items).
-- For step-by-step questions, use a numbered list with one line per step, no sub-bullets.
-- Do not add unnecessary headers, footers, or "good luck" sign-offs.
-- Link to official pages by name only (e.g. "nt.gov.au/driving"), not full URLs.
+- A minimised summary: at most 10 sentences, numbers over prose. Be concise \
+and factual. No markdown tables — plain sentences or a short bullet list.
+- For step-by-step questions, a numbered list, one line per step.
+- Link to official sources as plain URLs when helpful (smart.darwin.nt.gov.au, \
+nt.gov.au, darwin.nt.gov.au, bom.gov.au). No sign-offs or filler.
 """
 
-MAX_STEPS = 8  # safety cap on tool-use rounds
+# Extra instruction appended when the budget is in the degraded band.
+_DEGRADED_NUDGE = ("\n\nKeep this answer especially short — 3 sentences or fewer.")
+
+MAX_STEPS = 6  # safety cap on tool-use rounds
 
 
-def _rag_answer(question: str, repo: Repository, model: str | None) -> str:
-    """Fallback: search DB directly, inject context, ask model without tools."""
-    from .tools import dispatch
-    # Pull relevant context using the most useful tools directly
-    context_parts = []
-    try:
-        context_parts.append(dispatch(repo, "search_datasets", {"query": question}))
-    except Exception:
-        pass
-    try:
-        context_parts.append(dispatch(repo, "find_records", {"keyword": question}))
-    except Exception:
-        pass
-    try:
-        context_parts.append(dispatch(repo, "search_howto", {"query": question}))
-    except Exception:
-        pass
-    try:
-        context_parts.append(dispatch(repo, "search_forms", {"query": question}))
-    except Exception:
-        pass
-
-    context = "\n\n".join(str(c) for c in context_parts if c)
-    messages = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": f"Context from NT government database:\n{context}\n\nQuestion: {question}"},
-    ]
-    kw = {"model": model} if model else {}
-    msg = llm.chat(messages, tools=None, **kw)
-    return (msg.get("content") or "").strip() or "(no answer produced)"
+def _final_text(resp: Any) -> str:
+    if getattr(resp, "stop_reason", None) == "refusal":
+        return "I can only help with Northern Territory and Darwin questions."
+    text = "".join(
+        b.text for b in resp.content if getattr(b, "type", None) == "text"
+    ).strip()
+    return text or "(no answer produced)"
 
 
 def run(question: str, *, repo: Repository | None = None, model: str | None = None,
-        verbose: bool = True) -> str:
-    """Answer a question by letting the local model reason over the data tools."""
+        history: list[dict] | None = None, max_tokens: int | None = None,
+        degraded: bool = False, verbose: bool = True) -> str:
+    """Answer a question by letting the hosted model reason over the data tools."""
     own_repo = repo is None
     repo = repo or Repository()
-    messages: list[dict] = [
-        {"role": "system", "content": SYSTEM_PROMPT},
-        {"role": "user", "content": question},
-    ]
-    kw = {"model": model} if model else {}
-    try:
-        for step in range(MAX_STEPS):
-            try:
-                msg = llm.chat(messages, tools=TOOLS, **kw)
-            except llm.LocalModelError as exc:
-                if "tool" in str(exc).lower() or "404" in str(exc):
-                    # Model doesn't support tool use — fall back to RAG
-                    if verbose:
-                        print("  [fallback] tool use unsupported, switching to RAG mode", flush=True)
-                    return _rag_answer(question, repo, model)
-                raise
-            calls = llm.extract_tool_calls(msg)
-            messages.append(llm.assistant_message(msg))
-            if not calls:
-                return (msg.get("content") or "").strip() or "(no answer produced)"
+    system = SYSTEM_PROMPT + (_DEGRADED_NUDGE if degraded else "")
 
-            for call in calls:
+    messages: list[dict] = []
+    if history:
+        for turn in history:
+            role = turn.get("role")
+            content = (turn.get("content") or "").strip()
+            if role in ("user", "assistant") and content:
+                messages.append({"role": role, "content": content})
+    messages.append({"role": "user", "content": question})
+
+    try:
+        for _ in range(MAX_STEPS):
+            try:
+                resp = llm.messages_create(
+                    system, messages, tools=TOOLS,
+                    max_tokens=max_tokens, endpoint="ask",
+                )
+            except budget.BudgetExceededError as exc:
+                # Mid-loop guard: budget tripped between steps. If the model
+                # already produced some text, return it; else the pause line.
+                partial = "".join(
+                    m.get("content", "") for m in messages
+                    if m.get("role") == "assistant" and isinstance(m.get("content"), str)
+                ).strip()
+                return partial or budget.pause_message(exc.reason)
+
+            if getattr(resp, "stop_reason", None) != "tool_use":
+                return _final_text(resp)
+
+            # Round-trip: append the assistant turn (incl. tool_use blocks),
+            # then a user turn carrying every tool_result.
+            messages.append({"role": "assistant", "content": resp.content})
+            results = []
+            for block in resp.content:
+                if getattr(block, "type", None) != "tool_use":
+                    continue
                 if verbose:
-                    print(f"  [tool] {call['name']}({json.dumps(call['args'])})", flush=True)
-                result = dispatch(repo, call["name"], call["args"])
-                messages.append(llm.tool_result(call["id"], call["name"], result))
+                    print(f"  [tool] {block.name}({json.dumps(block.input)})", flush=True)
+                result = dispatch(repo, block.name, dict(block.input))
+                results.append({
+                    "type": "tool_result",
+                    "tool_use_id": block.id,
+                    "content": llm.trim_tool_result(result),
+                })
+            messages.append({"role": "user", "content": results})
         return "(reached step limit without a final answer)"
     finally:
         if own_repo:

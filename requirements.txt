@@ -1,0 +1,5 @@
+# Ask Territory — Python dependencies.
+# The app core is standard-library only; the single dependency is the official
+# Anthropic SDK, used for the hosted "AI Powered" chat (retries, typed errors,
+# token-usage accounting that the budget ledger relies on).
+anthropic>=0.40.0

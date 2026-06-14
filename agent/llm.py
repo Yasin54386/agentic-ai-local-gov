@@ -1,188 +1,146 @@
-"""Pluggable LLM backend — sovereign by default, hosted by deliberate opt-in.
+"""Hosted AI backend — the single choke point for every model call.
 
-Default backend is a LOCAL model via Ollama (no data leaves your network). An
-operator who accepts the trade-off can point at a single OpenAI-compatible
-endpoint instead (a self-hosted vLLM, or a hosted provider with proper
-no-training data terms). There is intentionally NO multi-provider "free-tier
-ensemble": that would send citizen/government data to third parties and break
-the sovereignty the project is built on.
+The chat is "AI Powered" by a hosted API (the provider is deliberately not
+named in user-facing surfaces). This module is the ONE place every call
+passes through, so the budget ledger can guarantee the monthly spend
+ceiling: each call checks the budget before and records real token usage
+after. Nothing else in the app talks to the API directly.
 
-Selection (env):
-    LLM_BACKEND   = local | openai        (default: local)
-    MODEL         = model name            (qwen2.5:7b-instruct | gpt-4o-mini | ...)
-    OLLAMA_HOST   = http://localhost:11434           (local backend)
-    LLM_BASE_URL  = https://api.openai.com/v1        (openai backend)
-    LLM_API_KEY   = <key>                            (openai backend)
-    LLM_FALLBACK  = 0 | 1   if 1, fall back to the OTHER backend on failure (default 0)
+Cost controls live here:
+  - prompt caching (cache_control ephemeral) on the system prompt, which —
+    because tools render before system — caches the tool definitions too;
+  - tool results are trimmed before they go back to the model (input is the
+    cost driver);
+  - max output tokens is small and shrinks further in "degraded" mode.
 
-Standard library only. The agent loop uses the helpers here so backend
-differences (tool-call ids, message shapes) stay contained.
+Config (env):
+    ANTHROPIC_API_KEY   the API key. No key -> chat shows offline, panels work.
+    MODEL               model id              (default: claude-haiku-4-5)
+    MAX_OUTPUT_TOKENS   per-call output cap   (default: 500)
 """
 from __future__ import annotations
 
 import json
 import os
-import sys
-import urllib.error
-import urllib.request
 from typing import Any
 
-BACKEND = os.environ.get("LLM_BACKEND", "local").lower()
-DEFAULT_MODEL = os.environ.get(
-    "MODEL", "gpt-4o-mini" if BACKEND == "openai" else "qwen2.5:14b")
+from . import budget
 
-# Fallback model chain for openai backend (tried in order on 429/503)
-FALLBACK_MODELS = [m.strip() for m in os.environ.get("FALLBACK_MODELS", "").split(",") if m.strip()] or [
-    "openai/gpt-oss-20b:free",
-    "meta-llama/llama-3.3-70b-instruct:free",
-    "meta-llama/llama-3.2-3b-instruct:free",
-    "nousresearch/hermes-3-llama-3.1-405b:free",
-]
+MODEL = os.environ.get("MODEL", "claude-haiku-4-5")
+MAX_OUTPUT_TOKENS = int(os.environ.get("MAX_OUTPUT_TOKENS", "500"))
+ANTHROPIC_API_KEY = os.environ.get("ANTHROPIC_API_KEY", "")
 
-OLLAMA_HOST = os.environ.get("OLLAMA_HOST", "http://localhost:11434").rstrip("/")
-LLM_BASE_URL = os.environ.get("LLM_BASE_URL", "https://api.openai.com/v1").rstrip("/")
-LLM_API_KEY = os.environ.get("LLM_API_KEY", "")
-LLM_FALLBACK = os.environ.get("LLM_FALLBACK", "0") == "1"
+# Back-compat alias kept so existing callers (server/cli/health) keep working.
+DEFAULT_MODEL = MODEL
 
-_warned = False
+# Tool results are trimmed to roughly this many characters (~1.5K tokens)
+# before being sent back — the model only needs the aggregates, not raw rows.
+TOOL_RESULT_CHARS = 6000
+
+_client = None
 
 
-class LocalModelError(RuntimeError):
-    pass
+class AIError(RuntimeError):
+    """Any failure talking to the hosted model."""
+
+
+# Back-compat alias: older code caught llm.LocalModelError.
+LocalModelError = AIError
 
 
 def describe() -> str:
-    if BACKEND == "openai":
-        return f"hosted (OpenAI-compatible) {DEFAULT_MODEL} @ {LLM_BASE_URL}"
-    return f"local (Ollama) {DEFAULT_MODEL} @ {OLLAMA_HOST}"
-
-
-def _egress_warning() -> None:
-    global _warned
-    if BACKEND == "openai" and not _warned:
-        _warned = True
-        print("⚠  LLM_BACKEND=openai: prompts (incl. data context) are sent to an "
-              f"EXTERNAL service ({LLM_BASE_URL}). This is NOT sovereign. Ensure your "
-              "provider's terms forbid training on your data.", file=sys.stderr)
-
-
-# --------------------------------------------------------------------------- #
-#  tool schema conversion (both backends use the OpenAI "function" shape)
-# --------------------------------------------------------------------------- #
-def _fn_tools(tools: list[dict]) -> list[dict]:
-    return [{"type": "function", "function": {
-        "name": t["name"], "description": t["description"],
-        "parameters": t.get("input_schema", {"type": "object", "properties": {}}),
-    }} for t in tools]
-
-
-def _post(url: str, body: dict, headers: dict, timeout: int = 300) -> dict:
-    req = urllib.request.Request(url, data=json.dumps(body).encode("utf-8"),
-                                 headers={"content-type": "application/json", **headers},
-                                 method="POST")
-    try:
-        with urllib.request.urlopen(req, timeout=timeout) as resp:
-            return json.loads(resp.read().decode("utf-8"))
-    except urllib.error.HTTPError as exc:
-        raise LocalModelError(f"{url} {exc.code}: {exc.read().decode('utf-8','replace')}") from exc
-    except (urllib.error.URLError, TimeoutError) as exc:
-        raise LocalModelError(f"Cannot reach model backend at {url} ({exc})") from exc
-
-
-# --------------------------------------------------------------------------- #
-#  per-backend chat
-# --------------------------------------------------------------------------- #
-def _chat_ollama(messages, tools, model, temperature) -> dict:
-    body = {"model": model, "messages": messages, "stream": False,
-            "options": {"temperature": temperature}}
-    if tools:
-        body["tools"] = _fn_tools(tools)
-    msg = _post(f"{OLLAMA_HOST}/api/chat", body, {}).get("message", {})
-    msg.setdefault("role", "assistant")
-    return msg
-
-
-def _chat_openai(messages, tools, model, temperature) -> dict:
-    body = {"model": model, "messages": messages, "temperature": temperature}
-    if tools:
-        body["tools"] = _fn_tools(tools)
-        body["tool_choice"] = "auto"
-    headers = {"authorization": f"Bearer {LLM_API_KEY}"} if LLM_API_KEY else {}
-    # Try primary model then fallbacks on rate-limit (429) or unavailable (503/404)
-    models_to_try = [model] + [m for m in FALLBACK_MODELS if m != model]
-    last_exc = None
-    for m in models_to_try:
-        try:
-            body["model"] = m
-            data = _post(f"{LLM_BASE_URL}/chat/completions", body, headers)
-            if m != model:
-                print(f"⚠  model {model} unavailable, used fallback {m}", file=sys.stderr)
-            return (data.get("choices") or [{}])[0].get("message", {}) or {}
-        except LocalModelError as exc:
-            if any(code in str(exc) for code in ("429", "503", "404")):
-                last_exc = exc
-                continue
-            raise
-    raise last_exc
-
-
-def chat(messages: list[dict], *, tools: list[dict] | None = None,
-         model: str | None = None, temperature: float = 0.0) -> dict[str, Any]:
-    """One chat turn. Returns the provider's assistant message (may hold tool_calls)."""
-    _egress_warning()
-    model = model or DEFAULT_MODEL
-    primary = _chat_openai if BACKEND == "openai" else _chat_ollama
-    other = _chat_ollama if BACKEND == "openai" else _chat_openai
-    try:
-        return primary(messages, tools, model, temperature)
-    except LocalModelError:
-        if LLM_FALLBACK:
-            print("⚠  primary LLM backend failed; falling back to the other backend.",
-                  file=sys.stderr)
-            return other(messages, tools, model, temperature)
-        raise
-
-
-# --------------------------------------------------------------------------- #
-#  uniform helpers used by the agent loop (hide backend message differences)
-# --------------------------------------------------------------------------- #
-def extract_tool_calls(msg: dict) -> list[dict]:
-    """Return [{id, name, args(dict)}] from either backend's message."""
-    out = []
-    for i, c in enumerate(msg.get("tool_calls") or []):
-        fn = c.get("function", {})
-        args = fn.get("arguments", {})
-        if isinstance(args, str):
-            try:
-                args = json.loads(args or "{}")
-            except json.JSONDecodeError:
-                args = {}
-        out.append({"id": c.get("id") or f"call_{i}", "name": fn.get("name", ""), "args": args})
-    return out
-
-
-def assistant_message(msg: dict) -> dict:
-    """The assistant message to append for round-tripping (kept in provider shape)."""
-    m = {"role": "assistant", "content": msg.get("content") or ""}
-    if msg.get("tool_calls"):
-        m["tool_calls"] = msg["tool_calls"]
-    return m
-
-
-def tool_result(call_id: str, name: str, result: Any) -> dict:
-    """A tool-result message. tool_call_id is required by OpenAI, ignored by Ollama."""
-    content = json.dumps(result, default=str)[:12000]
-    if BACKEND == "openai":
-        return {"role": "tool", "tool_call_id": call_id, "name": name, "content": content}
-    return {"role": "tool", "content": content}
+    """Generic, provider-neutral description for logs/status."""
+    return "AI Powered (hosted)"
 
 
 def server_up() -> bool:
-    """For local: is Ollama reachable? For openai: is it configured?"""
-    if BACKEND == "openai":
-        return bool(LLM_API_KEY) or "localhost" in LLM_BASE_URL or "127.0.0.1" in LLM_BASE_URL
-    try:
-        with urllib.request.urlopen(urllib.request.Request(f"{OLLAMA_HOST}/api/tags"), timeout=5):
-            return True
-    except (urllib.error.URLError, TimeoutError):
+    """True when the chat is usable: a key is set and the SDK is importable.
+
+    Budget exhaustion is a SEPARATE, softer state (see agent.budget.status);
+    this only reports whether the hosted AI is configured at all, so that
+    pulling the key degrades the chat tab only.
+    """
+    if not ANTHROPIC_API_KEY:
         return False
+    try:
+        import anthropic  # noqa: F401
+    except ImportError:
+        return False
+    return True
+
+
+def _get_client():
+    global _client
+    if _client is None:
+        import anthropic
+        _client = anthropic.Anthropic()  # reads ANTHROPIC_API_KEY from env
+    return _client
+
+
+def _system_blocks(system: str) -> list[dict]:
+    """System prompt as a single cached block. Tools render before system,
+    so this one breakpoint caches the tool definitions + system together."""
+    return [{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}]
+
+
+def trim_tool_result(result: Any) -> str:
+    """Serialise a tool result and cap its size to control input cost."""
+    text = json.dumps(result, default=str)
+    if len(text) > TOOL_RESULT_CHARS:
+        text = text[:TOOL_RESULT_CHARS] + ' …"[truncated]"'
+    return text
+
+
+def messages_create(system: str, messages: list[dict], *,
+                    tools: list[dict] | None = None,
+                    max_tokens: int | None = None,
+                    endpoint: str = "") -> Any:
+    """One API round. Budget-gated before, usage-recorded after.
+
+    Raises budget.BudgetExceededError if the AI allowance is used up, and
+    AIError on any API failure. Returns the raw SDK Message.
+    """
+    budget.check_allowed()  # raises BudgetExceededError when paused
+    client = _get_client()
+    kwargs: dict[str, Any] = {
+        "model": MODEL,
+        "max_tokens": max_tokens or MAX_OUTPUT_TOKENS,
+        "system": _system_blocks(system),
+        "messages": messages,
+        "temperature": 0.0,
+    }
+    if tools:
+        kwargs["tools"] = tools  # tools.py is already in Anthropic input_schema shape
+    try:
+        resp = client.messages.create(**kwargs)
+    except budget.BudgetExceededError:
+        raise
+    except Exception as exc:  # anthropic.APIError and friends
+        raise AIError(str(exc)) from exc
+
+    u = resp.usage
+    budget.record(
+        MODEL,
+        input_tokens=getattr(u, "input_tokens", 0) or 0,
+        output_tokens=getattr(u, "output_tokens", 0) or 0,
+        cache_read_tokens=getattr(u, "cache_read_input_tokens", 0) or 0,
+        cache_write_tokens=getattr(u, "cache_creation_input_tokens", 0) or 0,
+        endpoint=endpoint,
+    )
+    return resp
+
+
+def complete(prompt: str, *, max_tokens: int = 300, endpoint: str = "complete") -> str:
+    """Single-turn text completion (used by forms/how-to synonym expansion).
+
+    Budget-gated like every other call. Returns plain text ("" on refusal).
+    """
+    resp = messages_create(
+        "You are a concise assistant.",
+        [{"role": "user", "content": prompt}],
+        max_tokens=max_tokens,
+        endpoint=endpoint,
+    )
+    if getattr(resp, "stop_reason", None) == "refusal":
+        return ""
+    return "".join(b.text for b in resp.content if getattr(b, "type", None) == "text").strip()

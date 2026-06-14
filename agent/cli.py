@@ -1,11 +1,12 @@
-"""Command-line interface for the self-hosted data agent.
+"""Command-line interface for the Ask Territory data agent.
 
 Usage:
     python -m agent.cli "How much did each ward spend? Which spent most?"
     python -m agent.cli            # interactive REPL
 
-Requires a local Ollama server running Qwen2.5-7B-Instruct (see agent/README.md).
-Everything runs on your own machine — no external API.
+Requires ANTHROPIC_API_KEY in the environment for the hosted "AI Powered" chat.
+Questions are processed by a third-party AI service — don't include personal
+information.
 """
 from __future__ import annotations
 
@@ -19,13 +20,10 @@ from .repository import Repository
 def _preflight() -> bool:
     if not llm.server_up():
         print(
-            "\n[!] No local model server reachable at "
-            f"{llm.OLLAMA_HOST}.\n"
-            "    Start your self-hosted model first:\n"
-            "      1. Install Ollama:        https://ollama.com/download\n"
-            "      2. Pull the model:        ollama pull qwen2.5:7b-instruct\n"
-            "      3. (Ollama serves automatically on localhost:11434)\n"
-            "    Then re-run this command. Nothing leaves your machine.\n",
+            "\n[!] AI chat is not configured.\n"
+            "    Set ANTHROPIC_API_KEY in your environment, then re-run.\n"
+            "    Note: questions are processed by a third-party AI service —\n"
+            "    don't include personal information.\n",
             file=sys.stderr,
         )
         return False
@@ -45,7 +43,7 @@ def main(argv: list[str] | None = None) -> int:
             print(run(question, repo=repo))
             return 0
         # interactive
-        print(f"Self-hosted Darwin data agent ({llm.DEFAULT_MODEL}). "
+        print("Ask Territory data agent (AI Powered). "
               "Ctrl-C or 'exit' to quit.\n")
         while True:
             try:
